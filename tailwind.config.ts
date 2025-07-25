@@ -12,8 +12,20 @@ const config: Config = {
     extend: {
       colors: {
         "mcd-gold": "#FFD700",
+        "mcd-gold-light": "#FFED4E",
+        "mcd-gold-dark": "#B8860B",
         "mcd-purple": "#663399",
-        "mcd-dark": "#2F2F2F",
+        "mcd-purple-light": "#9B6DFF",
+        "mcd-purple-dark": "#3D1C6B",
+        "mcd-dark": "#1A1A1A",
+        "mcd-gray": "#2F2F2F",
+        "mcd-gray-light": "#4A4A4A",
+        "mcd-silver": "#D3D3D3",
+        "mcd-white": "#FFFFFF",
+        "mcd-success": "#00E676",
+        "mcd-error": "#FF5252",
+        "mcd-warning": "#FF9800",
+        
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

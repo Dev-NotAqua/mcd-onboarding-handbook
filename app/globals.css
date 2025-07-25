@@ -4,48 +4,58 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 18%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 18%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 18%;
-    --primary: 270 50% 30%;
-    --primary-foreground: 51 100% 50%;
-    --secondary: 270 30% 90%;
-    --secondary-foreground: 270 50% 30%;
-    --muted: 270 15% 95%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 270 40% 85%;
-    --accent-foreground: 270 50% 30%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 270 20% 80%;
-    --input: 270 15% 90%;
-    --ring: 270 50% 30%;
+    --background: 0 0% 100%;          /* mcd-white */
+    --foreground: 0 0% 10%;           /* mcd-dark */
+    --card: 0 0% 100%;                /* mcd-white */
+    --card-foreground: 0 0% 10%;      /* mcd-dark */
+    --popover: 0 0% 100%;             /* mcd-white */
+    --popover-foreground: 0 0% 10%;   /* mcd-dark */
+    --primary: 51 100% 50%;           /* mcd-gold */
+    --primary-foreground: 0 0% 10%;   /* mcd-dark */
+    --secondary: 260 100% 71%;        /* mcd-purple-light */
+    --secondary-foreground: 0 0% 10%; /* mcd-dark */
+    --muted: 0 0% 96%;                /* mcd-light */
+    --muted-foreground: 0 0% 45%;     /* mcd-gray-medium */
+    --accent: 260 50% 42%;            /* mcd-purple-dark */
+    --accent-foreground: 0 0% 100%;   /* mcd-white */
+    --destructive: 4 90% 58%;         /* mcd-error */
+    --destructive-foreground: 0 0% 100%; /* mcd-white */
+    --border: 0 0% 89%;               /* mcd-gray-lighter */
+    --input: 0 0% 96%;                /* mcd-light */
+    --ring: 51 100% 50%;              /* mcd-gold */
+    --chart-1: 260 50% 50%;           /* mcd-purple */
+    --chart-2: 141 76% 73%;           /* mcd-success */
+    --chart-3: 36 100% 50%;           /* mcd-warning */
+    --chart-4: 260 100% 71%;          /* mcd-purple-light */
+    --chart-5: 51 100% 50%;           /* mcd-gold */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 12%;
-    --foreground: 51 100% 95%;
-    --card: 0 0% 15%;
-    --card-foreground: 51 100% 95%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 51 100% 95%;
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 12%;
-    --secondary: 270 50% 20%;
-    --secondary-foreground: 51 100% 95%;
-    --muted: 270 30% 18%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 270 50% 25%;
-    --accent-foreground: 51 100% 95%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 270 30% 25%;
-    --input: 270 30% 18%;
-    --ring: 51 100% 50%;
+    --background: 0 0% 10%;           /* mcd-dark */
+    --foreground: 0 0% 83%;           /* mcd-silver */
+    --card: 0 0% 18%;                 /* mcd-gray */
+    --card-foreground: 0 0% 83%;      /* mcd-silver */
+    --popover: 0 0% 18%;              /* mcd-gray */
+    --popover-foreground: 0 0% 83%;   /* mcd-silver */
+    --primary: 51 100% 50%;           /* mcd-gold */
+    --primary-foreground: 0 0% 10%;   /* mcd-dark */
+    --secondary: 260 50% 42%;         /* mcd-purple-dark */
+    --secondary-foreground: 0 0% 100%; /* mcd-white */
+    --muted: 0 0% 29%;                /* mcd-gray-light */
+    --muted-foreground: 0 0% 83%;     /* mcd-silver */
+    --accent: 260 100% 71%;           /* mcd-purple-light */
+    --accent-foreground: 0 0% 10%;    /* mcd-dark */
+    --destructive: 4 90% 58%;         /* mcd-error */
+    --destructive-foreground: 0 0% 100%; /* mcd-white */
+    --border: 0 0% 29%;               /* mcd-gray-light */
+    --input: 0 0% 18%;                /* mcd-gray */
+    --ring: 51 100% 50%;              /* mcd-gold */
+    --chart-1: 260 50% 50%;           /* mcd-purple */
+    --chart-2: 141 76% 73%;           /* mcd-success */
+    --chart-3: 36 100% 50%;           /* mcd-warning */
+    --chart-4: 260 100% 71%;          /* mcd-purple-light */
+    --chart-5: 51 100% 50%;           /* mcd-gold */
   }
 }
 
@@ -58,21 +68,22 @@
   }
 }
 
-/* Enhanced scrollbar styles */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-muted rounded-full;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-b from-mcd-gold to-mcd-purple rounded-full shadow-lg;
+  background: linear-gradient(180deg, #FFD700 0%, #9B6DFF 50%, #3D1C6B 100%);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply from-mcd-purple to-mcd-gold;
+  background: linear-gradient(180deg, #FFED4E 0%, #663399 50%, #B8860B 100%);
 }
 
 /* Smooth scrolling */
@@ -176,10 +187,10 @@ html {
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.2), 0 0 60px rgba(255, 215, 0, 0.1);
   }
   50% {
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3), 0 0 90px rgba(255, 215, 0, 0.2);
   }
 }
 
