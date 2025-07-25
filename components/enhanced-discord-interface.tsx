@@ -175,7 +175,7 @@ export function EnhancedDiscordInterface() {
               </h3>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-gray-300 text-xs font-medium">1,247 members online</span>
+                <span className="text-gray-300 text-xs font-medium">259 members online</span>
               </div>
             </div>
           </div>

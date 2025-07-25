@@ -11,16 +11,16 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       },
       {
         type: "text",
-        text: "Are you a decently newer fella to custom site RP? Confused on what to do now that you have passed into MC&D? Need general assistance?",
+        text: "New to SCP roleplay or just joined our faction? Confused about your role within MC&D's operations? Need guidance on our procedures?",
       },
       {
         type: "text",
-        text: "Fear not... this document was crafted just to help you progress and settle down with our company.",
+        text: "This comprehensive handbook was designed to help you integrate seamlessly into our organization and understand your responsibilities as a member of this Group of Interest.",
       },
       {
         type: "callout",
         calloutType: "info",
-        text: "NOTICE: This is the official handbook of Marshall, Carter, and Darke Ltd. brought to you by the current leading shareholders of the company.",
+        text: "NOTICE: This is the official onboarding handbook for Marshall, Carter, and Darke Ltd. - a roleplay faction within the SCP Foundation universe. All content is for fictional roleplay purposes.",
       },
     ],
   },
@@ -100,36 +100,44 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
     ],
   },
   {
-    id: "divisions",
-    title: "Divisions & Channels",
+    id: "channels",
+    title: "Discord Channels Guide",
     content: [
       {
         type: "text",
-        text: "The default division of MC&D is the Wrecker Division, as it is the only division LRs may join! But you can always attempt to expand your output to our other division, the Accounting Division [once you are an MR+]. The divisional advertisements are found here:",
+        text: "Navigate MC&D's Discord server efficiently with this comprehensive channel guide. Each channel serves a specific purpose in our corporate structure.",
       },
       {
         type: "discord-interface",
       },
       {
-        type: "text",
-        text: "Learn cool stuff and ditch school because MC&D is your school! Available educational channels include:",
+        type: "heading",
+        text: "Educational & Social Channels",
       },
       {
         type: "list",
-        items: ["#math-class", "#count-to-503", "#english-class", "#karaoke"],
+        items: ["#math-class - Mathematical discussions", "#count-to-503 - Community counting game", "#english-class - Language and communication", "#karaoke - Entertainment and team building"],
       },
       {
-        type: "text",
-        text: "Read up on recent announcements that may apply to you in #announcements and #sub-announcements.",
+        type: "heading",
+        text: "Information Channels",
       },
       {
-        type: "text",
-        text: "Have a laugh and look at our 'hall of shame' in #hicom-shitposting and #memory-lane!",
+        type: "list",
+        items: ["#announcements - Official company updates", "#sub-announcements - Departmental notices", "#qna - Questions and assistance"],
+      },
+      {
+        type: "heading",
+        text: "Community Channels",
+      },
+      {
+        type: "list",
+        items: ["#hicom-shitposting - Leadership casual discussions", "#memory-lane - Company history and memorable moments"],
       },
       {
         type: "callout",
         calloutType: "info",
-        text: "Please do not hesitate and feel free to ask questions! Use the #qna channel for any inquiries.",
+        text: "Don't hesitate to ask questions! Use the #qna channel for any inquiries about MC&D operations.",
       },
     ],
   },
@@ -221,52 +229,46 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
     content: [
       {
         type: "text",
-        text: "Points are the primary currency for advancement in MC&D. Here's how you can earn them:",
+        text: "Points are the primary currency for advancement within Marshall, Carter & Darke. Understanding the point system is crucial for your progression through our corporate hierarchy.",
       },
       {
         type: "heading",
-        text: "Faction Events",
-      },
-      {
-        type: "text",
-        text: "Earn 5 points per 30 minutes of attendance:",
+        text: "Official Events (5 points per 30 minutes)",
       },
       {
         type: "list",
-        items: ["Deployments (hosted by HR+)", "Trainings (hosted by HR+)", "Tryout Supervisions"],
+        items: ["Deployments (hosted by HR+)", "Training Sessions (hosted by HR+)", "Tryout Supervisions", "Special Operations"],
       },
       {
-        type: "text",
-        text: "Points are given directly after the event host logs the event.",
+        type: "callout",
+        calloutType: "success",
+        text: "Points are automatically awarded after the event host logs the session. No additional action required from attendees.",
       },
       {
         type: "heading",
-        text: "Self Deployments",
-      },
-      {
-        type: "text",
-        text: "Earn 3 points per 30 minutes of self deployment:",
+        text: "Self Deployments (3 points per 30 minutes)",
       },
       {
         type: "list",
         items: [
-          "Must be logged properly with timer and screenshots",
-          "Must be properly formatted when requesting points",
-          "Submit logs in the designated channels",
+          "Must use Trident Timer system for accurate logging",
+          "Requires screenshot evidence of activities",
+          "Must submit properly formatted point requests",
+          "Submit in designated logging channels only",
         ],
       },
       {
         type: "heading",
-        text: "Special Events",
+        text: "Special Recognition",
       },
       {
         type: "list",
-        items: ['"The Probes" Interrogation - 5 points FLAT'],
+        items: ['Anomalous Asset Interrogations - 5 points (flat rate)', 'Exceptional Performance Bonuses - Variable points'],
       },
       {
         type: "callout",
         calloutType: "info",
-        text: "Example: If you attend a 2.5 hour deployment, you earn 25 points. If you self deploy for 1.5 hours, you earn 9 points.",
+        text: "Calculation Example: 2.5 hour official deployment = 25 points | 1.5 hour self deployment = 9 points",
       },
     ],
   },
@@ -447,54 +449,7 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       },
     ],
   },
-  {
-    id: "events",
-    title: "Event System",
-    content: [
-      {
-        type: "text",
-        text: "MC&D hosts three types of events that are essential for member development and point earning.",
-      },
-      {
-        type: "heading",
-        text: "Event Types",
-      },
-      {
-        type: "list",
-        items: [
-          "Deployments - Can be hosted by HR+",
-          "Tryouts - Can be hosted by HR+",
-          "Trainings - Can be hosted by HR+",
-        ],
-      },
-      {
-        type: "text",
-        text: "All events give 5 points per 30 minutes of attendance. Points are awarded after the event is properly logged by the host.",
-      },
-      {
-        type: "heading",
-        text: "Self Deployments",
-      },
-      {
-        type: "text",
-        text: "Members can also conduct self deployments for 3 points per 30 minutes. Requirements:",
-      },
-      {
-        type: "list",
-        items: [
-          "Must be logged with a timer",
-          "Several screenshots required as proof",
-          "Must be properly formatted when requesting points",
-          "Submit in designated logging channels",
-        ],
-      },
-      {
-        type: "callout",
-        calloutType: "success",
-        text: "Example: Attend a 2.5 hour deployment = 25 points. Self deploy for 1.5 hours = 9 points.",
-      },
-    ],
-  },
+
   {
     id: "clearance",
     title: "Clearance & Site Access",
@@ -689,33 +644,33 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
     content: [
       {
         type: "text",
-        text: "I would say about now is when you know 75% of what you need to settle down here in MC&D. The rest can be found in things like the MC&D Handbook (found in our advertisement and underneath rules), and a few other documents.",
+        text: "You now have the essential knowledge needed to begin your journey within MC&D. Additional resources and detailed procedures can be found in our supplementary documentation and channel pins.",
       },
       {
         type: "callout",
         calloutType: "success",
-        text: "Thanks for willing to try out and participate in MC&D, we hope you make an impact on the capitalist cause!",
+        text: "Thank you for joining Marshall, Carter & Darke! We look forward to your contributions to our roleplay community and the SCP Foundation universe.",
       },
       {
         type: "heading",
-        text: "Quick Checklist",
+        text: "Onboarding Checklist",
       },
       {
         type: "list",
         items: [
           "✅ Complete Discord verification with /verify",
-          "✅ Submit codename request and get approval",
-          "✅ Get assigned to Wrecker Division (default for LR)",
-          "✅ Read all information channels",
-          "✅ Understand point system and promotion requirements",
-          "✅ Learn shift logging procedures",
-          "✅ Participate in deployments and events",
-          "✅ Work towards your first promotion!",
+          "✅ Submit codename request and await approval",
+          "✅ Receive Wrecker Division assignment (default for LR)",
+          "✅ Review all information channels thoroughly",
+          "✅ Understand the point system and promotion structure",
+          "✅ Learn proper shift logging procedures",
+          "✅ Participate in faction deployments and training",
+          "✅ Begin working towards your first promotion",
         ],
       },
       {
         type: "text",
-        text: "Welcome to Marshall, Carter, and Darke Ltd. - where profit meets prestige!",
+        text: "Welcome to Marshall, Carter, and Darke Ltd. - where anomalous commerce meets roleplay excellence!",
       },
     ],
   },
