@@ -52,13 +52,14 @@ export default function HandbookPage() {
   if (isLoading) {
     return (
       <ThemeProvider>
-        <div className="min-h-screen bg-gradient-to-br from-background via-background to-mcd-gold/5 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-mcd-gold/5 flex items-center justify-center" role="status" aria-live="polite">
           <div className="text-center space-y-6">
             <div className="relative">
-              <div className="w-20 h-20 border-4 border-mcd-gold/30 border-t-mcd-gold rounded-full animate-spin mx-auto"></div>
+              <div className="w-20 h-20 border-4 border-mcd-gold/30 border-t-mcd-gold rounded-full animate-spin mx-auto" aria-hidden="true"></div>
               <div
                 className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-yellow-400 rounded-full animate-spin mx-auto"
                 style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
+                aria-hidden="true"
               ></div>
             </div>
             <div className="space-y-2">
@@ -66,6 +67,11 @@ export default function HandbookPage() {
                 Marshall, Carter & Darke
               </h2>
               <p className="text-muted-foreground font-medium">Loading Onboarding Handbook...</p>
+              <span className="sr-only">Please wait while the handbook loads</span>
+            </div>
+            {/* Loading progress indicator */}
+            <div className="w-48 h-1 bg-muted rounded-full overflow-hidden mx-auto">
+              <div className="h-full bg-gradient-to-r from-mcd-gold to-yellow-400 rounded-full animate-pulse" style={{width: '60%'}}></div>
             </div>
           </div>
         </div>
@@ -77,6 +83,13 @@ export default function HandbookPage() {
     <ThemeProvider>
       <ErrorBoundary>
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-mcd-gold/5 text-foreground">
+          {/* Skip Navigation Link for Accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-mcd-gold focus:text-black focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-mcd-gold focus:ring-offset-2 transition-all duration-200"
+          >
+            Skip to main content
+          </a>
           {/* Mobile Header */}
           {isMobile && <MobileHeader sections={filteredSections} activeSection={activeSection} />}
 
@@ -85,7 +98,7 @@ export default function HandbookPage() {
             {!isMobile && <Sidebar sections={filteredSections} activeSection={activeSection} />}
 
             {/* Main Content */}
-            <main className={`flex-1 ${!isMobile ? "ml-80" : ""} ${isMobile ? "pt-24" : ""}`}>
+            <main id="main-content" className={`flex-1 ${!isMobile ? "ml-80" : ""} ${isMobile ? "pt-24" : ""}`}>
               {/* Header with Search and Theme Toggle */}
               <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 border-b border-mcd-gold/20 shadow-sm">
                 <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">

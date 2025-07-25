@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { AlertTriangle, RefreshCw } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -41,43 +41,70 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 }
 
-function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError: () => void }) {
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-card border border-destructive/20 rounded-xl p-8 text-center space-y-6">
-        <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
-          <AlertTriangle className="w-8 h-8 text-destructive" />
-        </div>
 
+
+interface DefaultErrorFallbackProps {
+  error?: Error
+  resetError: () => void
+}
+
+function DefaultErrorFallback({ error, resetError }: DefaultErrorFallbackProps) {
+  const [showDetails, setShowDetails] = useState(false)
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4" role="alert" aria-live="assertive">
+      <div className="max-w-md w-full bg-card rounded-xl border border-destructive/20 p-6 shadow-lg text-center space-y-4">
+        <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+          <AlertTriangle className="w-8 h-8 text-destructive" aria-hidden="true" />
+        </div>
+        
         <div className="space-y-2">
-          <h2 className="text-2xl font-serif font-bold text-foreground">Something went wrong</h2>
-          <p className="text-muted-foreground">
-            The MC&D Handbook encountered an unexpected error. Please try refreshing the page.
+          <h2 className="text-xl font-semibold text-foreground">Oops! Something went wrong</h2>
+          <p className="text-sm text-muted-foreground">
+            We encountered an unexpected error while loading the handbook. Don't worry - your data is safe.
           </p>
         </div>
 
         {error && (
-          <details className="text-left bg-muted/50 rounded-lg p-4">
-            <summary className="cursor-pointer text-sm font-medium text-muted-foreground mb-2">Error Details</summary>
-            <pre className="text-xs text-destructive font-mono overflow-auto">{error.message}</pre>
-          </details>
+          <div className="text-left">
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors underline focus:outline-none focus:ring-2 focus:ring-mcd-gold focus:ring-offset-2 rounded"
+              aria-expanded={showDetails}
+              aria-controls="error-details"
+            >
+              {showDetails ? 'Hide' : 'Show'} error details
+            </button>
+            {showDetails && (
+              <div id="error-details" className="mt-2">
+                <pre className="text-xs bg-muted p-3 rounded border overflow-auto max-h-32 text-left">
+                  {error.message}
+                </pre>
+              </div>
+            )}
+          </div>
         )}
 
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-3 pt-2">
           <button
             onClick={resetError}
-            className="flex items-center gap-2 px-4 py-2 bg-mcd-gold hover:bg-yellow-400 text-black rounded-lg transition-colors duration-200"
+            className="flex-1 px-4 py-2 bg-gradient-to-r from-mcd-gold to-yellow-400 text-black rounded-lg hover:from-yellow-400 hover:to-mcd-gold transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-mcd-gold focus:ring-offset-2 shadow-lg hover:shadow-xl"
+            aria-label="Try to recover from the error"
           >
-            <RefreshCw className="w-4 h-4" />
             Try Again
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors duration-200"
+            className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-muted-foreground focus:ring-offset-2"
+            aria-label="Refresh the entire page"
           >
             Refresh Page
           </button>
         </div>
+        
+        <p className="text-xs text-muted-foreground mt-4">
+          If this problem persists, please contact the MC&D IT department.
+        </p>
       </div>
     </div>
   )

@@ -52,6 +52,17 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && value.trim()) {
+              // Trigger search on Enter
+              e.preventDefault()
+              // You can add actual search logic here
+            }
+            if (e.key === 'Escape') {
+              onChange('')
+              e.currentTarget.blur()
+            }
+          }}
           placeholder={placeholder}
           className={`w-full pl-9 sm:pl-10 pr-9 sm:pr-10 py-2.5 sm:py-3 text-sm sm:text-base bg-background border-2 rounded-lg transition-all duration-300 focus:outline-none focus:shadow-lg text-foreground placeholder:text-muted-foreground hover:scale-[1.01] focus:scale-[1.02] ${
             isFocused
@@ -61,6 +72,8 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
           aria-label="Search handbook sections"
           role="searchbox"
           aria-describedby={isSearching ? "search-status" : undefined}
+          autoComplete="off"
+          spellCheck="false"
         />
 
         {value && (
