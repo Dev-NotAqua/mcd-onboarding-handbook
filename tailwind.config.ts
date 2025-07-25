@@ -11,29 +11,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-/* Core Identity */
-  "mcd-gold":         "#FFD700",  /* classic brand gold */
-  "mcd-gold-light":   "#FFED4E",  /* highlight / hover */
-  "mcd-gold-dark":    "#B8860B",  /* pressed / borders */
-
-  /* Royal Purple Range */
-  "mcd-purple":       "#663399",  /* primary purple */
-  "mcd-purple-light": "#9B6DFF",  /* accents / links */
-  "mcd-purple-dark":  "#3D1C6B",  /* headings / footer */
-
-  /* Neutral Spectrum */
-  "mcd-dark":         "#1A1A1A",  /* almost-black */
-  "mcd-gray":         "#2F2F2F",  /* mid-gray */
-  "mcd-gray-light":   "#4A4A4A",  /* subtle borders */
-  "mcd-silver":       "#D3D3D3",  /* body text on dark */
-  "mcd-white":        "#FFFFFF",  /* inverse text / cards */
-
-  /* Utility */
-  "mcd-success":      "#00E676",  /* positive feedback */
-  "mcd-error":        "#FF5252",  /* alerts / errors */
-  "mcd-warning":      "#FF9800",  /* warnings / CTAs */
-  "mcd-info":         "#2196F3",  /* informational */
-
+        "mcd-gold": "#D4AF37",
+        "mcd-dark": "#1a1a1a",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
