@@ -4,58 +4,58 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;          /* mcd-white */
-    --foreground: 0 0% 10%;           /* mcd-dark */
-    --card: 0 0% 100%;                /* mcd-white */
-    --card-foreground: 0 0% 10%;      /* mcd-dark */
-    --popover: 0 0% 100%;             /* mcd-white */
-    --popover-foreground: 0 0% 10%;   /* mcd-dark */
-    --primary: 260 50% 50%;           /* mcd-purple */
-    --primary-foreground: 0 0% 100%;  /* mcd-white */
-    --secondary: 51 100% 50%;         /* mcd-gold */
-    --secondary-foreground: 0 0% 10%; /* mcd-dark */
-    --muted: 260 100% 95%;            /* mcd-purple-very-light */
-    --muted-foreground: 260 50% 30%;  /* mcd-purple-darker */
-    --accent: 260 100% 71%;           /* mcd-purple-light */
-    --accent-foreground: 0 0% 10%;    /* mcd-dark */
-    --destructive: 4 90% 58%;         /* mcd-error */
-    --destructive-foreground: 0 0% 100%; /* mcd-white */
-    --border: 260 50% 85%;            /* mcd-purple-border */
-    --input: 260 100% 98%;            /* mcd-purple-input */
-    --ring: 260 50% 50%;              /* mcd-purple */
-    --chart-1: 260 50% 50%;           /* mcd-purple */
-    --chart-2: 141 76% 73%;           /* mcd-success */
-    --chart-3: 36 100% 50%;           /* mcd-warning */
-    --chart-4: 260 100% 71%;          /* mcd-purple-light */
-    --chart-5: 51 100% 50%;           /* mcd-gold */
+    --background: 0 0% 100%;          /* mcd-white #FFFFFF */
+    --foreground: 0 0% 10%;           /* mcd-dark #1A1A1A */
+    --card: 0 0% 100%;                /* mcd-white #FFFFFF */
+    --card-foreground: 0 0% 10%;      /* mcd-dark #1A1A1A */
+    --popover: 0 0% 100%;             /* mcd-white #FFFFFF */
+    --popover-foreground: 0 0% 10%;   /* mcd-dark #1A1A1A */
+    --primary: 260 50% 40%;           /* mcd-purple #663399 */
+    --primary-foreground: 0 0% 100%;  /* mcd-white #FFFFFF */
+    --secondary: 51 100% 50%;         /* mcd-gold #FFD700 */
+    --secondary-foreground: 0 0% 10%; /* mcd-dark #1A1A1A */
+    --muted: 0 0% 29%;                /* mcd-gray #4A4A4A */
+    --muted-foreground: 0 0% 83%;     /* mcd-silver #D3D3D3 */
+    --accent: 260 100% 71%;           /* mcd-purple-light #9B6DFF */
+    --accent-foreground: 0 0% 10%;    /* mcd-dark #1A1A1A */
+    --destructive: 4 90% 58%;         /* mcd-error #FF5252 */
+    --destructive-foreground: 0 0% 100%; /* mcd-white #FFFFFF */
+    --border: 0 0% 29%;               /* mcd-gray-light #4A4A4A */
+    --input: 0 0% 96%;                /* light gray for inputs */
+    --ring: 260 50% 40%;              /* mcd-purple #663399 */
+    --chart-1: 260 50% 40%;           /* mcd-purple #663399 */
+    --chart-2: 141 76% 73%;           /* mcd-success #00E676 */
+    --chart-3: 36 100% 50%;           /* mcd-warning #FF9800 */
+    --chart-4: 260 100% 71%;          /* mcd-purple-light #9B6DFF */
+    --chart-5: 51 100% 50%;           /* mcd-gold #FFD700 */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 10%;           /* mcd-dark */
-    --foreground: 0 0% 83%;           /* mcd-silver */
-    --card: 0 0% 18%;                 /* mcd-gray */
-    --card-foreground: 0 0% 83%;      /* mcd-silver */
-    --popover: 0 0% 18%;              /* mcd-gray */
-    --popover-foreground: 0 0% 83%;   /* mcd-silver */
-    --primary: 260 100% 71%;          /* mcd-purple-light */
-    --primary-foreground: 0 0% 10%;   /* mcd-dark */
-    --secondary: 51 100% 50%;         /* mcd-gold */
-    --secondary-foreground: 0 0% 10%; /* mcd-dark */
-    --muted: 260 50% 20%;             /* mcd-purple-muted */
-    --muted-foreground: 260 100% 80%; /* mcd-purple-light-text */
-    --accent: 260 50% 50%;            /* mcd-purple */
-    --accent-foreground: 0 0% 100%;   /* mcd-white */
-    --destructive: 4 90% 58%;         /* mcd-error */
-    --destructive-foreground: 0 0% 100%; /* mcd-white */
-    --border: 260 50% 35%;            /* mcd-purple-border-dark */
-    --input: 260 50% 15%;             /* mcd-purple-input-dark */
-    --ring: 260 100% 71%;             /* mcd-purple-light */
-    --chart-1: 260 50% 50%;           /* mcd-purple */
-    --chart-2: 141 76% 73%;           /* mcd-success */
-    --chart-3: 36 100% 50%;           /* mcd-warning */
-    --chart-4: 260 100% 71%;          /* mcd-purple-light */
-    --chart-5: 51 100% 50%;           /* mcd-gold */
+    --background: 0 0% 10%;           /* mcd-dark #1A1A1A */
+    --foreground: 0 0% 83%;           /* mcd-silver #D3D3D3 */
+    --card: 0 0% 18%;                 /* mcd-gray #2F2F2F */
+    --card-foreground: 0 0% 83%;      /* mcd-silver #D3D3D3 */
+    --popover: 0 0% 18%;              /* mcd-gray #2F2F2F */
+    --popover-foreground: 0 0% 83%;   /* mcd-silver #D3D3D3 */
+    --primary: 260 100% 71%;          /* mcd-purple-light #9B6DFF */
+    --primary-foreground: 0 0% 10%;   /* mcd-dark #1A1A1A */
+    --secondary: 51 100% 50%;         /* mcd-gold #FFD700 */
+    --secondary-foreground: 0 0% 10%; /* mcd-dark #1A1A1A */
+    --muted: 260 50% 21%;             /* mcd-purple-dark #3D1C6B */
+    --muted-foreground: 0 0% 83%;     /* mcd-silver #D3D3D3 */
+    --accent: 260 50% 40%;            /* mcd-purple #663399 */
+    --accent-foreground: 0 0% 100%;   /* mcd-white #FFFFFF */
+    --destructive: 4 90% 58%;         /* mcd-error #FF5252 */
+    --destructive-foreground: 0 0% 100%; /* mcd-white #FFFFFF */
+    --border: 0 0% 29%;               /* mcd-gray-light #4A4A4A */
+    --input: 0 0% 18%;                /* mcd-gray #2F2F2F */
+    --ring: 260 100% 71%;             /* mcd-purple-light #9B6DFF */
+    --chart-1: 260 50% 40%;           /* mcd-purple #663399 */
+    --chart-2: 141 76% 73%;           /* mcd-success #00E676 */
+    --chart-3: 36 100% 50%;           /* mcd-warning #FF9800 */
+    --chart-4: 260 100% 71%;          /* mcd-purple-light #9B6DFF */
+    --chart-5: 51 100% 50%;           /* mcd-gold #FFD700 */
   }
 }
 
@@ -187,10 +187,10 @@ html {
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.2), 0 0 60px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 20px rgba(102, 51, 153, 0.3), 0 0 40px rgba(155, 109, 255, 0.2), 0 0 60px rgba(255, 215, 0, 0.1);
   }
   50% {
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3), 0 0 90px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 30px rgba(102, 51, 153, 0.5), 0 0 60px rgba(155, 109, 255, 0.3), 0 0 90px rgba(255, 215, 0, 0.2);
   }
 }
 
@@ -232,7 +232,7 @@ html {
 
 /* Custom gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #d4af37, #ffd700, #ffa500);
+  background: linear-gradient(135deg, #663399, #9B6DFF, #FFD700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -244,12 +244,12 @@ html {
 }
 
 .shadow-glow {
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 30px rgba(102, 51, 153, 0.3);
 }
 
 /* Improved focus states */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-mcd-gold focus:ring-offset-2 focus:ring-offset-background;
+  @apply focus:outline-none focus:ring-2 focus:ring-mcd-purple focus:ring-offset-2 focus:ring-offset-background;
 }
 
 /* Custom backdrop blur */
@@ -258,18 +258,18 @@ html {
 }
 
 .gradient-border {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, rgba(102, 51, 153, 0.2), rgba(155, 109, 255, 0.1));
+  border: 1px solid rgba(102, 51, 153, 0.3);
 }
 
 /* Improved text effects */
 .text-glow {
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  text-shadow: 0 0 10px rgba(102, 51, 153, 0.3);
 }
 
 /* Enhanced button styles */
 .btn-primary {
-  @apply bg-gradient-to-r from-mcd-gold to-yellow-400 hover:from-yellow-400 hover:to-mcd-gold text-black font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95;
+  @apply bg-gradient-to-r from-mcd-purple to-mcd-purple-light hover:from-mcd-purple-light hover:to-mcd-purple text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95;
 }
 
 /* Improved spacing utilities */
