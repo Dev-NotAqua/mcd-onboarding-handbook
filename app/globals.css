@@ -10,19 +10,19 @@
     --card-foreground: 0 0% 10%;      /* mcd-dark */
     --popover: 0 0% 100%;             /* mcd-white */
     --popover-foreground: 0 0% 10%;   /* mcd-dark */
-    --primary: 51 100% 50%;           /* mcd-gold */
-    --primary-foreground: 0 0% 10%;   /* mcd-dark */
-    --secondary: 260 100% 71%;        /* mcd-purple-light */
+    --primary: 260 50% 50%;           /* mcd-purple */
+    --primary-foreground: 0 0% 100%;  /* mcd-white */
+    --secondary: 51 100% 50%;         /* mcd-gold */
     --secondary-foreground: 0 0% 10%; /* mcd-dark */
-    --muted: 0 0% 96%;                /* mcd-light */
-    --muted-foreground: 0 0% 45%;     /* mcd-gray-medium */
-    --accent: 260 50% 42%;            /* mcd-purple-dark */
-    --accent-foreground: 0 0% 100%;   /* mcd-white */
+    --muted: 260 100% 95%;            /* mcd-purple-very-light */
+    --muted-foreground: 260 50% 30%;  /* mcd-purple-darker */
+    --accent: 260 100% 71%;           /* mcd-purple-light */
+    --accent-foreground: 0 0% 10%;    /* mcd-dark */
     --destructive: 4 90% 58%;         /* mcd-error */
     --destructive-foreground: 0 0% 100%; /* mcd-white */
-    --border: 0 0% 89%;               /* mcd-gray-lighter */
-    --input: 0 0% 96%;                /* mcd-light */
-    --ring: 51 100% 50%;              /* mcd-gold */
+    --border: 260 50% 85%;            /* mcd-purple-border */
+    --input: 260 100% 98%;            /* mcd-purple-input */
+    --ring: 260 50% 50%;              /* mcd-purple */
     --chart-1: 260 50% 50%;           /* mcd-purple */
     --chart-2: 141 76% 73%;           /* mcd-success */
     --chart-3: 36 100% 50%;           /* mcd-warning */
@@ -38,19 +38,19 @@
     --card-foreground: 0 0% 83%;      /* mcd-silver */
     --popover: 0 0% 18%;              /* mcd-gray */
     --popover-foreground: 0 0% 83%;   /* mcd-silver */
-    --primary: 51 100% 50%;           /* mcd-gold */
+    --primary: 260 100% 71%;          /* mcd-purple-light */
     --primary-foreground: 0 0% 10%;   /* mcd-dark */
-    --secondary: 260 50% 42%;         /* mcd-purple-dark */
-    --secondary-foreground: 0 0% 100%; /* mcd-white */
-    --muted: 0 0% 29%;                /* mcd-gray-light */
-    --muted-foreground: 0 0% 83%;     /* mcd-silver */
-    --accent: 260 100% 71%;           /* mcd-purple-light */
-    --accent-foreground: 0 0% 10%;    /* mcd-dark */
+    --secondary: 51 100% 50%;         /* mcd-gold */
+    --secondary-foreground: 0 0% 10%; /* mcd-dark */
+    --muted: 260 50% 20%;             /* mcd-purple-muted */
+    --muted-foreground: 260 100% 80%; /* mcd-purple-light-text */
+    --accent: 260 50% 50%;            /* mcd-purple */
+    --accent-foreground: 0 0% 100%;   /* mcd-white */
     --destructive: 4 90% 58%;         /* mcd-error */
     --destructive-foreground: 0 0% 100%; /* mcd-white */
-    --border: 0 0% 29%;               /* mcd-gray-light */
-    --input: 0 0% 18%;                /* mcd-gray */
-    --ring: 51 100% 50%;              /* mcd-gold */
+    --border: 260 50% 35%;            /* mcd-purple-border-dark */
+    --input: 260 50% 15%;             /* mcd-purple-input-dark */
+    --ring: 260 100% 71%;             /* mcd-purple-light */
     --chart-1: 260 50% 50%;           /* mcd-purple */
     --chart-2: 141 76% 73%;           /* mcd-success */
     --chart-3: 36 100% 50%;           /* mcd-warning */
