@@ -8,6 +8,7 @@ interface Rank {
   name: string
   points: number
   requirements?: string
+  owner?: string
   color: string
   icon: any
   level: "executive" | "high" | "middle" | "low"
@@ -20,30 +21,30 @@ export function HierarchyInterface() {
     // Executive Command
     {
       id: "ceo",
-      name: "Company CEO",
+      name: "Company CEO - FL",
       points: 0,
       color: "from-purple-500 to-pink-500",
       icon: Crown,
       level: "executive",
-      requirements: "Founder",
+      owner: "Marshall",
     },
     {
       id: "coo",
-      name: "Company COO",
+      name: "Company COO - CFL",
       points: 0,
       color: "from-purple-400 to-pink-400",
       icon: Crown,
       level: "executive",
-      requirements: "Appointed",
+      owner: "Carter",
     },
     {
       id: "advisor",
-      name: "Company Advisor",
+      name: "Company Advisor - FoL",
       points: 0,
       color: "from-purple-300 to-pink-300",
       icon: Crown,
       level: "executive",
-      requirements: "Handpicked",
+      owner: "Moonveil",
     },
 
     // High Command
@@ -54,7 +55,7 @@ export function HierarchyInterface() {
       color: "from-red-500 to-orange-500",
       icon: Star,
       level: "high",
-      requirements: "Handpicked",
+      owner: "Singularity",
     },
     {
       id: "fl",
@@ -63,33 +64,33 @@ export function HierarchyInterface() {
       color: "from-red-400 to-orange-400",
       icon: Star,
       level: "high",
-      requirements: "Division Leader",
+      owner: "Division Leader",
     },
 
     // High Ranks
     {
       id: "hr5",
-      name: "530 Points",
+      name: "Commander",
       points: 530,
       color: "from-orange-500 to-yellow-500",
       icon: Award,
       level: "high",
       requirements: "10 Deployments Hosted",
     },
-    { id: "hr4", name: "480 Points", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "high" },
+    { id: "hr4", name: "General", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "high" },
     {
       id: "hr3",
-      name: "430 Points",
+      name: "Colonel",
       points: 430,
       color: "from-orange-300 to-yellow-300",
       icon: Award,
       level: "high",
       requirements: "3 Deployments Hosted",
     },
-    { id: "hr2", name: "380 Points", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "high" },
+    { id: "hr2", name: "Major", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "high" },
     {
       id: "hr1",
-      name: "330 Points",
+      name: "Captain",
       points: 330,
       color: "from-yellow-400 to-yellow-300",
       icon: Shield,
@@ -100,7 +101,7 @@ export function HierarchyInterface() {
     // Middle Ranks
     {
       id: "mr5",
-      name: "275 Points",
+      name: "Lieutenant",
       points: 275,
       color: "from-blue-500 to-cyan-500",
       icon: TrendingUp,
@@ -108,17 +109,17 @@ export function HierarchyInterface() {
     },
     {
       id: "mr4",
-      name: "240 Points",
+      name: "Sergeant",
       points: 240,
       color: "from-blue-400 to-cyan-400",
       icon: TrendingUp,
       level: "middle",
     },
-    { id: "mr3", name: "205 Points", points: 205, color: "from-blue-300 to-cyan-300", icon: Target, level: "middle" },
-    { id: "mr2", name: "170 Points", points: 170, color: "from-cyan-500 to-teal-500", icon: Target, level: "middle" },
+    { id: "mr3", name: "Corporal", points: 205, color: "from-blue-300 to-cyan-300", icon: Target, level: "middle" },
+    { id: "mr2", name: "Specialist", points: 170, color: "from-cyan-500 to-teal-500", icon: Target, level: "middle" },
     {
       id: "mr1",
-      name: "135 Points",
+      name: "Agent",
       points: 135,
       color: "from-cyan-400 to-teal-400",
       icon: Target,
@@ -127,18 +128,18 @@ export function HierarchyInterface() {
     },
 
     // Low Ranks
-    { id: "lr5", name: "100 Points", points: 100, color: "from-green-500 to-emerald-500", icon: Users, level: "low" },
-    { id: "lr4", name: "75 Points", points: 75, color: "from-green-400 to-emerald-400", icon: Users, level: "low" },
+    { id: "lr5", name: "Senior Associate", points: 100, color: "from-green-500 to-emerald-500", icon: Users, level: "low" },
+    { id: "lr4", name: "Associate", points: 75, color: "from-green-400 to-emerald-400", icon: Users, level: "low" },
     {
       id: "lr3",
-      name: "50 Points",
+      name: "Junior Associate",
       points: 50,
       color: "from-green-300 to-emerald-300",
       icon: Users,
       level: "low",
       requirements: "1 Self Deployment",
     },
-    { id: "lr2", name: "25 Points", points: 25, color: "from-emerald-500 to-green-500", icon: Users, level: "low" },
+    { id: "lr2", name: "Trainee", points: 25, color: "from-emerald-500 to-green-500", icon: Users, level: "low" },
     {
       id: "lr1",
       name: "Recruit",
@@ -212,7 +213,7 @@ export function HierarchyInterface() {
                         : "bg-gray-800/50 border-gray-600/30 hover:bg-gray-700/50 hover:border-gray-500/50 hover:scale-[1.02]"
                     }`}
                     aria-expanded={isSelected}
-                    aria-label={`${rank.name} rank details. ${rank.points} points required. ${rank.requirements || 'No additional requirements'}`}
+                    aria-label={`${rank.name} rank details. ${rank.points} points required. ${rank.owner ? `Owned by ${rank.owner}` : ''} ${rank.requirements ? `Requirements: ${rank.requirements}` : 'No additional requirements'}`}
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div
@@ -231,8 +232,18 @@ export function HierarchyInterface() {
                       />
                     </div>
 
+                    {/* Owner Badge */}
+                    {rank.owner && (
+                      <div className="text-xs text-green-300 bg-green-900/30 border border-green-500/30 rounded px-2 py-1 mb-2">
+                        <span className="font-medium">👑 Current Owner:</span> {rank.owner}
+                      </div>
+                    )}
+
+                    {/* Requirements Badge */}
                     {rank.requirements && (
-                      <div className="text-xs text-gray-400 bg-gray-700/50 rounded px-2 py-1">{rank.requirements}</div>
+                      <div className="text-xs text-blue-300 bg-blue-900/30 border border-blue-500/30 rounded px-2 py-1">
+                        <span className="font-medium">📋 Requirements:</span> {rank.requirements}
+                      </div>
                     )}
 
                     {/* Expanded Details */}

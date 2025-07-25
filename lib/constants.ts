@@ -125,6 +125,9 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
         type: "hierarchy-interface",
       },
       {
+        type: "div",
+      },
+      {
         type: "text",
         text: "First, head to the promotion-request channel. Read the pinned messages to understand the format and requirements. The format is also provided below:",
       },
@@ -239,71 +242,76 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
   },
   {
     id: "hierarchy-detailed",
-    title: "Detailed Hierarchy",
+    title: "Global Hierarchy",
     content: [
       {
         type: "text",
-        text: "MC&D operates on a structured hierarchy system with specific point requirements and responsibilities for each rank.",
+        text: "MC&D operates on a structured hierarchy system with specific rank names and positions. Here's the complete global hierarchy structure:",
       },
       {
         type: "heading",
-        text: "Executive Command (200 HP)",
+        text: "Executives",
       },
       {
         type: "list",
         items: [
-          'Company CEO - FL - "Sun" (Marshall)',
-          'Company COO - CFL - "Sky" (Darke)',
-          'Company Advisor - 3rd-in-Command - "Blade"',
+          'Company CEO - "Sun" - Marshall',
+          'Company COO - "Sky" - Carter',
+          'Company Advisor - "Blade" - 3rd-in-Command',
         ],
       },
       {
         type: "heading",
-        text: "High Command (200 HP)",
+        text: "High Command - 200 HP",
       },
       {
         type: "list",
         items: [
-          'Head of Operations - "Guy" (Handpicked)',
-          "Division Leaders - Handpicked positions",
-          'Force Leader of Wrecker Division - "Moonveil"',
-          'Finance Director of Accounting Division - "Singularity"',
+          'Head of Operations - Handpicked - Head High Command',
+          'Force Leader of the WD - "Moonveil" - Handpicked - DL',
+          'Finance Director of the AD - "Singularity" - Handpicked - CDL',
         ],
       },
       {
         type: "heading",
-        text: "High Ranks (200 HP)",
+        text: "High Ranks - 200 HP",
       },
       {
         type: "list",
         items: [
-          "530 points + 10 deployments hosted",
-          "480 points",
-          "430 points + 3 deployments hosted",
-          "380 points",
-          "330 points + Pass HR Applications",
+          'Commander - 530 points + 10 deployments hosted - HR',
+          'General - 480 points - HR',
+          'Captain - 430 points + 3 deployments hosted - HR',
+          'Colonel - 380 points - HR',
+          'Major - 330 points + Pass High Rank Applications - HR',
         ],
       },
       {
         type: "heading",
-        text: "Middle Ranks (175 HP)",
-      },
-      {
-        type: "list",
-        items: ["275 points", "240 points", "205 points", "170 points", "135 points + 3 self deployments"],
-      },
-      {
-        type: "heading",
-        text: "Low Ranks (150 HP)",
+        text: "Middle Ranks - 175 HP",
       },
       {
         type: "list",
         items: [
-          "100 points",
-          "75 points",
-          "50 points + 1 self deployment",
-          "25 points",
-          "Pass Tryout/Application (Starting rank)",
+          'Lieutenant - 275 points - MR',
+          'Sergeant - 240 points - MR',
+          'Corporal - 205 points - MR',
+          'Specialist - 170 points - MR',
+          'Officer - 135 points + 3 self deployments - MR',
+        ],
+      },
+      {
+        type: "heading",
+        text: "Low Ranks - 150 HP",
+      },
+      {
+        type: "list",
+        items: [
+          'Senior Operative - 100 points - LR',
+          'Operative - 75 points - LR',
+          'Junior Operative - 50 points + 1 self deployment - LR',
+          'Trainee - 25 points - LR',
+          'Recruit - Pass Tryout/Application - LR',
         ],
       },
       {
