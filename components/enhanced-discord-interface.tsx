@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Hash, Volume2, Megaphone, Users, MessageSquare, ChevronRight, ExternalLink, Sparkles } from "lucide-react"
+import { Hash, Volume2, Megaphone, Users, ChevronRight, Sparkles } from "lucide-react"
 
 interface DiscordChannel {
   name: string
@@ -26,7 +26,6 @@ const DISCORD_CHANNELS: ChannelCategory[] = [
       {
         name: "divisions",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Division information and recruitment",
         isActive: true,
       },
@@ -38,26 +37,22 @@ const DISCORD_CHANNELS: ChannelCategory[] = [
       {
         name: "math-class",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Learn mathematics with MC&D professionals",
         hasNotification: true,
       },
       {
         name: "count-to-503",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Community counting challenge",
       },
       {
         name: "english-class",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Professional communication skills",
       },
       {
         name: "karaoke",
         type: "voice",
-        link: "https://discord.gg/your-server",
         description: "Voice channel for entertainment",
         memberCount: 3,
       },
@@ -69,14 +64,12 @@ const DISCORD_CHANNELS: ChannelCategory[] = [
       {
         name: "announcements",
         type: "announcement",
-        link: "https://discord.gg/your-server",
         description: "Official MC&D company announcements",
         hasNotification: true,
       },
       {
         name: "sub-announcements",
         type: "announcement",
-        link: "https://discord.gg/your-server",
         description: "Secondary announcements and updates",
       },
     ],
@@ -87,13 +80,11 @@ const DISCORD_CHANNELS: ChannelCategory[] = [
       {
         name: "hicom-shitposting",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "High Command casual discussions",
       },
       {
         name: "memory-lane",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Nostalgic MC&D moments",
       },
     ],
@@ -104,7 +95,6 @@ const DISCORD_CHANNELS: ChannelCategory[] = [
       {
         name: "qna",
         type: "text",
-        link: "https://discord.gg/your-server",
         description: "Questions and answers - get help here!",
         hasNotification: true,
       },
@@ -214,14 +204,11 @@ export function EnhancedDiscordInterface() {
                       const isHovered = hoveredChannel === `${categoryIndex}-${channelIndex}`
 
                       return (
-                        <a
+                        <div
                           key={channelIndex}
-                          href={channel.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           onMouseEnter={() => setHoveredChannel(`${categoryIndex}-${channelIndex}`)}
                           onMouseLeave={() => setHoveredChannel(null)}
-                          className={`group/channel flex items-center gap-2 px-3 py-2 mx-2 rounded-md transition-all duration-300 cursor-pointer relative overflow-hidden transform ${
+                          className={`group/channel flex items-center gap-2 px-3 py-2 mx-2 rounded-md transition-all duration-300 relative overflow-hidden transform ${
                             channel.isActive
                               ? "bg-mcd-gold/10 text-mcd-gold border-l-2 border-mcd-gold shadow-lg scale-105"
                               : "hover:bg-gray-700/50 text-gray-300 hover:text-white hover:scale-105"
@@ -253,12 +240,7 @@ export function EnhancedDiscordInterface() {
                             </div>
                           )}
 
-                          <ExternalLink
-                            className={`w-3 h-3 text-gray-500 transition-all duration-300 ${
-                              isHovered ? "opacity-100 scale-110 text-mcd-gold" : "opacity-0"
-                            }`}
-                          />
-                        </a>
+                        </div>
                       )
                     })}
                   </div>
@@ -268,28 +250,15 @@ export function EnhancedDiscordInterface() {
           })}
         </div>
 
-        {/* Enhanced footer with join button */}
+        {/* Enhanced footer */}
         <div className="bg-gradient-to-r from-gray-800 to-gray-750 px-4 py-4 border-t border-gray-600 relative overflow-hidden">
           {/* Animated background */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/10 to-transparent transform -translate-x-full animate-shimmer"></div>
 
-          <div className="relative space-y-3">
+          <div className="relative">
             <p className="text-gray-300 text-xs text-center font-medium leading-relaxed">
               Learn cool stuff and ditch school because MC&D is your school!
             </p>
-            <a
-              href="https://discord.gg/your-server"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group/button w-full bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold hover:from-yellow-400 hover:via-mcd-gold hover:to-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-all duration-500 flex items-center justify-center gap-2 shadow-lg hover:shadow-2xl transform hover:scale-105 active:scale-95 relative overflow-hidden"
-            >
-              {/* Button shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full group-hover/button:translate-x-full transition-transform duration-1000"></div>
-
-              <MessageSquare className="w-5 h-5 transform group-hover/button:rotate-12 transition-transform duration-300" />
-              <span className="relative">Join Discord Server</span>
-              <Sparkles className="w-4 h-4 animate-spin" />
-            </a>
           </div>
         </div>
       </div>

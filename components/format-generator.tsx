@@ -251,7 +251,7 @@ export function FormatGenerator() {
                   Discord Username <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold">@</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
                   <input
                     type="text"
                     placeholder="your_discord_username"
@@ -295,7 +295,7 @@ export function FormatGenerator() {
                   Discord Username <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold">@</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
                   <input
                     type="text"
                     placeholder="your_discord_username"
@@ -360,7 +360,7 @@ export function FormatGenerator() {
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-foreground">Ping (Optional)</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold">@</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
                   <input
                     type="text"
                     placeholder="hicom_member (optional)"

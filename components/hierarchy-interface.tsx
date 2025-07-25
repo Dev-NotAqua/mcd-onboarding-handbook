@@ -44,7 +44,7 @@ export function HierarchyInterface() {
       color: "from-purple-300 to-pink-300",
       icon: Crown,
       level: "executive",
-      owner: "Moonveil",
+      owner: "VACANT",
     },
 
     // High Command
@@ -65,6 +65,15 @@ export function HierarchyInterface() {
       icon: Star,
       level: "high",
       owner: "Division Leader",
+    },
+    {
+      id: "fd",
+      name: "Finance Director",
+      points: 0,
+      color: "from-red-300 to-orange-300",
+      icon: Star,
+      level: "high",
+      owner: "VACANT",
     },
 
     // High Ranks

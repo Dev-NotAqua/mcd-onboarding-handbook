@@ -115,11 +115,11 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
   },
   {
     id: "hierarchy",
-    title: "Promotions",
+    title: "Hierarchy & Promotions",
     content: [
       {
         type: "text",
-        text: "How can you get promoted? This section will revolve around one channel once again, and will focus on how to request a promotion.",
+        text: "MC&D operates on a structured hierarchy system with specific rank names and positions. This section covers both the complete hierarchy structure and how to request promotions.",
       },
       {
         type: "hierarchy-interface",
@@ -128,8 +128,91 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
         type: "div",
       },
       {
+        type: "heading",
+        text: "Current Leadership & Positions",
+      },
+      {
         type: "text",
-        text: "First, head to the promotion-request channel. Read the pinned messages to understand the format and requirements. The format is also provided below:",
+        text: "Here are the current holders of key positions within MC&D:",
+      },
+      {
+        type: "heading",
+        text: "Executives",
+      },
+      {
+        type: "list",
+        items: [
+          'Company CEO - "Sun" - Marshall',
+          'Company COO - "Sky" - Carter',
+          'Company Advisor - VACANT - 3rd-in-Command',
+        ],
+      },
+      {
+        type: "heading",
+        text: "High Command - 200 HP",
+      },
+      {
+        type: "list",
+        items: [
+          'Head of Operations - Handpicked - Head High Command',
+          'Force Leader of the WD - "Moonveil" - Handpicked - DL',
+          'Finance Director of the AD - "Singularity" - Handpicked - CDL',
+        ],
+      },
+      {
+        type: "heading",
+        text: "High Ranks - 200 HP",
+      },
+      {
+        type: "list",
+        items: [
+          'Commander - 530 points + 10 deployments hosted - HR',
+          'General - 480 points - HR',
+          'Captain - 430 points + 3 deployments hosted - HR',
+          'Colonel - 380 points - HR',
+          'Major - 330 points + Pass High Rank Applications - HR',
+        ],
+      },
+      {
+        type: "heading",
+        text: "Middle Ranks - 175 HP",
+      },
+      {
+        type: "list",
+        items: [
+          'Lieutenant - 275 points - MR',
+          'Sergeant - 240 points - MR',
+          'Corporal - 205 points - MR',
+          'Specialist - 170 points - MR',
+          'Officer - 135 points + 3 self deployments - MR',
+        ],
+      },
+      {
+        type: "heading",
+        text: "Low Ranks - 150 HP",
+      },
+      {
+        type: "list",
+        items: [
+          'Senior Operative - 100 points - LR',
+          'Operative - 75 points - LR',
+          'Junior Operative - 50 points + 1 self deployment - LR',
+          'Trainee - 25 points - LR',
+          'Recruit - Pass Tryout/Application - LR',
+        ],
+      },
+      {
+        type: "callout",
+        calloutType: "warning",
+        text: "Low Ranks may not join the Accounting Division! You must reach Middle Rank or higher with division leader permission.",
+      },
+      {
+        type: "heading",
+        text: "How to Request Promotions",
+      },
+      {
+        type: "text",
+        text: "Ready for a promotion? Head to the promotion-request channel and follow the format below. Make sure you meet all point requirements and additional requirements before submitting your request.",
       },
       {
         type: "code-block",
@@ -143,7 +226,7 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       },
       {
         type: "text",
-        text: "Make sure you meet all the point requirements and any additional requirements (like self deployments or applications) before requesting your promotion. HICOM+ will review your request and promote you if you qualify.",
+        text: "HICOM+ will review your request and promote you if you qualify. Make sure to include proof of any additional requirements like self deployments or completed applications.",
       },
     ],
   },
@@ -240,87 +323,7 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       },
     ],
   },
-  {
-    id: "hierarchy-detailed",
-    title: "Global Hierarchy",
-    content: [
-      {
-        type: "text",
-        text: "MC&D operates on a structured hierarchy system with specific rank names and positions. Here's the complete global hierarchy structure:",
-      },
-      {
-        type: "heading",
-        text: "Executives",
-      },
-      {
-        type: "list",
-        items: [
-          'Company CEO - "Sun" - Marshall',
-          'Company COO - "Sky" - Carter',
-          'Company Advisor - "Blade" - 3rd-in-Command',
-        ],
-      },
-      {
-        type: "heading",
-        text: "High Command - 200 HP",
-      },
-      {
-        type: "list",
-        items: [
-          'Head of Operations - Handpicked - Head High Command',
-          'Force Leader of the WD - "Moonveil" - Handpicked - DL',
-          'Finance Director of the AD - "Singularity" - Handpicked - CDL',
-        ],
-      },
-      {
-        type: "heading",
-        text: "High Ranks - 200 HP",
-      },
-      {
-        type: "list",
-        items: [
-          'Commander - 530 points + 10 deployments hosted - HR',
-          'General - 480 points - HR',
-          'Captain - 430 points + 3 deployments hosted - HR',
-          'Colonel - 380 points - HR',
-          'Major - 330 points + Pass High Rank Applications - HR',
-        ],
-      },
-      {
-        type: "heading",
-        text: "Middle Ranks - 175 HP",
-      },
-      {
-        type: "list",
-        items: [
-          'Lieutenant - 275 points - MR',
-          'Sergeant - 240 points - MR',
-          'Corporal - 205 points - MR',
-          'Specialist - 170 points - MR',
-          'Officer - 135 points + 3 self deployments - MR',
-        ],
-      },
-      {
-        type: "heading",
-        text: "Low Ranks - 150 HP",
-      },
-      {
-        type: "list",
-        items: [
-          'Senior Operative - 100 points - LR',
-          'Operative - 75 points - LR',
-          'Junior Operative - 50 points + 1 self deployment - LR',
-          'Trainee - 25 points - LR',
-          'Recruit - Pass Tryout/Application - LR',
-        ],
-      },
-      {
-        type: "callout",
-        calloutType: "warning",
-        text: "Low Ranks may not join the Accounting Division! You must reach Middle Rank or higher with division leader permission.",
-      },
-    ],
-  },
+
   {
     id: "morphs",
     title: "Morphs",

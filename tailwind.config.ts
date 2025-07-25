@@ -11,8 +11,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "mcd-gold": "#D4AF37",
-        "mcd-dark": "#1a1a1a",
+        "mcd-gold": "#FFD700",
+        "mcd-purple": "#663399",
+        "mcd-dark": "#2F2F2F",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

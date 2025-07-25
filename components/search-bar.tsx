@@ -39,7 +39,7 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
 
       <div className="relative">
         <div
-          className={`absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 transition-all duration-200 ${
+          className={`absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 transition-all duration-200 z-20 ${
             isFocused ? "text-mcd-gold scale-110" : "text-muted-foreground"
           }`}
         >

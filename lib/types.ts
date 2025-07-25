@@ -4,6 +4,7 @@ export interface ContentItem {
     | "heading"
     | "list"
     | "code"
+    | "code-block"
     | "callout"
     | "image"
     | "discord-interface"
@@ -11,6 +12,7 @@ export interface ContentItem {
     | "trident-timer"
     | "hierarchy-interface"
     | "promotion-request"
+    | "div"
   text?: string
   items?: string[]
   code?: string
