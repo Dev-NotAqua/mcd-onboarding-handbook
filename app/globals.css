@@ -199,6 +199,48 @@ html {
   animation: glow 2s ease-in-out infinite;
 }
 
+/* Terminal-specific animations */
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 0.5s steps(40, end);
+}
+
+.animate-scanline {
+  animation: scanline 3s linear infinite;
+}
+
+.animate-flicker {
+  animation: flicker 0.1s infinite;
+}
+
 .animate-shimmer {
   background-size: 300% 100%;
   animation: shimmer-bg 3s ease-in-out infinite;
