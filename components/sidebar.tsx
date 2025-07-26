@@ -15,6 +15,7 @@ import {
   Gavel,
 } from "lucide-react"
 import type { HandbookSection } from "@/lib/types"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const sectionIcons = {
   welcome: Shield,
@@ -39,6 +40,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ sections, activeSection }: SidebarProps) {
+  const isMobile = useIsMobile()
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
@@ -47,7 +49,9 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
   }
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-80 bg-card/95 backdrop-blur-md border-r border-mcd-purple/20 overflow-hidden shadow-xl">
+    <aside
+      className={`fixed left-0 top-0 h-screen w-80 bg-card/95 backdrop-blur-md border-r border-mcd-purple/20 overflow-hidden shadow-xl transition-transform duration-300 ease-in-out ${isMobile ? "-translate-x-full" : "translate-x-0"}`}>
+
       <div className="h-full flex flex-col">
         {/* Logo/Header */}
         <div className="p-6 border-b border-mcd-purple/10 bg-gradient-to-br from-mcd-purple/5 to-transparent">
@@ -56,7 +60,7 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
               <div className="w-14 h-14 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-2xl flex items-center justify-center shadow-xl shadow-mcd-purple/20">
                 <span className="text-mcd-gold font-bold text-lg">MC&D</span>
               </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card"></div>
             </div>
             <div>
               <h1 className="text-xl font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent">
@@ -82,10 +86,10 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
                     ? "bg-gradient-to-r from-mcd-purple/15 via-mcd-purple/10 to-mcd-purple/5 text-mcd-purple border border-mcd-purple/20 shadow-lg shadow-mcd-purple/5 scale-[1.02]"
                     : "hover:bg-gradient-to-r hover:from-muted/60 hover:to-muted/30 text-muted-foreground hover:text-foreground hover:shadow-md hover:scale-[1.01]"
                 }`}
-                style={{ animationDelay: `${index * 50}ms` }}
+
               >
                 {/* Animated background effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/5 to-transparent transform -translate-x-full group-hover:translate-x-full"></div>
 
                 <Icon
                   className={`h-5 w-5 flex-shrink-0 transition-all duration-300 ${
@@ -99,7 +103,7 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
                 </span>
 
                 {/* Active indicator */}
-                {isActive && <div className="absolute right-4 w-2 h-2 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-full animate-pulse"></div>}
+                {isActive && <div className="absolute right-4 w-2 h-2 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-full"></div>}
               </button>
             )
           })}
@@ -109,7 +113,7 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
         <div className="p-4 border-t border-mcd-purple/10 bg-gradient-to-t from-mcd-purple/5 to-transparent">
           <div className="text-center space-y-3">
             <div className="flex items-center justify-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-xs text-green-600 dark:text-green-400 font-medium">Handbook Online</span>
             </div>
             <p className="text-xs text-muted-foreground">© 2025 Marshall, Carter & Darke Ltd.</p>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
 
 import { Sidebar } from "@/components/sidebar"
 import { MobileHeader } from "@/components/mobile-header"
@@ -9,6 +9,7 @@ import { SearchBar } from "@/components/search-bar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { HANDBOOK_SECTIONS } from "@/lib/constants"
 import { useActiveSection } from "@/hooks/use-active-section"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { FormatGenerator } from "@/components/format-generator"
 import QuickReference from "@/components/quick-reference"
 import { ErrorBoundary } from "@/components/error-boundary"
@@ -19,22 +20,31 @@ import { TerminalIntro } from "@/components/terminal-intro"
 
 export default function HandbookPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [isMobile, setIsMobile] = useState(false)
   const [showTerminal, setShowTerminal] = useState(true)
+  const isMobile = useIsMobile()
   const activeSection = useActiveSection()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  // Close menu on escape key and prevent body scroll
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMenuOpen(false)
     }
 
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
+    if (isMenuOpen) {
+      document.addEventListener("keydown", handleEscape)
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
 
     return () => {
-      window.removeEventListener("resize", checkMobile)
+      document.removeEventListener("keydown", handleEscape)
+      document.body.style.overflow = ""
     }
-  }, [])
+  }, [isMenuOpen])
+
+
 
   const handleTerminalComplete = () => {
     setShowTerminal(false)
@@ -67,7 +77,7 @@ export default function HandbookPage() {
           Skip to main content
         </a>
 
-        {isMobile && <MobileHeader sections={filteredSections} activeSection={activeSection} />}
+        {isMobile && <MobileHeader sections={filteredSections} activeSection={activeSection} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
 
         <div className="flex min-h-screen">
           <BackToTop />
@@ -97,7 +107,7 @@ export default function HandbookPage() {
                     <ParticleBackground />
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse-slow"></div>
                   <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/10 rounded-full blur-2xl animate-float"></div>
-                  <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+                  <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent/10 rounded-full blur-xl animate-float"></div>
                   </div>
                   <div className="relative z-10 space-y-6">
                     <div className="relative inline-block">
@@ -107,15 +117,15 @@ export default function HandbookPage() {
                       </div>
                     </div>
                     <div className="space-y-3 sm:space-y-4">
-                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif font-bold bg-gradient-to-r from-accent via-accent to-accent bg-clip-text text-transparent animate-slide-up leading-tight">
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif font-bold bg-gradient-to-r from-mcd-gold to-mcd-purple bg-clip-text text-transparent animate-slide-up leading-tight">
                         Welcome to MC&D
                       </h1>
-                      <div className="w-16 sm:w-20 lg:w-24 h-1 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto animate-scale-in" style={{ animationDelay: '0.5s' }}></div>
-                      <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up px-4 sm:px-0" style={{ animationDelay: '0.3s' }}>
+                      <div className="w-16 sm:w-20 lg:w-24 h-1 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto animate-scale-in"></div>
+                      <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up px-4 sm:px-0">
                         Your comprehensive guide to joining <span className="text-accent-foreground font-semibold">Marshall, Carter, and Darke Ltd.</span> - where profit meets prestige.
                       </p>
                     </div>
-                    <div className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
+                    <div className="animate-slide-up">
                       <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-accent/10 border border-accent/20 rounded-full text-xs sm:text-sm text-accent-foreground">
                       <div className="w-2 h-2 bg-gradient-to-br from-accent to-accent rounded-full animate-pulse"></div>
                         Ready to serve excellence
@@ -130,33 +140,33 @@ export default function HandbookPage() {
                   <div className="absolute inset-0 -z-10">
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-accent/10 via-accent/15 to-accent/10 rounded-full blur-3xl opacity-60 animate-pulse-slow"></div>
                     <div className="absolute top-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-2xl animate-float"></div>
-                    <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-accent/8 rounded-full blur-xl animate-float" style={{ animationDelay: '3s' }}></div>
+                    <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-accent/8 rounded-full blur-xl animate-float"></div>
                   </div>
                   
                   <div className="text-center mb-8 sm:mb-12 relative z-10">
                     <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 bg-gradient-to-r from-accent/10 via-accent/15 to-accent/10 rounded-full border border-accent/20 backdrop-blur-md animate-slide-up">
                       <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent rounded-full animate-pulse"></div>
                       <span className="text-sm font-medium text-accent-foreground">Professional Tools Suite</span>
-                      <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                      <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent rounded-full animate-pulse"></div>
                     </div>
                     
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent via-accent to-accent mb-4 sm:mb-6 animate-slide-up px-4 sm:px-0" style={{ animationDelay: '0.1s' }}>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent via-accent to-accent mb-4 sm:mb-6 animate-slide-up px-4 sm:px-0">
                       Quick Tools
                     </h2>
                     
-                    <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6 animate-scale-in" style={{ animationDelay: '0.2s' }}>
+                    <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6 animate-scale-in">
                       <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-r from-transparent to-accent"></div>
                       <div className="w-3 h-3 bg-gradient-to-br from-accent to-accent rounded-full animate-spin-slow"></div>
                       <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-l from-transparent to-accent"></div>
                     </div>
                     
-                    <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up px-4 sm:px-0" style={{ animationDelay: '0.3s' }}>
+                    <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up px-4 sm:px-0">
                       Streamline your MC&D operations with our <span className="text-accent-foreground font-semibold">intelligent format generators</span> and <span className="text-accent-foreground font-semibold">instant reference guides</span>
                     </p>
                   </div>
                   
                   <div className="relative z-10">
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 animate-slide-up">
                       {/* Format Generator Card */}
                       <div className="group relative">
                         <div className="relative bg-gradient-to-br from-background/80 via-background/90 to-accent/5 backdrop-blur-xl rounded-2xl border border-accent/30 p-1 shadow-2xl hover:shadow-accent/25 transition-all duration-700 overflow-hidden">
@@ -202,7 +212,7 @@ export default function HandbookPage() {
                     </div>
                   ) : (
                     filteredSections.map((section, index) => (
-                      <div key={section.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                      <div key={section.id} style={{ animation: `fade-in 0.6s ease-out ${index * 100}ms both` }}>
                         <ContentSection section={section} />
                       </div>
                     ))

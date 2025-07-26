@@ -68,6 +68,11 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animationDelay: {
+        '0': '0ms',
+        '150': '150ms',
+        '300': '300ms',
+      },
     },
   },
   plugins: [],

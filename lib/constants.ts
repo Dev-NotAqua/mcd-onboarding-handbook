@@ -2,22 +2,8 @@ import type { HandbookSection } from "./types"
 
 export const HANDBOOK_SECTIONS: HandbookSection[] = [
   {
-    id: "welcome",
-    title: "Welcome to Marshall, Carter & Darke Ltd.",
-    content: [
-      {
-        type: "text",
-        text: "Are you a decently newer fella to custom site RP? Confused on what to do now that you have passed into MC&D? Need general assistance?",
-      },
-      {
-        type: "text",
-        text: "Fear not… this document was crafted just to help you progress and settle down with our company.",
-      },
-    ],
-  },
-  {
     id: "verification",
-    title: "Verify",
+    title: "Verified",
     content: [
       {
         type: "text",
@@ -72,50 +58,86 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
     ],
   },
   {
-    id: "channels",
-    title: "Discord Channels Guide",
+    id: "shift-logging",
+    title: "Self-Deployments and Points",
     content: [
       {
         type: "text",
-        text: "Navigate MC&D's Discord server efficiently with this comprehensive channel guide. Each channel serves a specific purpose in our corporate structure.",
+        text: "How can you log a shift? This section will revolve around two channels once again, and will focus on how to run a self deployment and also request points for that hard work.",
       },
       {
-        type: "discord-interface",
+        type: "text",
+        text: "First, create a post designated for yourself in the shift-logs channel. Name it with your codename in \"s. The format to use for every single log in your own post, is in the pinned post of the shift-logs channel, but also below:",
       },
       {
-        type: "heading",
-        text: "Educational & Social Channels",
+        type: "code-block",
+        language: "text",
+        code: "FORMAT:\nCodename: \nCurrent Rank: \nDivision: \nTime: \nTasks/Notes: \nProof: (1+ Screenshots w/ Trident Timer)",
+      },
+      {
+        type: "text",
+        text: "Your Trident Timer can be begun in your shift-log post, using the command /shift manage command. The bot will allow you to begin your shift, and if the command is run again, give you the option to pause and take a break or end the shift. Handy right? This is what your shift will look like after you end it (ignore the 3 seconds 😭).",
+      },
+      {
+        type: "text",
+        text: "Be sure to remain productive throughout your shifts; live up to MC&D's purpose and reputation! Keep in mind, shifts do not include time spent in an official deployment, only time spent alone. USe the \"break\" feature of the bot to solve that.",
+      },
+      {
+        type: "text",
+        text: "Once you have logged your shift, it is time to request points for that shift. Head over to the point-request channel, and use the format in pinned messages over there. If not found, it is listed below.",
+      },
+      {
+        type: "code-block",
+        language: "text",
+        code: "FORMAT:\nUsername:\nDivision:\nRank:\nPoints Requested:\nShift Log Link:\nPing:",
+      },
+      {
+        type: "text",
+        text: "Be sure to read pinned chats for rules of this complex channel as well! Note that for the shift log link, you must provide the EXACT shift log message within your individual shift post so those who are giving you points, can click on the link and head straight to the log. Find the following button when holding shift and your cursor is above your log message.",
+      },
+      {
+        type: "text",
+        text: "Once the individual message link is copied you may add it for your Shift Log Link in the format.",
+      },
+    ],
+  },
+  {
+    id: "morphs",
+    title: "Morphs",
+    content: [
+      {
+        type: "text",
+        text: "We are getting to a little more complex step of settling into factions, morphs. Hopefully you are competent enough to understand the process.",
+      },
+      {
+        type: "text",
+        text: "Morphs are the way you represent your faction while on-site, and deploy. Let me show you how to make your morph, and also how to get morphed on-site. This process revolves around the following two channels.",
       },
       {
         type: "list",
-        items: ["#math-class - Mathematical discussions", "#count-to-503 - Community counting game", "#english-class - Language and communication", "#karaoke - Entertainment and team building"],
+        items: [
+          "Step 1: Take the LR Morph format from morph-formats and copy it",
+          "Step 2: Create a post in morphs-locker and name it after your codename (in \"s)",
+          "Step 3: Paste the LR Morph format into the post details (DON'T SUBMIT YET!)",
+          "Step 4: Change every \"user\" in the block of text, to your Roblox Username",
+          "Step 5: Change \"Rank\" in the :permrtag command to Recruit",
+          "Step 6: Change \"Codename\" in the :permntag command to your accepted codename",
+          "Step 7: Submit the locker post, await a HICOM+ to stamp the \"Approved\" tag",
+        ],
       },
       {
-        type: "heading",
-        text: "Information Channels",
+        type: "text",
+        text: "Now how exactly do you get morphed on-site? Well, MC&D does grant mod perms to HR+, so if you see an HR+ online then they can morph you if they have received perms yet. If there is no HR+ on-site, then you have no choice but to resort to getting a morpher. How do we get one? Go to Site 64's main server and find the following channel.",
       },
       {
-        type: "list",
-        items: ["#announcements - Official company updates", "#sub-announcements - Departmental notices", "#qna - Questions and assistance"],
-      },
-      {
-        type: "heading",
-        text: "Community Channels",
-      },
-      {
-        type: "list",
-        items: ["#hicom-shitposting - Leadership casual discussions", "#memory-lane - Company history and memorable moments"],
-      },
-      {
-        type: "callout",
-        calloutType: "info",
-        text: "Don't hesitate to ask questions! Use the #qna channel for any inquiries about MC&D operations.",
+        type: "text",
+        text: "Once you have reached this channel, copy and paste your morph in your locker and say \"!morpher\" in the in-game communications radio. Soon enough, with patience a member of the GMT (Game Moderation Team) or a different staff member, will teleport to you and use the morph you sent in the morphs channel, and they will morph you so you are ready to self deploy!",
       },
     ],
   },
   {
     id: "hierarchy",
-    title: "Hierarchy & Promotions",
+    title: "Hierarchy and Points",
     content: [
       {
         type: "text",
@@ -231,137 +253,50 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
     ],
   },
   {
-    id: "shift-logging",
-    title: "Self Deploying and Points",
+    id: "channels",
+    title: "Discord Channels Guide",
     content: [
       {
         type: "text",
-        text: "How can you log a shift? This section will revolve around two channels once again, and will focus on how to run a self deployment and also request points for that hard work.",
+        text: "Navigate MC&D's Discord server efficiently with this comprehensive channel guide. Each channel serves a specific purpose in our corporate structure.",
       },
       {
-        type: "text",
-        text: "First, create a post designated for yourself in the shift-logs channel. Name it with your codename in \"s. The format to use for every single log in your own post, is in the pinned post of the shift-logs channel, but also below:",
-      },
-      {
-        type: "code-block",
-        language: "text",
-        code: "FORMAT:\nCodename: \nCurrent Rank: \nDivision: \nTime: \nTasks/Notes: \nProof: (1+ Screenshots w/ Trident Timer)",
-      },
-      {
-        type: "text",
-        text: "Your Trident Timer can be begun in your shift-log post, using the command /shift manage command. The bot will allow you to begin your shift, and if the command is run again, give you the option to pause and take a break or end the shift. Handy right? This is what your shift will look like after you end it (ignore the 3 seconds 😭).",
-      },
-      {
-        type: "text",
-        text: "Be sure to remain productive throughout your shifts; live up to MC&D's purpose and reputation! Keep in mind, shifts do not include time spent in an official deployment, only time spent alone. USe the \"break\" feature of the bot to solve that.",
-      },
-      {
-        type: "text",
-        text: "Once you have logged your shift, it is time to request points for that shift. Head over to the point-request channel, and use the format in pinned messages over there. If not found, it is listed below.",
-      },
-      {
-        type: "code-block",
-        language: "text",
-        code: "FORMAT:\nUsername:\nDivision:\nRank:\nPoints Requested:\nShift Log Link:\nPing:",
-      },
-      {
-        type: "text",
-        text: "Be sure to read pinned chats for rules of this complex channel as well! Note that for the shift log link, you must provide the EXACT shift log message within your individual shift post so those who are giving you points, can click on the link and head straight to the log. Find the following button when holding shift and your cursor is above your log message.",
-      },
-      {
-        type: "text",
-        text: "Once the individual message link is copied you may add it for your Shift Log Link in the format.",
-      },
-    ],
-  },
-  {
-    id: "points",
-    title: "Point System",
-    content: [
-      {
-        type: "text",
-        text: "Points are the primary currency for advancement within Marshall, Carter & Darke. Understanding the point system is crucial for your progression through our corporate hierarchy.",
+        type: "discord-interface",
       },
       {
         type: "heading",
-        text: "Official Events (5 points per 30 minutes)",
+        text: "Educational & Social Channels",
       },
       {
         type: "list",
-        items: ["Deployments (hosted by HR+)", "Training Sessions (hosted by HR+)", "Tryout Supervisions", "Special Operations"],
-      },
-      {
-        type: "callout",
-        calloutType: "success",
-        text: "Points are automatically awarded after the event host logs the session. No additional action required from attendees.",
+        items: ["#math-class - Mathematical discussions", "#count-to-503 - Community counting game", "#english-class - Language and communication", "#karaoke - Entertainment and team building"],
       },
       {
         type: "heading",
-        text: "Self Deployments (3 points per 30 minutes)",
+        text: "Information Channels",
       },
       {
         type: "list",
-        items: [
-          "Must use Trident Timer system for accurate logging",
-          "Requires screenshot evidence of activities",
-          "Must submit properly formatted point requests",
-          "Submit in designated logging channels only",
-        ],
+        items: ["#announcements - Official company updates", "#sub-announcements - Departmental notices", "#qna - Questions and assistance"],
       },
       {
         type: "heading",
-        text: "Special Recognition",
+        text: "Community Channels",
       },
       {
         type: "list",
-        items: ['Anomalous Asset Interrogations - 5 points (flat rate)', 'Exceptional Performance Bonuses - Variable points'],
+        items: ["#hicom-shitposting - Leadership casual discussions", "#memory-lane - Company history and memorable moments"],
       },
       {
         type: "callout",
         calloutType: "info",
-        text: "Calculation Example: 2.5 hour official deployment = 25 points | 1.5 hour self deployment = 9 points",
+        text: "Don't hesitate to ask questions! Use the #qna channel for any inquiries about MC&D operations.",
       },
     ],
   },
-
   {
-    id: "morphs",
-    title: "Morphs",
-    content: [
-      {
-        type: "text",
-        text: "We are getting to a little more complex step of settling into factions, morphs. Hopefully you are competent enough to understand the process.",
-      },
-      {
-        type: "text",
-        text: "Morphs are the way you represent your faction while on-site, and deploy. Let me show you how to make your morph, and also how to get morphed on-site. This process revolves around the following two channels.",
-      },
-      {
-        type: "list",
-        items: [
-          "Step 1: Take the LR Morph format from morph-formats and copy it",
-          "Step 2: Create a post in morphs-locker and name it after your codename (in \"s)",
-          "Step 3: Paste the LR Morph format into the post details (DON'T SUBMIT YET!)",
-          "Step 4: Change every \"user\" in the block of text, to your Roblox Username",
-          "Step 5: Change \"Rank\" in the :permrtag command to Recruit",
-          "Step 6: Change \"Codename\" in the :permntag command to your accepted codename",
-          "Step 7: Submit the locker post, await a HICOM+ to stamp the \"Approved\" tag",
-        ],
-      },
-      {
-        type: "text",
-        text: "Now how exactly do you get morphed on-site? Well, MC&D does grant mod perms to HR+, so if you see an HR+ online then they can morph you if they have received perms yet. If there is no HR+ on-site, then you have no choice but to resort to getting a morpher. How do we get one? Go to Site 64's main server and find the following channel.",
-      },
-      {
-        type: "text",
-        text: "Once you have reached this channel, copy and paste your morph in your locker and say \"!morpher\" in the in-game communications radio. Soon enough, with patience a member of the GMT (Game Moderation Team) or a different staff member, will teleport to you and use the morph you sent in the morphs channel, and they will morph you so you are ready to self deploy!",
-      },
-    ],
-  },
-
-  {
-    id: "divisions-detailed",
-    title: "Division Details",
+    id: "divisions",
+    title: "Divisions",
     content: [
       {
         type: "text",
@@ -460,195 +395,6 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       },
     ],
   },
-
-  {
-    id: "clearance",
-    title: "Clearance & Site Access",
-    content: [
-      {
-        type: "text",
-        text: "MC&D is a Neutral Group of Interest with Level-2 Clearance access to various SCP Foundation sites.",
-      },
-      {
-        type: "heading",
-        text: "Current Site Access",
-      },
-      {
-        type: "text",
-        text: "Site-64:",
-      },
-      {
-        type: "list",
-        items: ["L-2 Clearance: LR, MR, HR, HICOM, EXCOM"],
-      },
-      {
-        type: "text",
-        text: "Site-81:",
-      },
-      {
-        type: "list",
-        items: ["L-2 Clearance: LR, MR, HR, HICOM, EXCOM"],
-      },
-      {
-        type: "callout",
-        calloutType: "info",
-        text: "Clearance levels may vary by site. Always check the specific site's Faction Hub for current regulations and morph requirements.",
-      },
-      {
-        type: "heading",
-        text: "CanRK Authority",
-      },
-      {
-        type: "text",
-        text: "CanRK (Can Rank Kill) permissions by division and rank:",
-      },
-      {
-        type: "list",
-        items: [
-          "HICOM+: Full CanRK authority in both divisions",
-          "HR: Full CanRK authority in both divisions",
-          "MR: CanRK authority in Wrecker Division only",
-          "LR: CanRK authority in Wrecker Division only",
-        ],
-      },
-    ],
-  },
-  {
-    id: "regulations",
-    title: "Regulations & Punishment System",
-    content: [
-      {
-        type: "text",
-        text: "MC&D maintains strict standards of professionalism and conduct. Violations result in a progressive punishment system.",
-      },
-      {
-        type: "heading",
-        text: "Strike System",
-      },
-      {
-        type: "list",
-        items: [
-          "Strike 1 - You've made a mistake and have been given reasons, DO NOT repeat it again whatsoever",
-          "Strike 2 - You are on thin ice… be very careful, think before you do",
-          "Strike 3 - Removal from MC&D, you may join the faction again (progress resets)",
-          "Blacklist - You may not join the faction again, usually occurs when you are the reason MC&D gets striked or warned in the Faction Hub of a site",
-        ],
-      },
-      {
-        type: "callout",
-        calloutType: "warning",
-        text: "Some strikes are appealable, and some are not. To appeal a strike, DM the person who logged the punishment.",
-      },
-      {
-        type: "heading",
-        text: "Codename Regulations",
-      },
-      {
-        type: "list",
-        items: [
-          "You may not have an inappropriate codename",
-          "You may not have a codename of an already existing member of the company",
-          "You have the freedom to change your codename at any point just be re-requesting it",
-          "Try not to change your codename if you are already well-known for it",
-        ],
-      },
-      {
-        type: "heading",
-        text: "General Server Rules",
-      },
-      {
-        type: "list",
-        items: [
-          "Follow Discord's Terms of Service",
-          "Be respectful with all members",
-          "No death threats, sexism, hate speech, racism, or politics",
-          "No doxxing or advertising",
-          "No NSFW content or spamming",
-          "Use English only",
-          "Use designated channels for designated tasks",
-          "Report punishable behavior to HICOM+ immediately",
-        ],
-      },
-    ],
-  },
-  {
-    id: "leadership",
-    title: "Leadership & Medal System",
-    content: [
-      {
-        type: "text",
-        text: "Understanding the leadership structure and recognition system available in MC&D.",
-      },
-      {
-        type: "heading",
-        text: "Leadership Positions",
-      },
-      {
-        type: "text",
-        text: "Faction Overseers:",
-      },
-      {
-        type: "list",
-        items: [
-          'Company CEO - FL - "Marshall" / "Sun"',
-          'Company COO - CFL - "Darke" / "Sky"',
-          "Company Advisor - ADV - VACANT",
-        ],
-      },
-      {
-        type: "text",
-        text: "High Command:",
-      },
-      {
-        type: "list",
-        items: [
-          'Head of Operations - HoO - "Guy"',
-          'Force Leader of the WD - "Moonveil"',
-          'Finance Director of the AD - "Singularity"',
-        ],
-      },
-      {
-        type: "heading",
-        text: "HICOM vs HR Differences",
-      },
-      {
-        type: "text",
-        text: "High Command abilities:",
-      },
-      {
-        type: "list",
-        items: [
-          "Can Fulfill Point/Promotion Requests",
-          "Can Log Punishments",
-          "Can Create Activity Checks",
-          "Can Add Roles to Users",
-          "Discord Permissions",
-          "On-Site Mod Permissions",
-          "Can Host Tryouts/Deployments/Trainings",
-          "Doesn't Have Activity Quotas",
-        ],
-      },
-      {
-        type: "text",
-        text: "High Rank abilities:",
-      },
-      {
-        type: "list",
-        items: [
-          "Must Request Points for themselves and Event Attendees",
-          "Have Activity Quotas",
-          "Cannot Log Punishments",
-          "Cannot Create Activity Checks",
-          "Cannot Add Roles to Users",
-          "Can Host Tryouts/Deployments/Trainings",
-        ],
-      },
-      {
-        type: "text",
-        text: "MC&D recognizes exceptional service through various medals and achievements. Check the #medal-info channel for current available medals and their requirements.",
-      },
-    ],
-  },
   {
     id: "conclusion",
     title: "Final Steps",
@@ -692,6 +438,10 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         type: "text",
         text: "This is the end of the basic onboarding process. You should now have a good understanding of how MC&D operates and what is expected of you as a member.",
+      },
+      {
+        type: "text",
+        text: "For more detailed information about regulations, clearance levels, leadership structure, and other advanced topics, please refer to the comprehensive MC&D Handbook available in our Discord server.",
       },
       {
         type: "text",

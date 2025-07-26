@@ -28,9 +28,9 @@ const LogoCanvas = () => {
           
           {/* Decorative elements */}
           <div className="flex justify-center mt-2 space-x-1">
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-0" />
+            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-150" />
+            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-300" />
           </div>
         </div>
       </div>

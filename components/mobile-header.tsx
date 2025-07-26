@@ -26,8 +26,14 @@ interface MobileHeaderProps {
   activeSection: string
 }
 
-export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+interface MobileHeaderProps {
+  sections: HandbookSection[]
+  activeSection: string
+  isMenuOpen: boolean
+  setIsMenuOpen: (isOpen: boolean) => void
+}
+
+export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpen }: MobileHeaderProps) {
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -45,24 +51,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
     }
   }
 
-  // Close menu on escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMenuOpen(false)
-    }
-
-    if (isMenuOpen) {
-      document.addEventListener("keydown", handleEscape)
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape)
-      document.body.style.overflow = ""
-    }
-  }, [isMenuOpen])
+  
 
   return (
     <>
@@ -74,7 +63,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
                 <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-mcd-gold font-bold text-sm">MC&D</span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
               </div>
               <div>
                 <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent">
@@ -123,7 +112,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
                           ? "bg-gradient-to-r from-mcd-purple/15 to-mcd-purple/5 text-mcd-purple border border-mcd-purple/20 shadow-lg scale-[1.02]"
                           : "text-muted-foreground hover:text-foreground hover:bg-gradient-to-r hover:from-muted/50 hover:to-muted/20 hover:scale-[1.01]"
                       }`}
-                      style={{ animationDelay: `${index * 50}ms` }}
+
                       aria-current={isActive ? "page" : undefined}
                       aria-label={`Navigate to ${section.title} section`}
                     >

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, ExternalLink } from "lucide-react"
+import { useIsMobile } from "@/hooks/use-mobile"
 import type { HandbookSection } from "@/lib/types"
 import { CodeBlock } from "@/components/code-block"
 import { Callout } from "@/components/callout"
@@ -16,6 +17,7 @@ interface ContentSectionProps {
 }
 
 export function ContentSection({ section }: ContentSectionProps) {
+  const isMobile = useIsMobile()
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -51,7 +53,7 @@ export function ContentSection({ section }: ContentSectionProps) {
             isExpanded ? "max-h-none opacity-100 visible" : "max-h-0 opacity-0 invisible overflow-hidden"
           }`}
         >
-          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <div className={`p-4 sm:p-6 space-y-4 sm:space-y-6 ${isMobile ? "px-4" : "px-6"}`}>
             {section.content.map((item, index) => (
               <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 {item.type === "text" && (

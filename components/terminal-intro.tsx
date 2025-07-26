@@ -12,130 +12,163 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
   const [isComplete, setIsComplete] = useState(false)
   const [canSkip, setCanSkip] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [shake, setShake] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number | null>(null)
+  const startTimeRef = useRef<number>(0)
 
-  const terminalLines = [
-    { text: "MC&D TERMINAL v3.14.159", delay: 500 },
-    { text: "Copyright © Marshall, Carter & Darke Ltd.", delay: 300 },
-    { text: "", delay: 200 },
-    { text: "Initializing secure connection...", delay: 400 },
-    { text: "[████████████████████████████████] 100%", delay: 800 },
-    { text: "Connection established.", delay: 300 },
-    { text: "", delay: 200 },
-    { text: "Loading employee onboarding system...", delay: 400 },
-    { text: "Authenticating credentials...", delay: 500 },
-    { text: "Access granted.", delay: 300 },
-    { text: "", delay: 200 },
-    { text: "Welcome to Marshall, Carter & Darke Ltd.", delay: 400 },
-    { text: "Where profit meets prestige.", delay: 500 },
-    { text: "", delay: 300 },
-    { text: "Launching handbook interface...", delay: 600 }
-  ]
+  const terminalLines = useRef([
+    { text: "MC&D TERMINAL v3.14.159", duration: 500 },
+    { text: "Copyright © Marshall, Carter & Darke Ltd.", duration: 300 },
+    { text: "", duration: 200 },
+    { text: "Initializing secure connection...", duration: 400 },
+    { text: "[████████████████████████████████] 100%", duration: 800 },
+    { text: "Connection established.", duration: 300 },
+    { text: "", duration: 200 },
+    { text: "Loading employee onboarding system...", duration: 400 },
+    { text: "Authenticating credentials...", duration: 500 },
+    { text: "Access granted.", duration: 300 },
+    { text: "", duration: 200 },
+    { text: "Welcome to Marshall, Carter & Darke Ltd.", duration: 400 },
+    { text: "Where profit meets prestige.", duration: 500 },
+    { text: "", duration: 300 },
+    { text: "INITIATING LAUNCH SEQUENCE...", duration: 400 },
+    { text: "3...", duration: 800 },
+    { text: "2...", duration: 800 },
+    { text: "1...", duration: 800 },
+    { text: "LAUNCHING HANDBOOK INTERFACE...", duration: 1000 }
+  ]).current
+
+  const totalDuration = useRef(
+    terminalLines.reduce((sum, line) => sum + line.duration, 0) + 1000
+  ).current
 
   const handleSkip = useCallback(() => {
-    if (canSkip) {
+    if (canSkip && animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
       onComplete()
     }
   }, [canSkip, onComplete])
 
   useEffect(() => {
-    // Allow skipping after 2 seconds
-    const skipTimer = setTimeout(() => {
-      setCanSkip(true)
-    }, 2000)
-
-    return () => clearTimeout(skipTimer)
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
   }, [])
 
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (canSkip) {
-        handleSkip()
-      }
-    }
+    const timer = setTimeout(() => setCanSkip(true), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
-    const handleClick = () => {
-      if (canSkip) {
-        handleSkip()
-      }
-    }
+  useEffect(() => {
+    if (!canSkip) return
 
-    window.addEventListener('keydown', handleKeyPress)
-    window.addEventListener('click', handleClick)
-
+    const handler = () => handleSkip()
+    window.addEventListener('keydown', handler)
+    window.addEventListener('click', handler)
     return () => {
-      window.removeEventListener('keydown', handleKeyPress)
-      window.removeEventListener('click', handleClick)
+      window.removeEventListener('keydown', handler)
+      window.removeEventListener('click', handler)
     }
   }, [canSkip, handleSkip])
 
   useEffect(() => {
-    if (currentLine < terminalLines.length) {
-      // Calculate progress
-      setProgress(Math.round((currentLine / terminalLines.length) * 100))
+    startTimeRef.current = performance.now()
+    
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - startTimeRef.current
+      
+      setProgress(Math.min(100, (elapsed / totalDuration) * 100))
+      
+      let cumulativeTime = 0
+      let currentIndex = terminalLines.length
+      
+      for (let i = 0; i < terminalLines.length; i++) {
+        cumulativeTime += terminalLines[i].duration
+        if (elapsed < cumulativeTime) {
+          currentIndex = i
+          break
+        }
+      }
+      
+      setCurrentLine(currentIndex)
 
-      const timer = setTimeout(() => {
-        setCurrentLine(prev => prev + 1)
-      }, terminalLines[currentLine]?.delay || 300)
-
-      return () => clearTimeout(timer)
-    } else if (!isComplete) {
-      setIsComplete(true)
-      const completeTimer = setTimeout(() => {
-        onComplete()
-      }, 1000)
-
-      return () => clearTimeout(completeTimer)
+      // Trigger shake animation during countdown
+      if (terminalLines[currentIndex]?.text.includes("LAUNCHING")) {
+        setShake(true)
+        setTimeout(() => setShake(false), 2000)
+      }
+      
+      if (elapsed >= totalDuration && !isComplete) {
+        setIsComplete(true)
+        setTimeout(onComplete, 500)
+        return
+      }
+      
+      if (elapsed < totalDuration) {
+        animationRef.current = requestAnimationFrame(animate)
+      }
     }
-  }, [currentLine, terminalLines, onComplete, isComplete])
+    
+    animationRef.current = requestAnimationFrame(animate)
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current)
+    }
+  }, [terminalLines, totalDuration, isComplete, onComplete])
 
   useEffect(() => {
-    const cursorTimer = setInterval(() => {
-      setShowCursor(prev => !prev)
-    }, 500)
-
-    return () => clearInterval(cursorTimer)
+    const timer = setInterval(() => setShowCursor(prev => !prev), 500)
+    return () => clearInterval(timer)
   }, [])
+
+  const getLineStyle = (text: string) => {
+    if (text.includes("Marshall, Carter & Darke")) return "text-mcd-gold font-bold text-lg"
+    if (text.includes("100%")) return "text-green-400 font-bold"
+    if (text.includes("granted") || text.includes("established")) return "text-green-400 font-semibold"
+    if (text.includes("profit meets prestige")) return "text-mcd-gold-light italic"
+    if (text.includes("LAUNCH") || text.includes("INITIATING")) return "text-red-500 font-bold"
+    if (text.match(/[123]\.\.\.$/)) return "text-yellow-500 font-bold text-xl"
+    return "text-green-400"
+  }
 
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4 cursor-pointer overflow-hidden"
+      className={`fixed inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4 cursor-pointer overflow-hidden z-50 ${shake ? 'animate-shake' : ''}`}
       onClick={handleSkip}
     >
-      {/* Animated background particles */}
       <div className="absolute inset-0 z-0">
-        {Array.from({ length: 30 }).map((_, i) => (
+        {Array.from({ length: 20 }).map((_, i) => (
           <div 
             key={i}
-            className="absolute rounded-full bg-mcd-gold/10 animate-pulse"
+            className="absolute rounded-full bg-mcd-gold/10"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 6 + 2}px`,
-              height: `${Math.random() * 6 + 2}px`,
+              width: `${Math.random() * 4 + 2}px`,
+              height: `${Math.random() * 4 + 2}px`,
+              animationName: 'pulse',
               animationDuration: `${Math.random() * 3 + 2}s`,
-              animationDelay: `${i * 0.1}s`
+              animationIterationCount: 'infinite',
+              animationDelay: `${i * 0.2}s`
             }}
           />
         ))}
       </div>
       
-      {/* Main terminal container */}
-      <div className="w-full max-w-4xl z-10">
-        {/* Terminal Header */}
+      <div className={`w-full max-w-4xl z-10 flex flex-col ${shake ? 'animate-glow' : ''}`} style={{ height: 'calc(100vh - 2rem)' }}>
         <div className="bg-gradient-to-r from-mcd-purple-dark to-mcd-purple rounded-t-xl p-3 flex items-center gap-2 shadow-lg">
           <div className="flex gap-1.5">
-            <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+            {['bg-red-400', 'bg-yellow-400', 'bg-green-400'].map((color, i) => (
+              <div key={i} className={`w-2.5 h-2.5 ${color} rounded-full`} />
+            ))}
           </div>
           <span className="ml-3 text-mcd-gold-light text-sm font-semibold tracking-wider">
             MC&D TERMINAL v3.14.159
           </span>
           <div className="ml-auto flex items-center gap-3">
             <div className="text-mcd-gold text-xs font-medium">
-              {progress}% COMPLETE
+              {Math.round(progress)}% COMPLETE
             </div>
             <div className="text-mcd-gold-light/70 text-xs">
               {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -143,52 +176,38 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
           </div>
         </div>
         
-        {/* Terminal Body */}
-        <div className="bg-gradient-to-br from-gray-900 to-black rounded-b-xl p-6 min-h-[500px] border border-mcd-gold/30 shadow-[0_0_20px_rgba(212,175,55,0.2)] relative overflow-hidden">
-          {/* Scanline effect */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mcd-gold/5 to-transparent animate-scanline h-[2px]"></div>
+        <div className="bg-gradient-to-br from-gray-900 to-black rounded-b-xl p-6 flex-grow border border-mcd-gold/30 shadow-[0_0_20px_rgba(212,175,55,0.2)] relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div 
+              className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-transparent via-mcd-gold/10 to-transparent"
+              style={{
+                animation: 'scan 4s linear infinite',
+                animationDelay: '1s'
+              }}
+            />
           </div>
           
-          {/* Glow effect */}
-          <div className="absolute -inset-4 bg-mcd-gold/5 blur-xl rounded-xl z-0 pointer-events-none"></div>
-          
-          {/* Content */}
-          <div className="space-y-2 relative z-10">
-            {terminalLines.slice(0, currentLine).map((line, index) => (
-              <div key={index} className="flex items-center animate-fade-in">
-                {index === 0 && (
+          <div className="h-full flex flex-col justify-between">
+            <div className="space-y-2">
+              {terminalLines.slice(0, currentLine).map((line, index) => (
+                <div key={index} className="flex items-center">
+                  {index === 0 && <span className="text-mcd-gold mr-2 font-bold">$</span>}
+                  <span className={`${getLineStyle(line.text)} tracking-wide animate-fadeIn`}>
+                    {line.text}
+                  </span>
+                </div>
+              ))}
+              
+              {currentLine < terminalLines.length && (
+                <div className="flex items-center">
                   <span className="text-mcd-gold mr-2 font-bold">$</span>
-                )}
-                <span className={`${
-                  line.text.includes("Marshall, Carter & Darke") 
-                    ? "text-mcd-gold font-bold text-lg" 
-                    : line.text.includes("100%") 
-                    ? "text-green-400 font-bold" 
-                    : line.text.includes("granted") || line.text.includes("established")
-                    ? "text-green-400 font-semibold"
-                    : line.text.includes("profit meets prestige")
-                    ? "text-mcd-gold-light italic"
-                    : line.text.includes("Launching")
-                    ? "text-cyan-300 font-semibold"
-                    : "text-green-400"
-                } tracking-wide`}>
-                  {line.text}
-                </span>
-              </div>
-            ))}
+                  <span className={`inline-block w-3 h-5 bg-mcd-gold ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
+                </div>
+              )}
+            </div>
             
-            {/* Cursor */}
-            {currentLine < terminalLines.length && (
-              <div className="flex items-center">
-                <span className="text-mcd-gold mr-2 font-bold">$</span>
-                <span className={`inline-block w-3 h-5 bg-mcd-gold ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}></span>
-              </div>
-            )}
-            
-            {/* Completion message */}
             {isComplete && (
-              <div className="mt-8 text-center space-y-4 animate-pulse">
+              <div className="mt-auto mb-8 text-center space-y-4 animate-pulse">
                 <div className="text-mcd-gold text-xl font-bold tracking-wider">
                   ► PRESS ANY KEY TO CONTINUE ◄
                 </div>
@@ -199,36 +218,61 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
             )}
           </div>
           
-          {/* Progress bar */}
           <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-800">
             <div 
-              className="h-full bg-gradient-to-r from-mcd-gold to-yellow-500 transition-all duration-500"
+              className="h-full bg-gradient-to-r from-mcd-gold to-yellow-500 transition-all duration-300"
               style={{ width: `${progress}%` }}
-            ></div>
+            />
           </div>
         </div>
         
-        {/* Terminal footer */}
-        <div className="mt-4 text-center text-mcd-gold-light/50 text-xs tracking-wider">
+        <div className="mt-2 text-center text-mcd-gold-light/50 text-xs tracking-wider">
           CONFIDENTIAL - FOR AUTHORIZED PERSONNEL ONLY
         </div>
       </div>
       
-      {/* Corner decorations */}
-      <div className="absolute top-6 left-6 w-6 h-6 border-t border-l border-mcd-gold/30"></div>
-      <div className="absolute top-6 right-6 w-6 h-6 border-t border-r border-mcd-gold/30"></div>
-      <div className="absolute bottom-6 left-6 w-6 h-6 border-b border-l border-mcd-gold/30"></div>
-      <div className="absolute bottom-6 right-6 w-6 h-6 border-b border-r border-mcd-gold/30"></div>
-      
-      {/* Skip hint */}
       {canSkip && !isComplete && (
-        <div className="absolute bottom-8 right-8 flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full border border-mcd-gold/30">
-          <div className="w-2 h-2 bg-mcd-gold rounded-full animate-pulse"></div>
+        <div className="absolute bottom-8 right-8 flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full border border-mcd-gold/30 animate-fadeIn">
+          <div className="w-2 h-2 bg-mcd-gold rounded-full animate-pulse" />
           <div className="text-mcd-gold text-xs tracking-wider">
             PRESS ANY KEY TO SKIP
           </div>
         </div>
       )}
+      
+      <style jsx global>{`
+        @keyframes scan {
+          0% { transform: translateY(-100px); }
+          100% { transform: translateY(100vh); }
+        }
+        @keyframes pulse {
+          0% { opacity: 0.2; }
+          50% { opacity: 0.8; }
+          100% { opacity: 0.2; }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+          animation: shake 0.1s ease-in-out infinite;
+        }
+        .animate-glow {
+          animation: glow 2s ease-in-out infinite;
+        }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+          50% { box-shadow: 0 0 40px rgba(212,175,55,0.4); }
+        }
+      `}</style>
     </div>
   )
 }
