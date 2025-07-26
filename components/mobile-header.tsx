@@ -66,18 +66,18 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-mcd-gold/20 shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-mcd-purple/20 shadow-lg">
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-mcd-gold via-yellow-400 to-mcd-gold rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-black font-bold text-sm">MC&D</span>
+                <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-mcd-gold font-bold text-sm">MC&D</span>
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-gold to-yellow-400 bg-clip-text text-transparent">
+                <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent">
                   MC&D Handbook
                 </h1>
                 <p className="text-xs text-muted-foreground font-medium">Onboarding Guide</p>
@@ -86,7 +86,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative p-2.5 rounded-xl bg-gradient-to-br from-muted/80 to-muted/60 hover:from-muted hover:to-muted/80 border border-muted-foreground/20 hover:border-mcd-gold/50 transition-all duration-300 shadow-lg group"
+              className="relative p-2.5 rounded-xl bg-gradient-to-br from-muted/80 to-muted/60 hover:from-muted hover:to-muted/80 border border-muted-foreground/20 hover:border-mcd-purple/50 transition-all duration-300 shadow-lg group"
               aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation-menu"
@@ -108,7 +108,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
               isMenuOpen ? "max-h-96 opacity-100 mt-6" : "max-h-0 opacity-0"
             }`}
           >
-            <div className="bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm rounded-xl p-4 border border-mcd-gold/10 shadow-inner">
+            <div className="bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm rounded-xl p-4 border border-mcd-purple/10 shadow-inner">
               <nav className="max-h-80 overflow-y-auto space-y-1" id="mobile-navigation-menu" role="navigation" aria-label="Main navigation">
                 {sections.map((section, index) => {
                   const Icon = sectionIcons[section.id as keyof typeof sectionIcons] || FileText
@@ -120,7 +120,7 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
                       onClick={() => scrollToSection(section.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-300 group/item ${
                         isActive
-                          ? "bg-gradient-to-r from-mcd-gold/15 to-mcd-gold/5 text-mcd-gold border border-mcd-gold/20 shadow-lg scale-[1.02]"
+                          ? "bg-gradient-to-r from-mcd-purple/15 to-mcd-purple/5 text-mcd-purple border border-mcd-purple/20 shadow-lg scale-[1.02]"
                           : "text-muted-foreground hover:text-foreground hover:bg-gradient-to-r hover:from-muted/50 hover:to-muted/20 hover:scale-[1.01]"
                       }`}
                       style={{ animationDelay: `${index * 50}ms` }}
@@ -130,15 +130,15 @@ export function MobileHeader({ sections, activeSection }: MobileHeaderProps) {
                       <Icon
                         className={`h-4 w-4 flex-shrink-0 transition-all duration-300 ${
                           isActive
-                            ? "text-mcd-gold scale-110"
-                            : "group-hover/item:text-mcd-gold group-hover/item:scale-110"
+                            ? "text-mcd-purple scale-110"
+                            : "group-hover/item:text-mcd-purple group-hover/item:scale-110"
                         }`}
                         aria-hidden="true"
                       />
                       <span className="text-sm font-medium truncate flex-1">{section.title}</span>
                       <ChevronRight
                         className={`h-3 w-3 transition-all duration-300 ${
-                          isActive ? "text-mcd-gold" : "text-muted-foreground/50 group-hover/item:text-mcd-gold"
+                          isActive ? "text-mcd-purple" : "text-muted-foreground/50 group-hover/item:text-mcd-purple"
                         }`}
                         aria-hidden="true"
                       />

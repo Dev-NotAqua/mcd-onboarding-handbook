@@ -173,15 +173,15 @@ export function ProgressTracker() {
   return (
     <div className="relative group">
       {/* Animated background glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold rounded-xl blur opacity-20 group-hover:opacity-30 transition-all duration-1000"></div>
+      <div className="absolute -inset-1 bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple rounded-xl blur opacity-20 group-hover:opacity-30 transition-all duration-1000"></div>
 
-      <div className="relative bg-gradient-to-br from-card via-card to-mcd-gold/5 rounded-xl border border-mcd-gold/20 p-8 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-card via-card to-mcd-purple/5 rounded-xl border border-mcd-purple/20 p-8 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden">
         {/* Celebration Animation */}
         {showCelebration && (
           <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/20 via-yellow-400/30 to-mcd-gold/20 animate-pulse z-10 rounded-xl flex items-center justify-center backdrop-blur-sm">
             <div className="text-center transform animate-bounce">
               <Trophy className="h-20 w-20 text-mcd-gold mx-auto mb-4 animate-spin" />
-              <h3 className="text-3xl font-bold text-mcd-gold mb-2 animate-pulse">🎉 Congratulations! 🎉</h3>
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent mb-2 animate-pulse">🎉 Congratulations! 🎉</h3>
               <p className="text-muted-foreground text-lg">You've completed all onboarding steps!</p>
               <Sparkles className="h-8 w-8 text-yellow-400 mx-auto mt-4 animate-spin" />
             </div>
@@ -199,7 +199,7 @@ export function ProgressTracker() {
               <Trophy className="h-7 w-7 text-mcd-gold animate-pulse" />
             </div>
             <div>
-              <h3 className="text-2xl font-serif font-bold bg-gradient-to-r from-mcd-gold to-yellow-400 bg-clip-text text-transparent">
+              <h3 className="text-2xl font-serif font-bold bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent">
                 Onboarding Progress
               </h3>
               <p className="text-sm text-muted-foreground">Track your journey to becoming a full MC&D member</p>
@@ -222,7 +222,7 @@ export function ProgressTracker() {
                 className="h-full bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold rounded-full transition-all duration-2000 ease-out shadow-lg relative overflow-hidden"
                 style={{ width: `${animatedProgress}%` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/30 to-transparent animate-shimmer"></div>
               </div>
             </div>
             <div className="text-right mt-3">

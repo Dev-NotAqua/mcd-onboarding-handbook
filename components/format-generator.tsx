@@ -58,6 +58,8 @@ export function FormatGenerator() {
   const [copied, setCopied] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [completionPercentage, setCompletionPercentage] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
 
   // Clean username function to remove @ if user adds it
   const cleanUsername = (username: string) => {
@@ -144,29 +146,103 @@ export function FormatGenerator() {
   const isComplete = completionPercentage === 100
 
   return (
-    <div className="relative group h-full">
-      <div className="absolute -inset-1 bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold rounded-xl blur opacity-20 group-hover:opacity-30 transition-all duration-1000"></div>
-
-      <div className="relative bg-gradient-to-br from-card via-card to-mcd-gold/5 rounded-xl border border-mcd-gold/20 p-8 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden h-full flex flex-col">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-mcd-gold/20 to-transparent transform -skew-x-12 animate-shimmer"></div>
-        </div>
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-mcd-gold/10 rounded-lg">
-            <FileText className="h-6 w-6 text-mcd-gold" />
+    <div 
+      className="relative h-full group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Enhanced Header with Progress */}
+      <div className="relative z-10 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-mcd-gold to-yellow-400 rounded-xl blur opacity-60 animate-pulse"></div>
+              <div className="relative p-3 bg-gradient-to-br from-mcd-gold/20 to-yellow-400/10 rounded-xl border border-mcd-gold/30 backdrop-blur-sm">
+                <FileText className="h-6 w-6 text-mcd-gold" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold bg-clip-text text-transparent">
+                Format Generator
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                AI-powered Discord format creation
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-2xl font-serif font-bold text-mcd-gold">Format Generator</h3>
-            <p className="text-sm text-muted-foreground">Generate properly formatted Discord requests</p>
+          
+          {/* Progress Circle */}
+          <div className="relative w-16 h-16">
+            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+                className="text-mcd-gold/20"
+              />
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray={`${2 * Math.PI * 28}`}
+                strokeDashoffset={`${2 * Math.PI * 28 * (1 - completionPercentage / 100)}`}
+                className="text-mcd-gold transition-all duration-700 ease-out"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-sm font-bold text-mcd-gold">
+                {Math.round(completionPercentage)}%
+              </span>
+            </div>
           </div>
         </div>
+        
+        {/* Progress Bar */}
+        <div className="relative h-2 bg-mcd-gold/10 rounded-full overflow-hidden backdrop-blur-sm">
+          <div 
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${completionPercentage}%` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+          </div>
+        </div>
+        
+        {/* Status Indicator */}
+        <div className="flex items-center justify-between mt-4 text-xs">
+          <span className="text-muted-foreground">
+            {completionPercentage === 100 ? "Ready to generate" : "Fill required fields"}
+          </span>
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              completionPercentage === 100 
+                ? "bg-green-400 animate-pulse" 
+                : completionPercentage > 0 
+                ? "bg-yellow-400 animate-pulse" 
+                : "bg-mcd-gold/30"
+            }`}></div>
+            <span className="text-muted-foreground">
+              {getRequiredFields().filter(field => formData[field]?.trim()).length} / {getRequiredFields().length} fields
+            </span>
+          </div>
+        </div>
+      </div>
 
-        <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col space-y-8">
         {/* Format Type Selection */}
-        <div className="mb-8">
-          <label className="block text-sm font-semibold text-foreground mb-4">Select Format Type</label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-mcd-gold to-yellow-400 rounded-full"></div>
+            <h4 className="text-lg font-semibold text-foreground">Choose Format Type</h4>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(formatLabels).map(([value, label]) => {
               const Icon = formatIcons[value as FormatType]
               const isSelected = selectedFormat === value
@@ -177,49 +253,70 @@ export function FormatGenerator() {
                     setSelectedFormat(value as FormatType)
                     setFormData({}) // Reset form data when changing format
                   }}
-                  className={`relative p-4 rounded-xl border-2 transition-all duration-500 text-left group overflow-hidden ${
+                  className={`relative group overflow-hidden rounded-2xl transition-all duration-500 transform ${
                     isSelected
-                      ? "border-mcd-gold bg-gradient-to-br from-mcd-gold/20 via-mcd-gold/10 to-yellow-400/10 shadow-lg shadow-mcd-gold/20 scale-105 animate-glow"
-                      : "border-muted hover:border-mcd-gold/50 hover:bg-gradient-to-br hover:from-muted/50 hover:to-mcd-gold/5 hover:scale-[1.02] hover:shadow-md"
+                      ? "scale-105 shadow-2xl shadow-mcd-gold/30"
+                      : "hover:scale-[1.02] hover:shadow-xl hover:shadow-mcd-gold/20"
                   }`}
-                  aria-pressed={isSelected}
-                  aria-label={`Select ${FORMAT_DESCRIPTIONS[value as FormatType]} format`}
                 >
-                  {/* Animated background effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/10 to-transparent transform -skew-x-12 transition-all duration-700 ${
+                  {/* Background Layers */}
+                  <div className={`absolute inset-0 transition-all duration-500 ${
+                    isSelected
+                      ? "bg-gradient-to-br from-mcd-gold/20 via-yellow-400/15 to-mcd-gold/10"
+                      : "bg-gradient-to-br from-background/80 to-muted/40 group-hover:from-mcd-gold/10 group-hover:to-yellow-400/5"
+                  }`}></div>
+                  
+                  {/* Border Glow */}
+                  <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${
+                    isSelected
+                      ? "ring-2 ring-mcd-gold/60 ring-offset-2 ring-offset-background"
+                      : "ring-1 ring-muted/30 group-hover:ring-mcd-gold/40"
+                  }`}></div>
+                  
+                  {/* Shimmer Effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 transition-all duration-700 ${
                     isSelected ? 'animate-shimmer' : 'opacity-0 group-hover:opacity-100'
                   }`}></div>
-                  <div className="relative flex items-center gap-3 z-10">
-                    <div className={`p-2 rounded-lg transition-all duration-300 ${
-                      isSelected 
-                        ? "bg-mcd-gold/20 shadow-lg" 
-                        : "bg-muted/30 group-hover:bg-mcd-gold/10"
-                    }`}>
-                      <Icon
-                        className={`h-5 w-5 transition-all duration-300 ${
-                          isSelected 
+                  
+                  <div className="relative p-6 text-left backdrop-blur-sm">
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl transition-all duration-300 ${
+                        isSelected 
+                          ? "bg-mcd-gold/30 shadow-lg ring-2 ring-mcd-gold/40" 
+                          : "bg-muted/40 group-hover:bg-mcd-gold/20"
+                      }`}>
+                        <Icon
+                          className={`h-6 w-6 transition-all duration-300 ${
+                            isSelected 
                             ? "text-mcd-gold animate-pulse" 
                             : "text-muted-foreground group-hover:text-mcd-gold group-hover:scale-110"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div
-                        className={`font-semibold transition-all duration-300 ${
+                          }`}
+                        />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <h5 className={`font-semibold text-base mb-2 transition-all duration-300 ${
                           isSelected 
-                            ? "text-mcd-gold text-glow" 
+                            ? "text-mcd-gold" 
                             : "text-foreground group-hover:text-mcd-gold"
-                        }`}
-                      >
-                        {label}
+                        }`}>
+                          {label}
+                        </h5>
+                        <p className={`text-sm leading-relaxed transition-all duration-300 ${
+                          isSelected 
+                            ? "text-mcd-gold/80" 
+                            : "text-muted-foreground group-hover:text-foreground"
+                        }`}>
+                          {FORMAT_DESCRIPTIONS[value as FormatType]}
+                        </p>
                       </div>
-                      <div className={`text-xs mt-1 transition-colors duration-300 ${
+                      
+                      {/* Selection Indicator */}
+                      <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
                         isSelected 
-                          ? "text-mcd-gold/70" 
-                          : "text-muted-foreground group-hover:text-muted-foreground/80"
-                      }`}>
-                        {FORMAT_DESCRIPTIONS[value as FormatType]}
-                      </div>
+                          ? "bg-mcd-gold shadow-lg shadow-mcd-gold/50 animate-pulse" 
+                          : "bg-mcd-gold/40 group-hover:bg-mcd-gold/60"
+                      }`}></div>
                     </div>
                   </div>
                 </button>
@@ -228,370 +325,380 @@ export function FormatGenerator() {
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">Completion Progress</span>
-            <span className="text-sm text-mcd-gold font-bold">{Math.round(completionPercentage)}%</span>
-          </div>
-          <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-mcd-gold to-yellow-400 rounded-full transition-all duration-700 ease-out shadow-sm"
-              style={{ width: `${completionPercentage}%` }}
-            />
-          </div>
-        </div>
-
         {/* Form Fields */}
-        <div className="space-y-5 mb-8">
-          {selectedFormat === "codename" && (
-            <>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Discord Username <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
-                  <input
-                    type="text"
-                    placeholder="your_discord_username"
-                    value={formData.discordUsername || ""}
-                    onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Roblox Username <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="YourRobloxUsername"
-                  value={formData.robloxUsername || ""}
-                  onChange={(e) => setFormData({ ...formData, robloxUsername: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Desired Codename <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Professional Codename (e.g., Sterling Broker)"
-                  value={formData.codename || ""}
-                  onChange={(e) => setFormData({ ...formData, codename: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-            </>
-          )}
+        <div className="relative mb-8">
+          {/* Background Effects */}
+          <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-blue-500/5 rounded-3xl blur-xl" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-mcd-gold/5 rounded-3xl" />
+          
+          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <div className="space-y-6">
+              {selectedFormat === "codename" && (
+                <>
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3 group-focus-within:text-mcd-gold transition-colors duration-300">
+                      Discord Username <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+                      <input
+                        type="text"
+                        value={formData.discordUsername || ""}
+                        onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
+                        onFocus={() => setFocusedField("discordUsername")}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="Enter your Discord username"
+                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                      />
+                    </div>
+                  </div>
 
-          {selectedFormat === "promotion" && (
-            <>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Discord Username <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
-                  <input
-                    type="text"
-                    placeholder="your_discord_username"
-                    value={formData.discordUsername || ""}
-                    onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Division <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.division || ""}
-                  onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 relative z-10"
-                >
-                  <option value="">Select Division</option>
-                  <option value="Wrecker Division">Wrecker Division</option>
-                  <option value="Accounting Division">Accounting Division</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Current Rank <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                  type="text"
-                  placeholder="e.g., Associate"
-                  value={formData.rank || ""}
-                  onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Current Points <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                  type="number"
-                  placeholder="150"
-                  value={formData.currentPoints || ""}
-                  onChange={(e) => setFormData({ ...formData, currentPoints: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Requested Rank <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Senior Associate"
-                  value={formData.rankRequest || ""}
-                  onChange={(e) => setFormData({ ...formData, rankRequest: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">Ping (Optional)</label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
-                  <input
-                    type="text"
-                    placeholder="hicom_member (optional)"
-                    value={formData.ping || ""}
-                    onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-            </>
-          )}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3 group-focus-within:text-mcd-gold transition-colors duration-300">
+                      Roblox Username <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+                      <input
+                        type="text"
+                        value={formData.robloxUsername || ""}
+                        onChange={(e) => setFormData({ ...formData, robloxUsername: e.target.value })}
+                        onFocus={() => setFocusedField("robloxUsername")}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="Enter your Roblox username"
+                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                      />
+                    </div>
+                  </div>
 
-          {selectedFormat === "shift-log" && (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Codename <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Your MC&D Codename"
-                    value={formData.codename || ""}
-                    onChange={(e) => setFormData({ ...formData, codename: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Current Rank <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., 25 Points"
-                    value={formData.currentRank || ""}
-                    onChange={(e) => setFormData({ ...formData, currentRank: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Division <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={formData.division || ""}
-                    onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 relative z-10"
-                  >
-                    <option value="">Select Division</option>
-                    <option value="Wrecker Division">Wrecker Division</option>
-                    <option value="Accounting Division">Accounting Division</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Time Duration <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., 1 hour 30 minutes"
-                    value={formData.time || ""}
-                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Tasks/Notes <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  placeholder="Describe what you did during your shift..."
-                  value={formData.tasks || ""}
-                  onChange={(e) => setFormData({ ...formData, tasks: e.target.value })}
-                  rows={3}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 resize-none placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-            </>
-          )}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3 group-focus-within:text-mcd-gold transition-colors duration-300">
+                      Desired Codename <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+                      <input
+                        type="text"
+                        value={formData.codename || ""}
+                        onChange={(e) => setFormData({ ...formData, codename: e.target.value })}
+                        onFocus={() => setFocusedField("codename")}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="Enter your desired codename"
+                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
 
-          {selectedFormat === "point-request" && (
-            <>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Discord Username <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold">@</span>
-                  <input
-                    type="text"
-                    placeholder="your_discord_username"
-                    value={formData.discordUsername || ""}
-                    onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Division <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={formData.division || ""}
-                    onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 relative z-10"
-                  >
-                    <option value="">Select Division</option>
-                    <option value="Wrecker Division">Wrecker Division</option>
-                    <option value="Accounting Division">Accounting Division</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">
-                    Current Rank <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., 25 Points"
-                    value={formData.rank || ""}
-                    onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
-                    className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Points Requested <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  placeholder="9"
-                  value={formData.pointsRequested || ""}
-                  onChange={(e) => setFormData({ ...formData, pointsRequested: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Shift Log Link <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://discord.com/channels/..."
-                  value={formData.shiftLogLink || ""}
-                  onChange={(e) => setFormData({ ...formData, shiftLogLink: e.target.value })}
-                  className="w-full px-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">Ping (Optional)</label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-gold font-bold z-20">@</span>
-                  <input
-                    type="text"
-                    placeholder="hicom_member (optional)"
-                    value={formData.ping || ""}
-                    onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 bg-background text-foreground border-2 border-border hover:border-mcd-gold/50 focus:border-mcd-gold rounded-xl focus:outline-none transition-all duration-300 focus:shadow-lg focus:shadow-mcd-gold/20 placeholder:text-muted-foreground relative z-10"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+              {selectedFormat === "promotion" && (
+                <>
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Discord Username <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.discordUsername || ""}
+                      onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
+                      placeholder="Enter your Discord username"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
 
-        {/* Generated Format Display */}
-        <div className="bg-gradient-to-br from-mcd-dark via-gray-900 to-mcd-dark rounded-xl border-2 border-mcd-gold/30 overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-mcd-gold/20 to-yellow-400/20 border-b border-mcd-gold/30">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-mcd-gold animate-pulse" />
-              <span className="text-sm font-bold text-mcd-gold">Generated Format</span>
-            </div>
-            <div className="relative">
-              <button
-                  onClick={copyToClipboard}
-                  disabled={!isComplete || isGenerating}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    isComplete && !isGenerating
-                      ? "bg-mcd-gold hover:bg-yellow-400 text-mcd-dark hover:scale-[1.05] shadow-lg hover:shadow-xl"
-                      : "bg-muted text-muted-foreground cursor-not-allowed"
-                  }`}
-                  aria-label={copied ? "Format copied to clipboard" : "Copy format to clipboard"}
-                >
-                {isGenerating ? (
-                   <>
-                     <div className="w-4 h-4 border-2 border-mcd-dark border-t-transparent rounded-full animate-spin" />
-                     Generating...
-                   </>
-                 ) : copied ? (
-                   <>
-                     <Check className="h-4 w-4" />
-                     Copied!
-                   </>
-                 ) : (
-                   <>
-                     <Copy className="h-4 w-4" />
-                     Copy Format
-                   </>
-                 )}
-              </button>
-              {!isComplete && (
-                <div className="absolute -bottom-8 left-0 text-xs text-muted-foreground">
-                  Fill all required fields to enable copying
-                </div>
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Division <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.division || ""}
+                      onChange={(e) => setFormData({ ...formData, division: e.target.value })}
+                      placeholder="Enter your division"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Current Rank <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.rank || ""}
+                      onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
+                      placeholder="Enter your current rank"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Current Points <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.currentPoints || ""}
+                      onChange={(e) => setFormData({ ...formData, currentPoints: e.target.value })}
+                      placeholder="Enter your current points"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Rank Request <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.rankRequest || ""}
+                      onChange={(e) => setFormData({ ...formData, rankRequest: e.target.value })}
+                      placeholder="Enter requested rank"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Ping
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.ping || ""}
+                      onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
+                      placeholder="Enter ping (optional)"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+                </>
+              )}
+
+              {selectedFormat === "shift-log" && (
+                <>
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Codename <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.codename || ""}
+                      onChange={(e) => setFormData({ ...formData, codename: e.target.value })}
+                      placeholder="Enter your codename"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Current Rank <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.currentRank || ""}
+                      onChange={(e) => setFormData({ ...formData, currentRank: e.target.value })}
+                      placeholder="Enter your current rank"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Division <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.division || ""}
+                      onChange={(e) => setFormData({ ...formData, division: e.target.value })}
+                      placeholder="Enter your division"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Time <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.time || ""}
+                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                      placeholder="Enter shift time"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Tasks/Notes <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      value={formData.tasks || ""}
+                      onChange={(e) => setFormData({ ...formData, tasks: e.target.value })}
+                      placeholder="Enter tasks and notes"
+                      rows={3}
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 resize-none"
+                    />
+                  </div>
+                </>
+              )}
+
+              {selectedFormat === "point-request" && (
+                <>
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Discord Username <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.discordUsername || ""}
+                      onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
+                      placeholder="Enter your Discord username"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Division <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.division || ""}
+                      onChange={(e) => setFormData({ ...formData, division: e.target.value })}
+                      placeholder="Enter your division"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Rank <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.rank || ""}
+                      onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
+                      placeholder="Enter your rank"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Points Requested <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.pointsRequested || ""}
+                      onChange={(e) => setFormData({ ...formData, pointsRequested: e.target.value })}
+                      placeholder="Enter points requested"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Shift Log Link <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.shiftLogLink || ""}
+                      onChange={(e) => setFormData({ ...formData, shiftLogLink: e.target.value })}
+                      placeholder="Enter shift log link"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-foreground/90 mb-3">
+                      Ping
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.ping || ""}
+                      onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
+                      placeholder="Enter ping (optional)"
+                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                    />
+                  </div>
+                </>
               )}
             </div>
           </div>
-          <div className="p-6">
-            <pre className="text-sm text-gray-100 font-mono whitespace-pre-wrap leading-relaxed">
-              {generateFormat()}
-            </pre>
+        </div>
+
+        {/* Generated Format Display */}
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-purple-500/5 rounded-3xl blur-xl" />
+          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-6 bg-gradient-to-b from-mcd-gold to-yellow-400 rounded-full"></div>
+                <h4 className="text-lg font-semibold text-foreground">Generated Format</h4>
+              </div>
+              
+              <button
+                onClick={copyToClipboard}
+                disabled={!isComplete || isGenerating}
+                className={`relative group flex items-center gap-3 px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform ${
+                  isComplete && !isGenerating
+                    ? "bg-gradient-to-r from-mcd-gold to-yellow-400 text-black hover:scale-105 hover:shadow-xl hover:shadow-mcd-gold/30 active:scale-95"
+                    : "bg-muted/40 text-muted-foreground cursor-not-allowed"
+                }`}
+              >
+                <div className="relative">
+                  {isGenerating ? (
+                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  ) : copied ? (
+                    <Check className="w-5 h-5" />
+                  ) : (
+                    <Copy className="w-5 h-5" />
+                  )}
+                </div>
+                <span>
+                  {isGenerating ? "Generating..." : copied ? "Copied!" : "Copy Format"}
+                </span>
+                
+                {isComplete && !isGenerating && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-shimmer" />
+                )}
+              </button>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 to-transparent rounded-2xl" />
+              <pre className="relative bg-background/60 border border-white/10 rounded-2xl p-6 text-sm text-foreground font-mono whitespace-pre-wrap overflow-x-auto backdrop-blur-sm">
+                {generateFormat()}
+              </pre>
+            </div>
           </div>
         </div>
 
         {/* Helpful Tips */}
-        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            Pro Tips
-          </h4>
-          <ul className="text-sm text-blue-600 dark:text-blue-400 space-y-1">
-            <li>• Discord usernames are automatically formatted with @ for proper pinging</li>
-            <li>• Fill all required fields (marked with *) to enable copying</li>
-            <li>• Double-check your information before copying to Discord</li>
-            <li>• Use professional language appropriate for MC&D standards</li>
-          </ul>
-        </div>
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-mcd-gold/5 rounded-3xl blur-xl" />
+          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-6 bg-gradient-to-b from-blue-400 to-mcd-gold rounded-full"></div>
+              <h4 className="text-lg font-semibold text-foreground">Helpful Tips</h4>
+              <Sparkles className="w-5 h-5 text-mcd-gold animate-pulse" />
+            </div>
+            
+            <div className="grid gap-4 text-sm text-muted-foreground">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-mcd-gold rounded-full mt-2 flex-shrink-0" />
+                <p>Don't include the @ symbol when entering usernames - it will be added automatically</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-mcd-gold rounded-full mt-2 flex-shrink-0" />
+                <p>Make sure all required fields are filled before copying the format</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-mcd-gold rounded-full mt-2 flex-shrink-0" />
+                <p>Double-check your information for accuracy before submitting</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,18 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { BookOpen, Zap, Trophy, MessageSquare, TrendingUp } from "lucide-react"
+import { useState } from 'react'
+import { BookOpen, Zap, Trophy, MessageSquare, TrendingUp } from 'lucide-react'
+
+interface QuickReferenceItem {
+  command: string
+  description: string
+}
+
+interface QuickReferenceCategory {
+  category: string
+  icon: any
+  items: QuickReferenceItem[]
+}
 
 const QUICK_REFERENCE_DATA = [
   {
@@ -43,75 +54,110 @@ const QUICK_REFERENCE_DATA = [
   },
 ]
 
-export function QuickReference() {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(["Essential Commands"])
-
+export default function QuickReference() {
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['Essential Commands']) // Start with Essential Commands expanded
+  
   const toggleCategory = (category: string) => {
-    setExpandedCategories((prev) =>
-      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
     )
   }
-
+  
   return (
-    <div className="relative group h-full">
-      <div className="absolute -inset-1 bg-gradient-to-r from-mcd-gold via-yellow-400 to-mcd-gold rounded-lg sm:rounded-xl blur opacity-20 group-hover:opacity-30 transition-all duration-1000"></div>
+    <div className="relative">
+      {/* Subtle Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-mcd-purple/5 rounded-2xl" />
       
-      <div className="relative bg-gradient-to-br from-card via-card to-mcd-gold/5 rounded-lg sm:rounded-xl border border-mcd-gold/20 p-4 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden h-full flex flex-col">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-mcd-gold/20 to-transparent transform -skew-x-12 animate-shimmer"></div>
-        </div>
-        
+      <div className="relative bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group hover:border-mcd-gold/40">
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-6 sm:mb-8">
-            <div className="p-2 bg-mcd-gold/10 rounded-lg flex-shrink-0">
-              <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-gold" />
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="bg-gradient-to-br from-mcd-gold/20 to-mcd-gold/10 p-2.5 rounded-xl border border-mcd-gold/30">
+                  <BookOpen className="h-6 w-6 text-mcd-gold" />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Quick Reference</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">Essential commands and shortcuts</p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-xl sm:text-2xl font-serif font-bold text-mcd-gold">Quick Reference</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">Essential information at your fingertips</p>
+            
+            {/* Status Indicator */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/15 border border-emerald-500/25 rounded-full">
+              <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+              <span className="text-xs font-medium text-emerald-400">Ready</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr flex-1">
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {QUICK_REFERENCE_DATA.map((category, index) => {
               const CategoryIcon = category.icon
+              const isExpanded = expandedCategories.includes(category.category)
+              
               return (
                 <div
                   key={category.category}
-                  className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-lg sm:rounded-xl border border-mcd-gold/20 p-4 sm:p-6 hover:shadow-lg hover:shadow-mcd-gold/10 transition-all duration-500 group/card animate-slide-up active:scale-[0.99] flex flex-col"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="relative group/category"
                 >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-1.5 sm:p-2 bg-mcd-gold/10 rounded-lg group-hover/card:bg-mcd-gold/20 transition-colors duration-300 flex-shrink-0">
-                      <CategoryIcon className="h-4 w-4 sm:h-5 sm:w-5 text-mcd-gold group-hover/card:scale-110 transition-transform duration-300" />
+                  <div className="relative bg-background/60 backdrop-blur-sm border border-border/40 rounded-xl p-4 hover:border-mcd-gold/30 transition-all duration-200 hover:shadow-md">
+                    {/* Category Header */}
+                    <button
+                      onClick={() => toggleCategory(category.category)}
+                      className="w-full flex items-center justify-between mb-3 group/header"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="bg-gradient-to-br from-mcd-gold/15 to-mcd-gold/10 p-2 rounded-lg border border-mcd-gold/25">
+                          <CategoryIcon className="h-4 w-4 text-mcd-gold" />
+                        </div>
+                        <h4 className="text-base font-semibold text-foreground group-hover/header:text-mcd-gold transition-colors duration-200">
+                          {category.category}
+                        </h4>
+                      </div>
+                      
+                      <div className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+                        <div className="w-5 h-5 rounded-full bg-mcd-gold/15 border border-mcd-gold/25 flex items-center justify-center">
+                          <div className="w-1.5 h-1.5 border-t border-r border-mcd-gold transform rotate-45 -translate-y-px" />
+                        </div>
+                      </div>
+                    </button>
+                    
+                    {/* Category Items */}
+                    <div className={`space-y-2.5 transition-all duration-200 overflow-hidden ${
+                      isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}>
+                      {category.items.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className="relative group/item"
+                        >
+                          <div className="relative bg-background/50 border border-border/30 rounded-lg p-3 hover:border-mcd-gold/25 transition-colors duration-150 hover:bg-background/70">
+                            <div className="flex items-start gap-2.5">
+                              <div className="w-1.5 h-1.5 bg-mcd-gold rounded-full mt-1.5 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-mono text-sm text-mcd-gold font-medium mb-1 break-all">
+                                  {item.command}
+                                </div>
+                                <div className="text-sm text-muted-foreground leading-relaxed">
+                                  {item.description}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <h4 className="font-bold text-base sm:text-lg text-mcd-gold group-hover/card:text-glow transition-all duration-300 min-w-0 flex-1">
-                      {category.category}
-                    </h4>
                   </div>
-                   <div className="space-y-2 sm:space-y-3 flex-1">
-                     {category.items.map((item, itemIndex) => (
-                       <div
-                         key={itemIndex}
-                         className="bg-background/50 rounded-lg p-3 sm:p-4 border border-mcd-gold/10 hover:border-mcd-gold/30 transition-all duration-300 hover:shadow-md hover:shadow-mcd-gold/5 group/item animate-slide-right active:scale-[0.99]"
-                         style={{ animationDelay: `${(index * 100) + (itemIndex * 50)}ms` }}
-                       >
-                         <div className="font-mono text-xs sm:text-sm text-mcd-gold font-semibold mb-1.5 sm:mb-2 group-hover/item:text-glow transition-all duration-300 break-all">
-                           {item.command}
-                         </div>
-                         <div className="text-xs sm:text-sm text-muted-foreground group-hover/item:text-foreground transition-colors duration-300 leading-relaxed">
-                           {item.description}
-                         </div>
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               )
-             })}
-           </div>
-         </div>
-       </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

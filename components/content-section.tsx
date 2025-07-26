@@ -16,22 +16,22 @@ interface ContentSectionProps {
 }
 
 export function ContentSection({ section }: ContentSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <section id={section.id} className="scroll-mt-20 sm:scroll-mt-24 group">
-      <div className="bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-mcd-gold/20 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-mcd-gold/5 transition-all duration-500">
+      <div className="bg-card/50 backdrop-blur-sm rounded-lg sm:rounded-xl border border-mcd-purple/20 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-mcd-purple/5 transition-all duration-500">
         {/* Section Header */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between bg-gradient-to-r from-mcd-gold/5 via-mcd-gold/10 to-mcd-gold/5 hover:from-mcd-gold/10 hover:via-mcd-gold/15 hover:to-mcd-gold/10 transition-all duration-500 relative overflow-hidden group/header active:scale-[0.99]"
+          className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between bg-gradient-to-r from-mcd-purple/5 via-mcd-purple/10 to-mcd-purple/5 hover:from-mcd-purple/10 hover:via-mcd-purple/15 hover:to-mcd-purple/10 transition-all duration-500 relative overflow-hidden group/header active:scale-[0.99]"
           aria-expanded={isExpanded}
           aria-controls={`section-${section.id}`}
         >
           {/* Animated background effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/10 to-transparent transform -translate-x-full group-hover/header:translate-x-full transition-transform duration-1000"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-purple/10 to-transparent transform -translate-x-full group-hover/header:translate-x-full transition-transform duration-1000"></div>
 
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-serif font-bold bg-gradient-to-r from-mcd-gold to-yellow-400 bg-clip-text text-transparent relative group-hover/header:scale-105 transition-transform duration-300 text-left">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-serif font-bold bg-gradient-to-r from-mcd-purple to-purple-400 bg-clip-text text-transparent relative group-hover/header:scale-105 transition-transform duration-300 text-left">
             {section.title}
           </h2>
 
@@ -40,7 +40,7 @@ export function ContentSection({ section }: ContentSectionProps) {
               isExpanded ? "rotate-180" : "rotate-0"
             }`}
           >
-            <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-gold" />
+            <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-purple" />
           </div>
         </button>
 
@@ -59,8 +59,8 @@ export function ContentSection({ section }: ContentSectionProps) {
                 )}
 
                 {item.type === "heading" && (
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-serif font-semibold text-mcd-gold mt-6 sm:mt-8 mb-3 sm:mb-4 flex items-center gap-2">
-                    <div className="w-1 h-5 sm:h-6 bg-gradient-to-b from-mcd-gold to-yellow-400 rounded-full flex-shrink-0"></div>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-serif font-semibold bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent mt-6 sm:mt-8 mb-3 sm:mb-4 flex items-center gap-2">
+                    <div className="w-1 h-5 sm:h-6 bg-gradient-to-b from-mcd-purple to-mcd-gold rounded-full flex-shrink-0"></div>
                     {item.text}
                   </h3>
                 )}
@@ -70,9 +70,9 @@ export function ContentSection({ section }: ContentSectionProps) {
                     {item.items.map((listItem, listIndex) => (
                       <div key={listIndex} className="flex items-start gap-3 sm:gap-4 group/item">
                         <div className="flex-shrink-0 mt-1.5 sm:mt-2">
-                          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-r from-mcd-gold to-yellow-400 rounded-full shadow-lg group-hover/item:scale-125 transition-transform duration-300"></div>
+                          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-full shadow-lg group-hover/item:scale-125 transition-transform duration-300"></div>
                         </div>
-                        <span className="text-foreground leading-relaxed group-hover/item:text-mcd-gold transition-colors duration-300 flex-1 text-sm sm:text-base lg:text-lg">
+                        <span className="text-foreground leading-relaxed group-hover/item:text-mcd-purple transition-colors duration-300 flex-1 text-sm sm:text-base lg:text-lg">
                           {listItem}
                         </span>
                       </div>
@@ -94,7 +94,7 @@ export function ContentSection({ section }: ContentSectionProps) {
 
                 {item.type === "image" && item.src && (
                   <div className="my-8">
-                    <div className="relative group/image overflow-hidden rounded-xl border border-mcd-gold/20 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="relative group/image overflow-hidden rounded-xl border border-mcd-purple/20 shadow-lg hover:shadow-xl transition-all duration-300">
                       <img
                         src={item.src || "/placeholder.svg"}
                         alt={item.alt || ""}

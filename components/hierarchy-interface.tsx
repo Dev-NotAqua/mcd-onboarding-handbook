@@ -184,15 +184,15 @@ export function HierarchyInterface() {
   )
 
   return (
-    <div className="max-w-4xl mx-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-xl border border-mcd-gold/30 shadow-2xl overflow-hidden">
+    <div className="max-w-4xl mx-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-xl border border-mcd-purple/30 shadow-2xl overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-mcd-gold/20 to-yellow-400/20 px-6 py-4 border-b border-mcd-gold/30">
+      <div className="bg-gradient-to-r from-mcd-purple/20 to-mcd-gold/20 px-6 py-4 border-b border-mcd-purple/30">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-mcd-gold to-yellow-400 rounded-lg flex items-center justify-center shadow-lg">
-            <TrendingUp className="w-5 h-5 text-black" />
+          <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-lg flex items-center justify-center shadow-lg">
+            <TrendingUp className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg">MC&D Hierarchy System</h3>
+            <h3 className="font-bold text-lg bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent">MC&D Hierarchy System</h3>
             <p className="text-gray-300 text-sm">Rank Structure & Point Requirements</p>
           </div>
         </div>
@@ -203,7 +203,7 @@ export function HierarchyInterface() {
         {(Object.keys(groupedRanks) as Array<keyof typeof groupedRanks>).map((level) => (
           <div key={level} className={`bg-gradient-to-br ${levelColors[level]} rounded-xl border p-4`}>
             <h4 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-              <div className="w-2 h-6 bg-gradient-to-b from-mcd-gold to-yellow-400 rounded-full"></div>
+              <div className="w-2 h-6 bg-gradient-to-b from-mcd-purple to-mcd-gold rounded-full"></div>
               {levelTitles[level]}
             </h4>
 
@@ -218,7 +218,7 @@ export function HierarchyInterface() {
                     onClick={() => setSelectedRank(isSelected ? null : rank.id)}
                     className={`text-left p-4 rounded-lg border transition-all duration-300 group ${
                       isSelected
-                        ? "bg-mcd-gold/10 border-mcd-gold/50 shadow-lg scale-105"
+                        ? "bg-mcd-purple/10 border-mcd-purple/50 shadow-lg scale-105"
                         : "bg-gray-800/50 border-gray-600/30 hover:bg-gray-700/50 hover:border-gray-500/50 hover:scale-[1.02]"
                     }`}
                     aria-expanded={isSelected}

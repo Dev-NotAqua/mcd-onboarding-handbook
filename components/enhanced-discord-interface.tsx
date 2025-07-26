@@ -160,7 +160,7 @@ export function EnhancedDiscordInterface() {
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-800 animate-pulse"></div>
             </div>
             <div className="flex-1">
-              <h3 className="text-white font-semibold text-base bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+              <h3 className="font-semibold text-base bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent">
                 Marshall, Carter & Darke
               </h3>
               <div className="flex items-center gap-2">
@@ -211,12 +211,12 @@ export function EnhancedDiscordInterface() {
                           className={`group/channel flex items-center gap-2 px-3 py-2 mx-2 rounded-md transition-all duration-300 relative overflow-hidden transform ${
                             channel.isActive
                               ? "bg-mcd-gold/10 text-mcd-gold border-l-2 border-mcd-gold shadow-lg scale-105"
-                              : "hover:bg-gray-700/50 text-gray-300 hover:text-white hover:scale-105"
+                              : "hover:bg-gray-700/50 text-gray-300 hover:text-mcd-gold hover:scale-105"
                           } ${isHovered ? "shadow-lg" : ""}`}
                           title={channel.description}
                         >
                           {/* Animated background on hover */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -translate-x-full group-hover/channel:translate-x-full transition-transform duration-700"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/5 to-transparent transform -translate-x-full group-hover/channel:translate-x-full transition-transform duration-700"></div>
 
                           <Icon
                             className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${

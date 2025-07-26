@@ -73,7 +73,7 @@ export function TridentTimerInterface() {
             <Timer className="w-5 h-5 text-black" />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg">Trident Timer</h3>
+            <h3 className="font-bold text-lg bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent">Trident Timer</h3>
             <p className="text-gray-300 text-sm">MC&D Shift Management System</p>
           </div>
         </div>

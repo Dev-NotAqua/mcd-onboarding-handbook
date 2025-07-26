@@ -76,7 +76,7 @@ export function PointCalculator() {
           <Calculator className="h-6 w-6 text-mcd-gold" />
         </div>
         <div>
-          <h3 className="text-2xl font-serif font-bold text-mcd-gold">Point Calculator</h3>
+          <h3 className="text-2xl font-serif font-bold bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent">Point Calculator</h3>
           <p className="text-sm text-muted-foreground">Calculate your advancement progress and next rank</p>
         </div>
       </div>

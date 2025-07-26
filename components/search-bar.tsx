@@ -32,7 +32,7 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
     <div className="relative group">
       {/* Animated background glow */}
       <div
-        className={`absolute -inset-0.5 bg-gradient-to-r from-mcd-gold/20 to-yellow-400/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+        className={`absolute -inset-0.5 bg-gradient-to-r from-mcd-purple/20 to-mcd-gold/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
           isFocused ? "opacity-100" : ""
         }`}
       ></div>
@@ -40,7 +40,7 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
       <div className="relative">
         <div
           className={`absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 transition-all duration-200 z-20 ${
-            isFocused ? "text-mcd-gold scale-110" : "text-muted-foreground"
+            isFocused ? "text-mcd-purple scale-110" : "text-muted-foreground"
           }`}
         >
           {isSearching ? <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" /> : <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
@@ -66,8 +66,8 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
           placeholder={placeholder}
           className={`w-full pl-9 sm:pl-10 pr-9 sm:pr-10 py-2.5 sm:py-3 text-sm sm:text-base bg-background border-2 rounded-lg transition-all duration-300 focus:outline-none focus:shadow-lg text-foreground placeholder:text-muted-foreground hover:scale-[1.01] focus:scale-[1.02] ${
             isFocused
-              ? "border-mcd-gold shadow-lg shadow-mcd-gold/20 bg-background"
-              : "border-border hover:border-mcd-gold/50 hover:shadow-md"
+              ? "border-mcd-purple shadow-lg shadow-mcd-purple/20 bg-background"
+              : "border-border hover:border-mcd-purple/50 hover:shadow-md"
           }`}
           aria-label="Search handbook sections"
           role="searchbox"
@@ -93,7 +93,7 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
         <div className="absolute top-full left-0 right-0 mt-1 text-xs text-muted-foreground px-2 sm:px-3 animate-fade-in" id="search-status" aria-live="polite">
           {isSearching ? (
             <span className="flex items-center gap-1">
-              <div className="w-1 h-1 bg-mcd-gold rounded-full animate-pulse"></div>
+              <div className="w-1 h-1 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-full animate-pulse"></div>
               Searching...
             </span>
           ) : (
