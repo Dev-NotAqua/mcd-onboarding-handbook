@@ -156,8 +156,7 @@ export function FormatGenerator() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-mcd-gold to-yellow-400 rounded-xl blur opacity-60 animate-pulse"></div>
-              <div className="relative p-3 bg-gradient-to-br from-mcd-gold/20 to-yellow-400/10 rounded-xl border border-mcd-gold/30 backdrop-blur-sm">
+              <div className="p-3 bg-gradient-to-br from-mcd-gold/15 to-yellow-400/8 rounded-xl border border-mcd-gold/25">
                 <FileText className="h-6 w-6 text-mcd-gold" />
               </div>
             </div>
@@ -166,7 +165,7 @@ export function FormatGenerator() {
                 Format Generator
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
-                AI-powered Discord format creation
+                Discord format creation
               </p>
             </div>
           </div>
@@ -327,11 +326,7 @@ export function FormatGenerator() {
 
         {/* Form Fields */}
         <div className="relative mb-8">
-          {/* Background Effects */}
-          <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-blue-500/5 rounded-3xl blur-xl" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-mcd-gold/5 rounded-3xl" />
-          
-          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <div className="bg-background/60 border border-border/40 rounded-2xl p-6 shadow-md">
             <div className="space-y-6">
               {selectedFormat === "codename" && (
                 <>
@@ -340,7 +335,6 @@ export function FormatGenerator() {
                       Discord Username <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
                       <input
                         type="text"
                         value={formData.discordUsername || ""}
@@ -348,7 +342,7 @@ export function FormatGenerator() {
                         onFocus={() => setFocusedField("discordUsername")}
                         onBlur={() => setFocusedField(null)}
                         placeholder="Enter your Discord username"
-                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                       />
                     </div>
                   </div>
@@ -358,7 +352,6 @@ export function FormatGenerator() {
                       Roblox Username <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
                       <input
                         type="text"
                         value={formData.robloxUsername || ""}
@@ -366,7 +359,7 @@ export function FormatGenerator() {
                         onFocus={() => setFocusedField("robloxUsername")}
                         onBlur={() => setFocusedField(null)}
                         placeholder="Enter your Roblox username"
-                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                       />
                     </div>
                   </div>
@@ -376,7 +369,6 @@ export function FormatGenerator() {
                       Desired Codename <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-mcd-gold/10 via-transparent to-blue-500/10 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
                       <input
                         type="text"
                         value={formData.codename || ""}
@@ -384,7 +376,7 @@ export function FormatGenerator() {
                         onFocus={() => setFocusedField("codename")}
                         onBlur={() => setFocusedField(null)}
                         placeholder="Enter your desired codename"
-                        className="relative w-full px-6 py-4 bg-background/60 backdrop-blur-sm border border-white/10 rounded-2xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 group-focus-within:shadow-lg group-focus-within:shadow-mcd-gold/20"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                       />
                     </div>
                   </div>
@@ -402,7 +394,7 @@ export function FormatGenerator() {
                       value={formData.discordUsername || ""}
                       onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
                       placeholder="Enter your Discord username"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -415,7 +407,7 @@ export function FormatGenerator() {
                       value={formData.division || ""}
                       onChange={(e) => setFormData({ ...formData, division: e.target.value })}
                       placeholder="Enter your division"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -428,7 +420,7 @@ export function FormatGenerator() {
                       value={formData.rank || ""}
                       onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
                       placeholder="Enter your current rank"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -441,7 +433,7 @@ export function FormatGenerator() {
                       value={formData.currentPoints || ""}
                       onChange={(e) => setFormData({ ...formData, currentPoints: e.target.value })}
                       placeholder="Enter your current points"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -454,7 +446,7 @@ export function FormatGenerator() {
                       value={formData.rankRequest || ""}
                       onChange={(e) => setFormData({ ...formData, rankRequest: e.target.value })}
                       placeholder="Enter requested rank"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -467,7 +459,7 @@ export function FormatGenerator() {
                       value={formData.ping || ""}
                       onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
                       placeholder="Enter ping (optional)"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
                 </>
@@ -484,7 +476,7 @@ export function FormatGenerator() {
                       value={formData.codename || ""}
                       onChange={(e) => setFormData({ ...formData, codename: e.target.value })}
                       placeholder="Enter your codename"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -497,7 +489,7 @@ export function FormatGenerator() {
                       value={formData.currentRank || ""}
                       onChange={(e) => setFormData({ ...formData, currentRank: e.target.value })}
                       placeholder="Enter your current rank"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -510,7 +502,7 @@ export function FormatGenerator() {
                       value={formData.division || ""}
                       onChange={(e) => setFormData({ ...formData, division: e.target.value })}
                       placeholder="Enter your division"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -523,7 +515,7 @@ export function FormatGenerator() {
                       value={formData.time || ""}
                       onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                       placeholder="Enter shift time"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -536,7 +528,7 @@ export function FormatGenerator() {
                       onChange={(e) => setFormData({ ...formData, tasks: e.target.value })}
                       placeholder="Enter tasks and notes"
                       rows={3}
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300 resize-none"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200 resize-none"
                     />
                   </div>
                 </>
@@ -553,7 +545,7 @@ export function FormatGenerator() {
                       value={formData.discordUsername || ""}
                       onChange={(e) => setFormData({ ...formData, discordUsername: e.target.value })}
                       placeholder="Enter your Discord username"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -566,7 +558,7 @@ export function FormatGenerator() {
                       value={formData.division || ""}
                       onChange={(e) => setFormData({ ...formData, division: e.target.value })}
                       placeholder="Enter your division"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -577,9 +569,9 @@ export function FormatGenerator() {
                     <input
                       type="text"
                       value={formData.rank || ""}
-                      onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
-                      placeholder="Enter your rank"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      onChange={(e) => setFormData({ ...formData, nextRank: e.target.value })}
+                        placeholder="Enter your next rank"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -590,9 +582,9 @@ export function FormatGenerator() {
                     <input
                       type="text"
                       value={formData.pointsRequested || ""}
-                      onChange={(e) => setFormData({ ...formData, pointsRequested: e.target.value })}
-                      placeholder="Enter points requested"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      onChange={(e) => setFormData({ ...formData, pointsNeeded: e.target.value })}
+                        placeholder="Enter points needed for next rank"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -605,7 +597,7 @@ export function FormatGenerator() {
                       value={formData.shiftLogLink || ""}
                       onChange={(e) => setFormData({ ...formData, shiftLogLink: e.target.value })}
                       placeholder="Enter shift log link"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
 
@@ -618,7 +610,7 @@ export function FormatGenerator() {
                       value={formData.ping || ""}
                       onChange={(e) => setFormData({ ...formData, ping: e.target.value })}
                       placeholder="Enter ping (optional)"
-                      className="w-full px-4 py-3 bg-background/60 border border-white/10 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-mcd-gold/40 focus:border-mcd-gold/40 transition-all duration-200"
                     />
                   </div>
                 </>
@@ -629,8 +621,7 @@ export function FormatGenerator() {
 
         {/* Generated Format Display */}
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-purple-500/5 rounded-3xl blur-xl" />
-          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <div className="relative bg-background border border-border rounded-3xl p-8 shadow-lg">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-1 h-6 bg-gradient-to-b from-mcd-gold to-yellow-400 rounded-full"></div>
@@ -667,7 +658,7 @@ export function FormatGenerator() {
             
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 to-transparent rounded-2xl" />
-              <pre className="relative bg-background/60 border border-white/10 rounded-2xl p-6 text-sm text-foreground font-mono whitespace-pre-wrap overflow-x-auto backdrop-blur-sm">
+              <pre className="relative bg-background border border-border rounded-2xl p-6 text-sm text-foreground font-mono whitespace-pre-wrap overflow-x-auto">
                 {generateFormat()}
               </pre>
             </div>
@@ -676,8 +667,7 @@ export function FormatGenerator() {
 
         {/* Helpful Tips */}
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-mcd-gold/5 rounded-3xl blur-xl" />
-          <div className="relative bg-background/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <div className="relative bg-background border border-border rounded-3xl p-8 shadow-lg">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-6 bg-gradient-to-b from-blue-400 to-mcd-gold rounded-full"></div>
               <h4 className="text-lg font-semibold text-foreground">Helpful Tips</h4>

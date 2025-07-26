@@ -67,16 +67,13 @@ export default function QuickReference() {
   
   return (
     <div className="relative">
-      {/* Subtle Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-mcd-gold/5 via-transparent to-mcd-purple/5 rounded-2xl" />
-      
-      <div className="relative bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group hover:border-mcd-gold/40">
+      <div className="bg-card border border-border/40 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:border-mcd-gold/30">
         <div className="relative z-10">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="bg-gradient-to-br from-mcd-gold/20 to-mcd-gold/10 p-2.5 rounded-xl border border-mcd-gold/30">
+                <div className="bg-gradient-to-br from-mcd-gold/15 to-mcd-gold/8 p-2.5 rounded-xl border border-mcd-gold/25">
                   <BookOpen className="h-6 w-6 text-mcd-gold" />
                 </div>
               </div>
@@ -104,14 +101,14 @@ export default function QuickReference() {
                   key={category.category}
                   className="relative group/category"
                 >
-                  <div className="relative bg-background/60 backdrop-blur-sm border border-border/40 rounded-xl p-4 hover:border-mcd-gold/30 transition-all duration-200 hover:shadow-md">
+                  <div className="relative bg-background border border-border rounded-xl p-4 hover:border-mcd-gold/30 transition-all duration-200 hover:shadow-md">
                     {/* Category Header */}
                     <button
                       onClick={() => toggleCategory(category.category)}
                       className="w-full flex items-center justify-between mb-3 group/header"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="bg-gradient-to-br from-mcd-gold/15 to-mcd-gold/10 p-2 rounded-lg border border-mcd-gold/25">
+                        <div className="bg-gradient-to-br from-mcd-gold/12 to-mcd-gold/8 p-2 rounded-lg border border-mcd-gold/20">
                           <CategoryIcon className="h-4 w-4 text-mcd-gold" />
                         </div>
                         <h4 className="text-base font-semibold text-foreground group-hover/header:text-mcd-gold transition-colors duration-200">
@@ -119,8 +116,8 @@ export default function QuickReference() {
                         </h4>
                       </div>
                       
-                      <div className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
-                        <div className="w-5 h-5 rounded-full bg-mcd-gold/15 border border-mcd-gold/25 flex items-center justify-center">
+                      <div className={`transform transition-transform duration-150 ease-in-out ${isExpanded ? 'rotate-180' : ''}`}>
+                        <div className="w-5 h-5 rounded-full bg-mcd-gold/10 border border-mcd-gold/20 flex items-center justify-center">
                           <div className="w-1.5 h-1.5 border-t border-r border-mcd-gold transform rotate-45 -translate-y-px" />
                         </div>
                       </div>
