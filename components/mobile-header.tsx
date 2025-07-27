@@ -67,18 +67,18 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-mcd-purple/20 shadow-lg">
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-mcd-gold font-bold text-sm">MC&D</span>
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
               </div>
-              <div>
-                <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent">
+              <div className="min-w-0">
+                <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent truncate">
                   MC&D Handbook
                 </h1>
-                <p className="text-xs text-muted-foreground font-medium">Onboarding Guide</p>
+                <p className="text-xs text-muted-foreground font-medium truncate">Onboarding Guide</p>
               </div>
             </div>
 
