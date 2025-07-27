@@ -67,15 +67,15 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-mcd-purple/20 shadow-lg">
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
               <div className="relative flex-shrink-0">
-                <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-mcd-gold font-bold text-sm">MC&D</span>
+                <div className="w-8 h-8 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-lg flex items-center justify-center shadow-lg">
+                  <span className="text-mcd-gold font-bold text-xs">MC&D</span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-card"></div>
               </div>
-              <div className="min-w-0">
-                <h1 className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent truncate">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-base font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent truncate">
                   MC&D Handbook
                 </h1>
                 <p className="text-xs text-muted-foreground font-medium truncate">Onboarding Guide</p>
@@ -84,17 +84,17 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative p-2.5 rounded-xl bg-gradient-to-br from-muted/80 to-muted/60 hover:from-muted hover:to-muted/80 border border-muted-foreground/20 hover:border-mcd-purple/50 transition-all duration-300 shadow-lg group"
+              className="relative p-2 rounded-lg bg-gradient-to-br from-muted/80 to-muted/60 hover:from-muted hover:to-muted/80 border border-muted-foreground/20 hover:border-mcd-purple/50 transition-all duration-300 shadow-lg group flex-shrink-0"
               aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation-menu"
             >
-              <div className="relative w-5 h-5 flex items-center justify-center">
+              <div className="relative w-4 h-4 flex items-center justify-center">
                 <Menu
-                  className={`absolute h-5 w-5 text-foreground transition-all duration-300 ${isMenuOpen ? "rotate-90 scale-0" : "rotate-0 scale-100"}`}
+                  className={`absolute h-4 w-4 text-foreground transition-all duration-300 ${isMenuOpen ? "rotate-90 scale-0" : "rotate-0 scale-100"}`}
                 />
                 <X
-                  className={`absolute h-5 w-5 text-foreground transition-all duration-300 ${isMenuOpen ? "rotate-0 scale-100" : "-rotate-90 scale-0"}`}
+                  className={`absolute h-4 w-4 text-foreground transition-all duration-300 ${isMenuOpen ? "rotate-0 scale-100" : "-rotate-90 scale-0"}`}
                 />
               </div>
             </button>
