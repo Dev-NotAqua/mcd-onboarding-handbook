@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, Check, Star, Zap, Shield, User, Award, BookOpen, Clock, Briefcase, Globe, Gavel, Copy } from "lucide-react"
+import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, Check, Star, Zap, Shield, User, Award, BookOpen, Clock, Briefcase, Globe, Gavel } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useSearch } from "@/contexts/search-context"
 import { highlightText } from "@/lib/search-utils"
+import { replaceIconPlaceholders } from "@/lib/constants"
 import type { HandbookSection } from "@/lib/types"
 import { CodeBlock } from "@/components/code-block"
 import { Callout } from "@/components/callout"
@@ -14,30 +15,38 @@ import { TridentTimerInterface } from "@/components/trident-timer-interface"
 import { HierarchyInterface } from "@/components/hierarchy-interface"
 import { motion, AnimatePresence } from "framer-motion"
 
-// Function to parse text with bold formatting and search highlighting
+// Function to parse text with bold formatting, icon replacement, and search highlighting
 function parseTextWithFormatting(text: string, searchTerm?: string) {
-  // First handle bold formatting
-  const boldParts = text.split(/\*\*(.*?)\*\*/g)
-  const formattedParts = boldParts.map((part, index) => {
-    if (index % 2 === 1) {
-      return <strong key={`bold-${index}`} className="font-semibold text-mcd-purple">{part}</strong>
-    }
-    return part
-  })
+  // First handle icon replacement
+  const iconReplacedParts = replaceIconPlaceholders(text)
   
-  // Then handle search highlighting if searchTerm is provided
+  // Then handle bold formatting for each part
+  const processedParts = iconReplacedParts.map((part, partIndex) => {
+    if (typeof part === 'string') {
+      const boldParts = part.split(/\*\*(.*?)\*\*/g)
+      return boldParts.map((boldPart, boldIndex) => {
+        if (boldIndex % 2 === 1) {
+          return <strong key={`bold-${partIndex}-${boldIndex}`} className="font-semibold text-mcd-purple">{boldPart}</strong>
+        }
+        return boldPart
+      })
+    }
+    return part // Return icon components as-is
+  }).flat()
+  
+  // Finally handle search highlighting if searchTerm is provided
   if (searchTerm && searchTerm.trim()) {
-    return formattedParts.map((part, index) => {
+    return processedParts.map((part, index) => {
       if (typeof part === 'string') {
         return highlightText(part, searchTerm).map((highlighted, hIndex) => (
           <span key={`highlight-${index}-${hIndex}`}>{highlighted}</span>
         ))
       }
-      return part
+      return part // Return non-string elements (bold text, icons) as-is
     })
   }
   
-  return formattedParts
+  return processedParts
 }
 
 // Icon mapping for section types
@@ -61,7 +70,7 @@ export function ContentSection({ section }: ContentSectionProps) {
   const isMobile = useIsMobile()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
+
   const { highlightedText } = useSearch()
   const contentRef = useRef<HTMLDivElement>(null)
   const IconComponent = SECTION_ICONS[section.id] || BookOpen
@@ -73,12 +82,7 @@ export function ContentSection({ section }: ContentSectionProps) {
     }
   }, [highlightedText])
 
-  const handleCopyLink = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    navigator.clipboard.writeText(`${window.location.origin}/handbook#${section.id}`)
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), 2000)
-  }
+
 
   return (
     <motion.section
@@ -100,7 +104,7 @@ export function ContentSection({ section }: ContentSectionProps) {
         <div className="relative">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between bg-gradient-to-r from-mcd-purple/5 via-mcd-purple/10 to-mcd-purple/5 hover:from-mcd-purple/10 hover:via-mcd-purple/15 hover:to-mcd-purple/10 transition-all duration-500 relative overflow-hidden group/header active:scale-[0.99]"
+            className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between bg-gradient-to-r from-mcd-purple/5 via-mcd-purple/10 to-mcd-purple/5 hover:from-mcd-purple/10 hover:via-mcd-purple/15 hover:to-mcd-purple/10 transition-all duration-300 relative overflow-hidden group/header active:scale-[0.98]"
             aria-expanded={isExpanded}
             aria-controls={`section-${section.id}`}
           >
@@ -110,7 +114,7 @@ export function ContentSection({ section }: ContentSectionProps) {
             {/* Section icon */}
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${isExpanded ? "bg-gradient-to-br from-mcd-purple to-mcd-gold scale-110" : "bg-mcd-purple/10"}`}>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-400 ease-out ${isExpanded ? "bg-gradient-to-br from-mcd-purple to-mcd-gold scale-110 shadow-lg shadow-mcd-purple/30" : "bg-mcd-purple/10 hover:bg-mcd-purple/15"}`}>
                   <IconComponent className={`h-5 w-5 ${isExpanded ? "text-white" : "text-mcd-purple"}`} />
                 </div>
                 {isExpanded && (
@@ -125,39 +129,16 @@ export function ContentSection({ section }: ContentSectionProps) {
             
             <div className="flex items-center gap-3">
               <div
-                className={`transform transition-all duration-500 group-hover/header:scale-110 flex-shrink-0 ${
+                className={`transform transition-all duration-400 ease-out group-hover/header:scale-110 flex-shrink-0 ${
                   isExpanded ? "rotate-180" : "rotate-0"
                 }`}
               >
-                {isExpanded ? (
-                  <ChevronUp className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-purple" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-purple" />
-                )}
+                <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 text-mcd-purple" />
               </div>
             </div>
           </button>
           
-          {/* Copy link button positioned absolutely to avoid nesting */}
-          <button 
-            onClick={handleCopyLink}
-            className="absolute top-4 sm:top-5 right-12 sm:right-16 p-2 rounded-full hover:bg-mcd-purple/10 transition-colors z-10"
-            aria-label={isCopied ? "Link copied!" : "Copy section link"}
-          >
-            <AnimatePresence>
-              {isCopied && (
-                <motion.div 
-                  className="absolute -top-8 -right-2 bg-mcd-purple text-white text-xs px-2 py-1 rounded-md"
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 5 }}
-                >
-                  Copied!
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <Copy className="h-4 w-4 text-mcd-purple" />
-          </button>
+
         </div>
 
         {/* Section Content */}
@@ -165,21 +146,44 @@ export function ContentSection({ section }: ContentSectionProps) {
           {isExpanded && (
             <motion.div
               id={`section-${section.id}`}
-              initial={{ height: 0, opacity: 0 }}
+              initial={{ height: 0, opacity: 0, y: -10 }}
               animate={{ 
                 height: "auto", 
                 opacity: 1,
+                y: 0,
                 transition: {
-                  height: { duration: 0.4, ease: "easeOut" },
-                  opacity: { duration: 0.3, delay: 0.1 }
+                  height: { 
+                    duration: 0.6, 
+                    ease: [0.25, 0.46, 0.45, 0.94] 
+                  },
+                  opacity: { 
+                    duration: 0.4, 
+                    delay: 0.15,
+                    ease: "easeOut" 
+                  },
+                  y: { 
+                    duration: 0.5, 
+                    delay: 0.1,
+                    ease: [0.16, 1, 0.3, 1] 
+                  }
                 }
               }}
               exit={{ 
                 height: 0, 
                 opacity: 0,
+                y: -10,
                 transition: {
-                  height: { duration: 0.3 },
-                  opacity: { duration: 0.2 }
+                  height: { 
+                    duration: 0.4, 
+                    ease: [0.55, 0.085, 0.68, 0.53] 
+                  },
+                  opacity: { 
+                    duration: 0.25 
+                  },
+                  y: { 
+                    duration: 0.3, 
+                    ease: "easeIn" 
+                  }
                 }
               }}
               className="overflow-hidden"

@@ -25,10 +25,10 @@ const Particles = ({ count }: { count: number }) => {
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  useFrame(() => {
+  useFrame((state, delta) => {
     particles.forEach((particle, i) => {
       let { factor, speed, x, y, z } = particle;
-      const t = (particle.time += speed);
+      const t = (particle.time += speed * (delta * 60)); // Frame-rate independent animation
       dummy.position.set(
         x + Math.cos((t / 10) * factor) + (Math.sin(t * 1) * factor) / 10,
         y + Math.sin((t / 10) * factor) + (Math.cos(t * 2) * factor) / 10,
@@ -53,9 +53,9 @@ const Particles = ({ count }: { count: number }) => {
 
 const ParticleBackground = () => {
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
-      <Canvas camera={{ fov: 75, position: [0, 0, 70] }}>
-        <Particles count={100} />
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
+      <Canvas camera={{ fov: 75, position: [0, 0, 70] }} dpr={[1, 2]}>
+        <Particles count={50} />
       </Canvas>
     </div>
   );

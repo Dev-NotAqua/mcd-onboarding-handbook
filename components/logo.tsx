@@ -1,44 +1,58 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Image } from '@react-three/drei'
+import * as THREE from 'three'
 
-const LogoCanvas = () => {
-  const [isVisible, setIsVisible] = useState(false);
+function Logo() {
+  const imageRef = useRef<THREE.Mesh>(null!)
+  const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
-    // Add a small delay to ensure smooth animation
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+    document.body.style.cursor = hovered ? 'pointer' : 'auto'
+    return () => {
+      document.body.style.cursor = 'auto'
+    }
+  }, [hovered])
+
+  useFrame((_, delta) => {
+    if (!imageRef.current) return
+
+    imageRef.current.rotation.y += delta * 0.1
+    const targetScale = hovered ? 1.1 : 1
+    // The scale property of the mesh itself is a Vector3, so this part is correct.
+    imageRef.current.scale.lerp(
+      new THREE.Vector3(targetScale, targetScale, targetScale),
+      0.1
+    )
+  })
 
   return (
-    <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-mcd-purple/20 via-mcd-gold/10 to-mcd-purple/20 rounded-2xl animate-pulse" />
-      
-      {/* Main logo */}
-      <div className={`relative z-10 transition-all duration-1000 transform ${
-        isVisible ? 'scale-100 opacity-100 rotate-0' : 'scale-75 opacity-0 rotate-12'
-      }`}>
-        <div className="text-center">
-          {/* Primary logo text */}
-          <div className="text-2xl md:text-3xl font-serif font-bold bg-gradient-to-r from-mcd-gold via-yellow-300 to-mcd-gold bg-clip-text text-transparent animate-shimmer bg-300% leading-none">
-            MC&D
-          </div>
-          
-          {/* Decorative elements */}
-          <div className="flex justify-center mt-2 space-x-1">
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-0" />
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-150" />
-            <div className="w-2 h-2 bg-mcd-gold rounded-full animate-bounce delay-300" />
-          </div>
-        </div>
-      </div>
-      
-      {/* Subtle rotating border */}
-      <div className="absolute inset-2 border border-mcd-gold/30 rounded-2xl animate-spin-slow" />
-    </div>
-  );
-};
+    <Image
+      ref={imageRef}
+      url="/Logo.png"
+      transparent
+      // The prop for the <Image> component expects [number, number]
+      scale={[2, 2]}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    />
+  )
+}
 
-export default LogoCanvas;
+const LogoCanvas: React.FC = () => {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 5], fov: 25 }}
+      gl={{ antialias: true, alpha: true }}
+      dpr={[1, 2]}
+    >
+      <ambientLight intensity={1.57} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <Logo />
+    </Canvas>
+  )
+}
+
+export default LogoCanvas

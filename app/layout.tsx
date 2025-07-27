@@ -14,7 +14,12 @@ export const metadata: Metadata = {
   creator: "MC&D HR Department",
   publisher: "Marshall, Carter, and Darke Ltd.",
   robots: "index, follow",
-  generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: '/Logo.png',
+    shortcut: '/Logo.png',
+    apple: '/Logo.png',
+  },
 }
 
 export const viewport: Viewport = {

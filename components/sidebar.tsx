@@ -19,6 +19,7 @@ import {
 import type { HandbookSection } from "@/lib/types"
 import { useState, useEffect } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
+import Image from "next/image"
 
 const sectionIcons = {
   welcome: Shield,
@@ -95,7 +96,7 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed left-0 top-0 h-screen w-80 bg-card/95 backdrop-blur-xl border-r border-mcd-purple/20 overflow-hidden shadow-2xl transition-all duration-500 ease-in-out z-50 ${
+        className={`fixed left-0 top-0 h-screen w-80 bg-card/95 backdrop-blur-xl border-r border-mcd-purple/20 overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] z-50 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{ overflowX: 'hidden' }}
@@ -116,8 +117,17 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
             
             <div className="flex items-center gap-4 mb-4">
               <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-2xl flex items-center justify-center shadow-xl shadow-mcd-purple/20 animate-pulse-once">
-                  <span className="text-white font-bold text-lg">MC&D</span>
+                <div className="w-14 h-14 bg-gradient-to-br from-mcd-purple/20 via-mcd-gold/20 to-mcd-purple/20 rounded-2xl flex items-center justify-center shadow-xl shadow-mcd-purple/20 backdrop-blur-sm border border-mcd-gold/30 overflow-hidden group hover:scale-105 transition-all duration-300">
+                  <div className="relative w-10 h-10">
+                    <Image
+                      src="/Logo.png"
+                      alt="MC&D Logo"
+                      fill
+                      className="object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                      priority
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-mcd-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card shadow-md animate-pulse"></div>
               </div>
@@ -147,30 +157,30 @@ export function Sidebar({ sections, activeSection }: SidebarProps) {
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left transition-all duration-300 group relative overflow-hidden mx-2 ${
+                  className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left transition-all duration-400 ease-out group relative overflow-hidden mx-2 ${
                     isActive
-                      ? "bg-gradient-to-r from-mcd-purple/20 via-mcd-purple/10 to-mcd-purple/5 text-mcd-purple border border-mcd-purple/20 shadow-lg shadow-mcd-purple/5"
-                      : "hover:bg-gradient-to-r hover:from-muted/60 hover:to-muted/30 text-muted-foreground hover:text-foreground"
+                      ? "bg-gradient-to-r from-mcd-purple/25 via-mcd-purple/15 to-mcd-purple/8 text-mcd-purple border border-mcd-purple/30 shadow-lg shadow-mcd-purple/10 scale-[1.02]"
+                      : "hover:bg-gradient-to-r hover:from-muted/60 hover:to-muted/30 text-muted-foreground hover:text-foreground hover:scale-[1.01]"
                   }`}
                 >
                   {/* Active indicator bar */}
                   {isActive && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-mcd-purple to-mcd-gold rounded-r-full"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-mcd-purple via-mcd-gold to-mcd-purple rounded-r-full shadow-lg shadow-mcd-purple/50 animate-pulse"></div>
                   )}
                   
                   {/* Animated background effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-mcd-gold/8 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
 
-                  <div className={`relative p-1.5 rounded-lg ${
+                  <div className={`relative p-1.5 rounded-lg transition-all duration-300 ease-out ${
                     isActive 
-                      ? "bg-gradient-to-br from-mcd-purple/20 to-mcd-gold/20" 
-                      : "bg-muted/50 group-hover:bg-muted"
+                      ? "bg-gradient-to-br from-mcd-purple/25 to-mcd-gold/25 shadow-md shadow-mcd-purple/20" 
+                      : "bg-muted/50 group-hover:bg-muted group-hover:shadow-sm"
                   }`}>
                     <Icon
-                      className={`h-5 w-5 transition-all duration-300 ${
+                      className={`h-5 w-5 transition-all duration-400 ease-out ${
                         isActive
-                          ? "text-mcd-purple scale-110 drop-shadow-sm"
-                          : "text-muted-foreground group-hover:text-mcd-purple group-hover:scale-110"
+                          ? "text-mcd-purple scale-125 drop-shadow-md filter brightness-110"
+                          : "text-muted-foreground group-hover:text-mcd-purple group-hover:scale-110 group-hover:drop-shadow-sm"
                       }`}
                     />
                   </div>

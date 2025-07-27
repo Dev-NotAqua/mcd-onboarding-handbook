@@ -1,403 +1,497 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { Copy, Check, Maximize, Minimize, X, WrapText, Search, Download, Eye, EyeOff } from "lucide-react"
-import Prism from 'prismjs';
-import 'prismjs/themes/prism-tomorrow.css';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-sql';
-import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
-import 'prismjs/plugins/line-numbers/prism-line-numbers';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import type { KeyboardEvent } from "react";
+import {
+  Copy,
+  Check,
+  Maximize,
+  Minimize,
+  X,
+  WrapText,
+  Search,
+  Download,
+  Eye,
+  EyeOff,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface CodeBlockProps {
-  code: string
-  language?: string
-  fileName?: string
+/* -------------------------------------------------------------------------- */
+/*  PRISM  – load only once, dynamic languages                                */
+/* -------------------------------------------------------------------------- */
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import "prismjs/plugins/line-numbers/prism-line-numbers";
+
+/* preload the common languages */
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-bash";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-sql";
+
+/* -------------------------------------------------------------------------- */
+/*  Component                                                                 */
+/* -------------------------------------------------------------------------- */
+interface Props {
+  code: string;
+  language?: string;
+  fileName?: string;
 }
 
-export function CodeBlock({ code, language = "text", fileName }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false)
-  const [expanded, setExpanded] = useState(false)
-  const [wordWrap, setWordWrap] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [showLineNumbers, setShowLineNumbers] = useState(true)
-  const [isHovered, setIsHovered] = useState(false)
-  const codeRef = useRef<HTMLElement>(null)
-  const preRef = useRef<HTMLPreElement>(null)
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  
-  // Initialize syntax highlighting
+export function CodeBlock({ code, language = "text", fileName }: Props) {
+  /* ------------------------------------------------------------------ refs */
+  const preRef = useRef<HTMLPreElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  /* -------------------------------------------------------------- state */
+  const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [wordWrap, setWordWrap] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentMatch, setCurrentMatch] = useState(0);
+  const [showLineNumbers, setShowLineNumbers] = useState(true);
+
+  /* ---------------------------------------------------------- line count */
+  const lineCount = useMemo(() => code.split("\n").length, [code]);
+
+  /* -------------------------------------------------------- highlighting */
   useEffect(() => {
-    if (codeRef.current) {
-      Prism.highlightElement(codeRef.current)
-      
-      // Add line numbers if needed
-      if (language !== 'text' && preRef.current) {
-        Prism.plugins.lineNumbers.resize(preRef.current)
+    if (!preRef.current) return;
+
+    const timer = setTimeout(() => {
+      Prism.highlightElement(preRef.current!.querySelector("code")!);
+      if (language !== "text") {
+        Prism.plugins.lineNumbers.resize(preRef.current!);
       }
-    }
-  }, [code, language, expanded])
+    }, 16);
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error("Failed to copy text: ", err)
-    }
-  }
+    return () => clearTimeout(timer);
+  }, [code, language]);
 
-  const toggleExpand = () => {
-    setExpanded(!expanded)
-  }
+  /* -------------------------------------------------------------- search */
+  const searchMatches = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    const regex = new RegExp(
+      searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      "gi",
+    );
+    return [...code.matchAll(regex)].map((m) => m.index!);
+  }, [code, searchTerm]);
 
-  const downloadCode = () => {
-    const blob = new Blob([code], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = fileName || `code.${language === 'text' ? 'txt' : language}`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+  const totalMatches = searchMatches.length;
 
-  const toggleSearch = () => {
-    setShowSearch(!showSearch)
-    if (!showSearch) {
-      setTimeout(() => searchInputRef.current?.focus(), 100)
-    } else {
-      setSearchTerm("")
-    }
-  }
+  const updateSearch = (term: string) => {
+    setSearchTerm(term);
+    setCurrentMatch(0);
+  };
 
-  const highlightSearchTerm = (text: string) => {
-    if (!searchTerm) return text
-    const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(regex, '<mark class="bg-yellow-400/30 text-yellow-200">$1</mark>')
-  }
+  const gotoMatch = useCallback(
+    (dir: 1 | -1) => {
+      if (!totalMatches) return;
+      const next =
+        (currentMatch + dir + totalMatches) % totalMatches;
+      setCurrentMatch(next);
 
-  // Keyboard shortcuts
+      const node = preRef.current?.querySelector(`[data-match="${next}"]`);
+      node?.scrollIntoView({ block: "center", behavior: "smooth" });
+    },
+    [currentMatch, totalMatches],
+  );
+
+  /* ------------------------------------------------------------ keyboard */
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!expanded) return
-      
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (!expanded) return;
+      if (e.target instanceof HTMLInputElement) return;
+
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
-          case 'c':
-            if (!showSearch) {
-              e.preventDefault()
-              copyToClipboard()
-            }
-            break
-          case 'f':
-            e.preventDefault()
-            toggleSearch()
-            break
-          case 's':
-            e.preventDefault()
-            downloadCode()
-            break
+          case "c":
+            e.preventDefault();
+            copy();
+            break;
+          case "f":
+            e.preventDefault();
+            openSearch();
+            break;
+          case "s":
+            e.preventDefault();
+            download();
+            break;
+          case "g":
+            e.preventDefault();
+            gotoMatch(e.shiftKey ? -1 : 1);
+            break;
+          case "Escape":
+            if (showSearch) closeSearch();
+            else setExpanded(false);
+            break;
         }
       }
-      
-      if (e.key === 'Escape') {
-        if (showSearch) {
-          setShowSearch(false)
-          setSearchTerm("")
-        } else {
-          setExpanded(false)
-        }
-      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [expanded, showSearch, gotoMatch]);
+
+  /* ---------------------------------------------------------- helpers */
+  const copy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      const t = setTimeout(() => setCopied(false), 2000);
+      return () => clearTimeout(t);
+    } catch {
+      /* ignore */
     }
+  }, [code]);
 
-    if (expanded) {
-      document.addEventListener('keydown', handleKeyDown)
-      return () => document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [expanded, showSearch])
+  const download = useCallback(() => {
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement("a"), {
+      href: url,
+      download: fileName || `code.${language === "text" ? "txt" : language}`,
+    });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }, [code, fileName, language]);
 
-  // Calculate lines of code
-  const lineCount = code.split('\n').length
+  const openSearch = useCallback(() => {
+    setShowSearch(true);
+    setTimeout(() => searchInputRef.current?.focus(), 100);
+  }, []);
 
+  const closeSearch = useCallback(() => {
+    setShowSearch(false);
+    setSearchTerm("");
+    setCurrentMatch(0);
+  }, []);
+
+  /* ----------------------------------------------------- render helpers */
+  const highlightedCode = useMemo(() => {
+    if (!searchTerm || !totalMatches) return code;
+
+    let last = 0,
+      idx = 0;
+    const parts = searchMatches.map((pos) => {
+      const before = code.slice(last, pos);
+      const match = code.slice(pos, pos + searchTerm.length);
+      const node = (
+        <mark
+          key={idx}
+          data-match={idx++}
+          className={`bg-yellow-400/30 text-yellow-200 ${
+            idx - 1 === currentMatch ? "ring-2 ring-yellow-400" : ""
+          }`}
+        >
+          {match}
+        </mark>
+      );
+      last = pos + searchTerm.length;
+      return (
+        <>
+          {before}
+          {node}
+        </>
+      );
+    });
+
+    return (
+      <>
+        {parts}
+        {code.slice(last)}
+      </>
+    );
+  }, [code, searchTerm, searchMatches, currentMatch]);
+
+  /* ---------------------------------------------------------- render */
   return (
     <>
-      {/* Backdrop for expanded mode */}
-      {expanded && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
-          onClick={() => setExpanded(false)}
-        />
-      )}
-      
-      <div 
-        className={`relative group rounded-xl overflow-hidden border border-mcd-gold/30 bg-gradient-to-br from-mcd-dark/90 to-mcd-darkest shadow-xl transition-all duration-300 ${
-          expanded ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] h-[calc(100%-2rem)] md:w-[calc(100%-8rem)] md:h-[calc(100%-8rem)] flex flex-col" : ""
-        }`}
-      >
-        {/* Header with gradient */}
-        <div className={`bg-gradient-to-r from-mcd-gold/10 via-mcd-gold/5 to-transparent px-4 py-2 border-b border-mcd-gold/20 ${expanded ? 'sticky top-0 z-10' : ''}`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 truncate">
-              <div className="flex gap-1.5 shrink-0">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors cursor-pointer" onClick={() => setExpanded(false)}></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors cursor-pointer" onClick={toggleExpand}></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors cursor-pointer" onClick={toggleExpand}></div>
-              </div>
-              
-              <div className="truncate">
-                {fileName && (
-                  <div className="text-xs text-mcd-gold/70 truncate max-w-[120px] md:max-w-[200px] font-medium">
-                    {fileName}
-                  </div>
-                )}
-                <span className="text-sm font-medium text-mcd-gold/90 font-mono truncate">
-                  {language}
-                </span>
-              </div>
-              
-              {language !== 'text' && expanded && (
-                <div className="text-xs text-mcd-gold/50 ml-2 flex items-center gap-2">
-                  <span className="bg-mcd-gold/10 px-2 py-1 rounded border border-mcd-gold/20">
-                    {lineCount} {lineCount === 1 ? 'line' : 'lines'}
-                  </span>
-                  {searchTerm && (
-                    <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded border border-yellow-500/30">
-                      "{searchTerm}"
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            <div className="flex gap-1">
-              {/* Word wrap toggle */}
-              {expanded && (
-                <button
-                  onClick={() => setWordWrap(!wordWrap)}
-                  className={`p-1.5 rounded-md transition-all duration-200 group/wrap ${
-                    wordWrap 
-                      ? 'bg-mcd-gold/20 text-mcd-gold' 
-                      : 'hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold'
-                  }`}
-                  aria-label="Toggle word wrap"
-                >
-                  <WrapText className="h-4 w-4 group-hover/wrap:scale-110 transition-transform" />
-                </button>
-              )}
-              
-              {/* Line numbers toggle */}
-              {expanded && language !== 'text' && (
-                <button
-                  onClick={() => setShowLineNumbers(!showLineNumbers)}
-                  className={`p-1.5 rounded-md transition-all duration-200 group/lines ${
-                    showLineNumbers 
-                      ? 'bg-mcd-gold/20 text-mcd-gold' 
-                      : 'hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold'
-                  }`}
-                  aria-label="Toggle line numbers"
-                >
-                  {showLineNumbers ? (
-                    <Eye className="h-4 w-4 group-hover/lines:scale-110 transition-transform" />
-                  ) : (
-                    <EyeOff className="h-4 w-4 group-hover/lines:scale-110 transition-transform" />
-                  )}
-                </button>
-              )}
-              
-              {/* Search toggle */}
-              {expanded && (
-                <button
-                  onClick={toggleSearch}
-                  className={`p-1.5 rounded-md transition-all duration-200 group/search ${
-                    showSearch 
-                      ? 'bg-mcd-gold/20 text-mcd-gold' 
-                      : 'hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold'
-                  }`}
-                  aria-label="Search in code"
-                >
-                  <Search className="h-4 w-4 group-hover/search:scale-110 transition-transform" />
-                </button>
-              )}
-              
-              {/* Download button */}
-              <button
-                onClick={downloadCode}
-                className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold transition-colors duration-200 group/download"
-                aria-label="Download code"
-              >
-                <Download className="h-4 w-4 group-hover/download:scale-110 transition-transform" />
-              </button>
-              
-              {/* Expand/Minimize button */}
-              <button
-                onClick={toggleExpand}
-                className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold transition-colors duration-200 group/expand"
-                aria-label={expanded ? "Minimize code" : "Expand code"}
-              >
-                {expanded ? (
-                  <Minimize className="h-4 w-4 group-hover/expand:scale-110 transition-transform" />
-                ) : (
-                  <Maximize className="h-4 w-4 group-hover/expand:scale-110 transition-transform" />
-                )}
-              </button>
-              
-              {/* Close button (only in expanded mode) */}
-              {expanded && (
-                <button
-                  onClick={() => setExpanded(false)}
-                  className="p-1.5 rounded-md hover:bg-red-500/20 text-mcd-gold/70 hover:text-red-400 transition-colors duration-200 group/close"
-                  aria-label="Close"
-                >
-                  <X className="h-4 w-4 group-hover/close:scale-110 transition-transform" />
-                </button>
-              )}
-              
-              {/* Copy button */}
-              <button
-                onClick={copyToClipboard}
-                className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold transition-colors duration-200 group/copy relative"
-                aria-label="Copy code"
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-400 group-hover/copy:scale-110 transition-transform" />
-                ) : (
-                  <Copy className="h-4 w-4 group-hover/copy:scale-110 transition-transform" />
-                )}
-                
-                {/* Tooltip */}
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-mcd-gold text-mcd-darkest text-xs px-2 py-1 rounded-md shadow-lg opacity-0 group-hover/copy:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
-                  {copied ? "Copied!" : "Copy to clipboard"}
-                </div>
-              </button>
-            </div>
-          </div>
-          
-          {/* Search bar */}
-          {showSearch && expanded && (
-            <div className="mt-3 pt-3 border-t border-mcd-gold/20">
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search in code... (Ctrl+F)"
-                  className="w-full bg-mcd-dark/50 border border-mcd-gold/30 rounded-md px-3 py-2 text-sm text-mcd-gold placeholder-mcd-gold/50 focus:outline-none focus:ring-2 focus:ring-mcd-gold/50 focus:border-mcd-gold/50"
-                />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-mcd-gold/50">
-                  ESC to close
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Code container with gradient overlay */}
-        <div 
-          className="relative flex-1 overflow-auto group/code"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-mcd-gold/3 via-transparent to-mcd-gold/3 pointer-events-none"></div>
-          
-          {/* Scrollbar styling overlay */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-3 h-full bg-gradient-to-b from-mcd-gold/10 to-transparent opacity-0 group-hover/code:opacity-100 transition-opacity"></div>
-          </div>
-          
-          <pre 
-            ref={preRef}
-            className={`p-4 font-mono text-sm transition-all duration-300 ${
-              language !== 'text' && showLineNumbers ? 'line-numbers' : ''
-            } ${
-              wordWrap ? 'whitespace-pre-wrap break-words' : 'overflow-x-auto'
-            } ${
-              isHovered ? 'bg-mcd-dark/20' : ''
-            }`}
-            style={{
-              height: expanded ? '100%' : 'auto',
-              maxHeight: expanded ? '100%' : '24rem',
-              scrollbarWidth: 'thin',
-              scrollbarColor: 'rgba(212, 175, 55, 0.3) transparent'
-            }}
-          >
-            <code 
-              ref={codeRef} 
-              className={`language-${language} transition-all duration-200`}
-              dangerouslySetInnerHTML={{
-                __html: searchTerm ? highlightSearchTerm(code) : code
-              }}
-            />
-          </pre>
-          
-          {/* Keyboard shortcuts hint */}
-          {expanded && isHovered && (
-            <div className="absolute bottom-4 right-4 bg-mcd-dark/90 border border-mcd-gold/30 rounded-lg p-3 text-xs text-mcd-gold/70 backdrop-blur-sm">
-              <div className="space-y-1">
-                <div><kbd className="bg-mcd-gold/20 px-1 rounded">Ctrl+C</kbd> Copy</div>
-                <div><kbd className="bg-mcd-gold/20 px-1 rounded">Ctrl+F</kbd> Search</div>
-                <div><kbd className="bg-mcd-gold/20 px-1 rounded">Ctrl+S</kbd> Download</div>
-                <div><kbd className="bg-mcd-gold/20 px-1 rounded">Esc</kbd> Close</div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Floating copy confirmation */}
-        {copied && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-mcd-gold to-mcd-gold/80 text-mcd-darkest px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in-out z-20 border border-mcd-gold/30">
-            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-              <Check className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="font-bold text-sm">Copied to clipboard!</div>
-              <div className="text-xs opacity-80">{lineCount} lines copied</div>
-            </div>
-          </div>
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setExpanded(false)}
+          />
         )}
-        
-        {/* Enhanced info badges */}
-        {!expanded && (
-          <div className="absolute bottom-3 right-3 flex gap-2">
-            {/* Line count badge */}
-            {language !== 'text' && (
-              <div className="bg-mcd-dark/90 border border-mcd-gold/30 text-mcd-gold/80 text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm flex items-center gap-1.5 shadow-lg">
-                <div className="w-1.5 h-1.5 bg-mcd-gold rounded-full animate-pulse"></div>
-                <span className="font-medium">{lineCount} {lineCount === 1 ? 'line' : 'lines'}</span>
+      </AnimatePresence>
+
+      <motion.div
+        className="relative rounded-xl overflow-hidden border border-mcd-gold/30 bg-gradient-to-br from-mcd-dark/90 to-mcd-darkest shadow-2xl"
+        layout
+        transition={{ type: "spring", stiffness: 400, damping: 40 }}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: expanded ? "fixed" : "relative",
+          top: expanded ? "50%" : undefined,
+          left: expanded ? "50%" : undefined,
+          transform: expanded ? "translate(-50%, -50%)" : undefined,
+          width: expanded ? "calc(100vw - 4rem)" : "100%",
+          height: expanded ? "calc(100vh - 4rem)" : undefined,
+          zIndex: expanded ? 50 : undefined,
+        }}
+      >
+        {/* ------------------------------------------------ header */}
+        <header className="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-mcd-gold/10 via-mcd-gold/5 to-transparent border-b border-mcd-gold/20">
+          <div className="truncate flex items-center gap-3">
+            {/* traffic lights */}
+            <div className="flex gap-1.5">
+              <button
+                aria-label="Close"
+                className="w-2.5 h-2.5 rounded-full bg-red-500/80 hover:bg-red-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(false);
+                }}
+              />
+              <button
+                aria-label="Toggle size"
+                className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 hover:bg-yellow-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded((b) => !b);
+                }}
+              />
+              <button
+                aria-label="Expand"
+                className="w-2.5 h-2.5 rounded-full bg-green-500/80 hover:bg-green-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(true);
+                }}
+              />
+            </div>
+
+            {/* file / language */}
+            <div className="truncate">
+              {fileName && (
+                <div className="text-xs text-mcd-gold/70 truncate max-w-[120px] md:max-w-[200px]">
+                  {fileName}
+                </div>
+              )}
+              <span className="text-sm font-mono text-mcd-gold/90">
+                {language}
+              </span>
+            </div>
+
+            {/* badges */}
+            {expanded && language !== "text" && (
+              <div className="text-xs text-mcd-gold/50 ml-2 flex items-center gap-2">
+                <span>
+                  {lineCount} {lineCount === 1 ? "line" : "lines"}
+                </span>
+                {totalMatches > 0 && (
+                  <span>
+                    {currentMatch + 1}/{totalMatches} matches
+                  </span>
+                )}
               </div>
             )}
-            
-            {/* Language badge */}
-            <div className="bg-mcd-purple/20 border border-mcd-purple/40 text-mcd-purple text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm font-mono font-medium shadow-lg">
+          </div>
+
+          {/* ---------------------------------------------------- controls */}
+          <div className="flex items-center gap-1">
+            {expanded && (
+              <>
+                <button
+                  aria-label="Toggle word wrap"
+                  className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setWordWrap((b) => !b);
+                  }}
+                >
+                  <WrapText size={16} />
+                </button>
+
+                {language !== "text" && (
+                  <button
+                    aria-label="Toggle line numbers"
+                    className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowLineNumbers((b) => !b);
+                    }}
+                  >
+                    {showLineNumbers ? <Eye size={16} /> : <EyeOff size={16} />}
+                  </button>
+                )}
+
+                <button
+                  aria-label="Search"
+                  className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openSearch();
+                  }}
+                >
+                  <Search size={16} />
+                </button>
+              </>
+            )}
+
+            <button
+              aria-label="Download"
+              className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+              onClick={(e) => {
+                e.stopPropagation();
+                download();
+              }}
+            >
+              <Download size={16} />
+            </button>
+
+            <button
+              aria-label={expanded ? "Minimize" : "Expand"}
+              className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded((b) => !b);
+              }}
+            >
+              {expanded ? <Minimize size={16} /> : <Maximize size={16} />}
+            </button>
+
+            <button
+              aria-label="Copy"
+              className="p-1.5 rounded-md hover:bg-mcd-gold/20 text-mcd-gold/70 hover:text-mcd-gold"
+              onClick={(e) => {
+                e.stopPropagation();
+                copy();
+              }}
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+            </button>
+
+            {expanded && (
+              <button
+                aria-label="Close"
+                className="p-1.5 rounded-md hover:bg-red-500/20 text-mcd-gold/70 hover:text-red-400"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(false);
+                }}
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        </header>
+
+        {/* ------------------------------------------------ search bar */}
+        <AnimatePresence>
+          {showSearch && expanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="border-t border-mcd-gold/20 px-4 py-2"
+            >
+              <div className="flex gap-2">
+                <input
+                  ref={searchInputRef}
+                  value={searchTerm}
+                  onChange={(e) => updateSearch(e.target.value)}
+                  placeholder="Search…"
+                  className="flex-1 bg-mcd-dark/50 border border-mcd-gold/30 rounded-md px-3 py-1 text-sm text-mcd-gold placeholder-mcd-gold/50 focus:outline-none focus:ring-1 focus:ring-mcd-gold"
+                />
+                {totalMatches > 0 && (
+                  <>
+                    <span className="text-sm text-mcd-gold/80 self-center">
+                      {currentMatch + 1}/{totalMatches}
+                    </span>
+                    <button
+                      aria-label="Previous match"
+                      className="p-1 rounded-md hover:bg-mcd-gold/20"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        gotoMatch(-1);
+                      }}
+                    >
+                      <ChevronUp size={14} />
+                    </button>
+                    <button
+                      aria-label="Next match"
+                      className="p-1 rounded-md hover:bg-mcd-gold/20"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        gotoMatch(1);
+                      }}
+                    >
+                      <ChevronDown size={14} />
+                    </button>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ------------------------------------------------ code */}
+        <div className="relative flex-1 overflow-auto">
+          <pre
+            ref={preRef}
+            className={[
+              "p-4 font-mono text-sm leading-snug",
+              language !== "text" && showLineNumbers ? "line-numbers" : "",
+              wordWrap ? "whitespace-pre-wrap break-words" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            style={{
+              maxHeight: expanded ? undefined : "24rem",
+            }}
+          >
+            <code
+              className={`language-${language}`}
+              suppressHydrationWarning
+            >
+              {highlightedCode}
+            </code>
+          </pre>
+        </div>
+
+        {/* ------------------------------------------------ badges */}
+        {!expanded && (
+          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+            <span className="bg-mcd-dark/90 border border-mcd-gold/30 text-mcd-gold/80 text-xs px-2 py-1 rounded-md">
+              {lineCount}
+            </span>
+            <span className="bg-mcd-purple/20 border border-mcd-purple/40 text-mcd-purple text-xs px-2 py-1 rounded-md font-mono">
               {language.toUpperCase()}
-            </div>
+            </span>
           </div>
         )}
-        
-        {/* Hover overlay for non-expanded mode */}
-        {!expanded && isHovered && (
-          <div className="absolute inset-0 bg-gradient-to-t from-mcd-gold/5 via-transparent to-transparent pointer-events-none rounded-xl transition-opacity duration-300" />
-        )}
-        
-        {/* Loading state for syntax highlighting */}
-        {language !== 'text' && !codeRef.current && (
-          <div className="absolute inset-0 flex items-center justify-center bg-mcd-dark/50 backdrop-blur-sm rounded-xl">
-            <div className="flex items-center gap-3 text-mcd-gold/70">
-              <div className="w-5 h-5 border-2 border-mcd-gold/30 border-t-mcd-gold rounded-full animate-spin"></div>
-              <span className="text-sm font-medium">Highlighting syntax...</span>
-            </div>
-          </div>
-        )}
-      </div>
+
+        {/* ------------------------------------------------ copied toast */}
+        <AnimatePresence>
+          {copied && (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="absolute top-4 left-1/2 -translate-x-1/2 bg-mcd-gold text-mcd-darkest px-3 py-2 rounded-md shadow-lg flex items-center gap-2 text-sm"
+            >
+              <Check size={16} />
+              Copied
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </>
-  )
+  );
 }
