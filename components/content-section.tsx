@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { ChevronDown, ExternalLink } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { useSearch } from "@/contexts/search-context"
+import { highlightText } from "@/lib/search-utils"
 import type { HandbookSection } from "@/lib/types"
 import { CodeBlock } from "@/components/code-block"
 import { Callout } from "@/components/callout"
@@ -11,16 +13,31 @@ import { DiscordVerificationInterface } from "@/components/discord-verification-
 import { TridentTimerInterface } from "@/components/trident-timer-interface"
 import { HierarchyInterface } from "@/components/hierarchy-interface"
 
-// Function to parse text with bold formatting
-function parseTextWithFormatting(text: string) {
-  const parts = text.split(/\*\*(.*?)\*\*/g)
-  return parts.map((part, index) => {
+// Function to parse text with bold formatting and search highlighting
+function parseTextWithFormatting(text: string, searchTerm?: string) {
+  // First handle bold formatting
+  const boldParts = text.split(/\*\*(.*?)\*\*/g)
+  const formattedParts = boldParts.map((part, index) => {
     if (index % 2 === 1) {
       // This is the content inside **bold** markers
-      return <strong key={index} className="font-semibold text-mcd-purple">{part}</strong>
+      return <strong key={`bold-${index}`} className="font-semibold text-mcd-purple">{part}</strong>
     }
     return part
   })
+  
+  // Then handle search highlighting if searchTerm is provided
+  if (searchTerm && searchTerm.trim()) {
+    return formattedParts.map((part, index) => {
+      if (typeof part === 'string') {
+        return highlightText(part, searchTerm).map((highlighted, hIndex) => (
+          <span key={`highlight-${index}-${hIndex}`}>{highlighted}</span>
+        ))
+      }
+      return part
+    })
+  }
+  
+  return formattedParts
 }
 
 
@@ -31,6 +48,7 @@ interface ContentSectionProps {
 export function ContentSection({ section }: ContentSectionProps) {
   const isMobile = useIsMobile()
   const [isExpanded, setIsExpanded] = useState(false)
+  const { highlightedText } = useSearch()
 
   return (
     <section id={section.id} className="scroll-mt-20 sm:scroll-mt-24 group">
@@ -70,14 +88,14 @@ export function ContentSection({ section }: ContentSectionProps) {
               <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 {item.type === "text" && (
                   <p className="text-foreground leading-relaxed text-sm sm:text-base lg:text-lg">
-                    {parseTextWithFormatting(item.text || "")}
+                    {parseTextWithFormatting(item.text || "", highlightedText)}
                   </p>
                 )}
 
                 {item.type === "heading" && (
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-serif font-semibold bg-gradient-to-r from-mcd-purple via-mcd-gold to-mcd-purple bg-clip-text text-transparent mt-6 sm:mt-8 mb-3 sm:mb-4 flex items-center gap-2">
                     <div className="w-1 h-5 sm:h-6 bg-gradient-to-b from-mcd-purple to-mcd-gold rounded-full flex-shrink-0"></div>
-                    {parseTextWithFormatting(item.text || "")}
+                    {parseTextWithFormatting(item.text || "", highlightedText)}
                   </h3>
                 )}
 
@@ -89,7 +107,7 @@ export function ContentSection({ section }: ContentSectionProps) {
                           <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gradient-to-br from-mcd-purple to-mcd-gold rounded-full shadow-lg group-hover/item:scale-125 transition-transform duration-300"></div>
                         </div>
                         <span className="text-foreground leading-relaxed group-hover/item:text-mcd-purple transition-colors duration-300 flex-1 text-sm sm:text-base lg:text-lg">
-                          {parseTextWithFormatting(listItem)}
+                          {parseTextWithFormatting(listItem, highlightedText)}
                         </span>
                       </div>
                     ))}
@@ -105,7 +123,7 @@ export function ContentSection({ section }: ContentSectionProps) {
                 {item.type === "callout" && (
                   <div className="my-4 sm:my-6">
                     <Callout type={item.calloutType || "info"}>
-                      {parseTextWithFormatting(item.text || "")}
+                      {parseTextWithFormatting(item.text || "", highlightedText)}
                     </Callout>
                   </div>
                 )}

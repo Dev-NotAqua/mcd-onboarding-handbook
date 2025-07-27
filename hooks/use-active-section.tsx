@@ -13,18 +13,22 @@ export function useActiveSection() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the entry with the highest intersection ratio
+        // Find the entry with the highest intersection ratio that's in the viewport
         const visibleEntries = entries.filter(entry => entry.isIntersecting)
         if (visibleEntries.length > 0) {
-          const mostVisible = visibleEntries.reduce((prev, current) => 
-            current.intersectionRatio > prev.intersectionRatio ? current : prev
-          )
-          setActiveSection(mostVisible.target.id)
+          // Sort by how close to the top of the viewport they are
+          const sortedEntries = visibleEntries.sort((a, b) => {
+            const aTop = a.boundingClientRect.top
+            const bTop = b.boundingClientRect.top
+            // Prefer sections closer to the top of the viewport
+            return Math.abs(aTop) - Math.abs(bTop)
+          })
+          setActiveSection(sortedEntries[0].target.id)
         }
       },
       {
-        rootMargin: "-10% 0px -80% 0px", // Adjusted for better mobile experience
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1], // Multiple thresholds for better accuracy
+        rootMargin: "-20% 0px -60% 0px", // Better detection for collapsed sections
+        threshold: [0, 0.1, 0.3, 0.5], // Simplified thresholds for better performance
       },
     )
 

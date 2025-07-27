@@ -38,15 +38,24 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      // Account for mobile header height (96px = 24 * 4)
-      const headerHeight = 96
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-      const offsetPosition = elementPosition - headerHeight
+      // Find and click the expand button to open the section
+      const expandButton = element.querySelector('button[aria-expanded]') as HTMLButtonElement
+      if (expandButton && expandButton.getAttribute('aria-expanded') === 'false') {
+        expandButton.click()
+      }
+      
+      // Account for mobile header height (96px = 24 * 4) with a delay for expansion
+      setTimeout(() => {
+        const headerHeight = 96
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition - headerHeight
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      })
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        })
+      }, 100)
+      
       setIsMenuOpen(false)
     }
   }
