@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 interface Props {
   onComplete: () => void;
@@ -14,11 +14,12 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
   const [canSkip, setCanSkip] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isShaking, setIsShaking] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   /* ---------- lines ---------- */
-  const lines = [
+  const lines = useMemo(() => [
     { text: "MC&D TERMINAL v3.14.159", duration: 500 },
     { text: "Copyright © Marshall, Carter & Darke Ltd.", duration: 300 },
     { text: "", duration: 200 },
@@ -38,8 +39,9 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
     { text: "2...", duration: 800 },
     { text: "1...", duration: 800 },
     { text: "LAUNCHING HANDBOOK INTERFACE...", duration: 1000 },
-  ];
-  const totalDuration = lines.reduce((a, b) => a + b.duration, 0);
+  ], []);
+
+  const totalDuration = useMemo(() => lines.reduce((a, b) => a + b.duration, 0), [lines]);
 
   /* ---------- effects ---------- */
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
   }, []);
 
   useEffect(() => {
-    if (isComplete) return; // This prevents the effect from re-running after completion
+    if (isComplete) return;
 
     const start = performance.now();
     let id: number;
@@ -64,14 +66,18 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
       const elapsed = now - start;
       setProgress(Math.min(100, (elapsed / totalDuration) * 100));
 
-      let idx = 0;
-      let cum = 0;
+      let cumulativeDuration = 0;
+      let nextLineIndex = 0;
       for (let i = 0; i < lines.length; i++) {
-        cum += lines[i].duration;
-        if (elapsed < cum) break;
-        idx = i + 1;
+        cumulativeDuration += lines[i].duration;
+        if (elapsed < cumulativeDuration) {
+          nextLineIndex = i;
+          break;
+        }
+        nextLineIndex = i + 1;
       }
-      setCurrentLine(idx);
+      
+      setCurrentLine(nextLineIndex);
 
       if (elapsed >= totalDuration) {
         setIsComplete(true);
@@ -93,19 +99,18 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
     const launchLine = lines[currentLine];
     if (!launchLine) return;
     const doShake = /LAUNCHING/.test(launchLine.text);
+    setIsShaking(doShake);
     onShakeChange?.(doShake);
   }, [currentLine, onShakeChange, lines]);
 
   /* ---------- interaction handler ---------- */
   const handleInteraction = useCallback(() => {
-    if (isComplete || canSkip) {
-        setIsComplete(true); // Ensure animation stops
-        onComplete();
+    if (canSkip && !isComplete) {
+      setIsComplete(true);
     }
-  }, [canSkip, isComplete, onComplete]);
+  }, [canSkip, isComplete]);
 
   useEffect(() => {
-    // Attach listener if skippable or already complete
     if (canSkip || isComplete) {
       window.addEventListener("click", handleInteraction);
       window.addEventListener("keydown", handleInteraction);
@@ -116,111 +121,197 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
     };
   }, [canSkip, isComplete, handleInteraction]);
 
+  // Separate effect to handle completion callback
+  useEffect(() => {
+    if (isComplete) {
+      onComplete();
+    }
+  }, [isComplete, onComplete]);
+
   /* ---------- helpers ---------- */
   const lineStyle = (t: string) => {
-    if (t.startsWith("MC&D TERMINAL")) return "text-[#d4af37] font-bold text-lg";
-    if (t.startsWith("Copyright")) return "text-[#d4af37]";
-    if (t.includes("100%")) return "text-green-400 font-bold";
-    if (/granted|established/.test(t)) return "text-green-400 font-semibold";
-    if (/profit meets prestige/.test(t)) return "text-[#f2d675] italic";
+    if (t.startsWith("MC&D TERMINAL")) return "text-mcd-gold-light font-bold text-lg";
+    if (t.startsWith("Copyright")) return "text-mcd-gold";
+    if (t.includes("100%")) return "text-mcd-gold-light font-bold";
+    if (/granted|established/.test(t)) return "text-mcd-gold-light font-semibold";
+    if (/profit meets prestige/.test(t)) return "italic";
     if (/LAUNCH|INITIATING/.test(t)) return "text-red-500 font-bold";
     if (/^...$/.test(t)) return "text-yellow-500 font-bold text-xl";
-    return "text-green-400";
+    return "text-mcd-gold";
+  };
+
+  const generateStars = (count: number, sizeRange: [number, number], speedRange: [number, number]) => {
+    return Array.from({ length: count }).map((_, i) => {
+      const size = Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0];
+      const duration = Math.random() * (speedRange[1] - speedRange[0]) + speedRange[0];
+      return (
+        <div
+          key={i}
+          className="absolute rounded-full bg-mcd-gold-light animate-pulse"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${size}px`,
+            height: `${size}px`,
+            animationDuration: `${duration}s`,
+            opacity: Math.random() * 0.5 + 0.1,
+          }}
+        />
+      );
+    });
   };
 
   return (
     <>
       {/* global styles */}
       <style jsx global>{`
-        html { --gold: #d4af37; --gold-light: #f2d675; --purple-dark: #2e1a47; --purple: #4a2b6b; --green: #22c55e; --red: #ef4444; --yellow: #eab308; }
-        @keyframes scan { 0% { transform: translateY(-100px); } 100% { transform: translateY(100vh); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        :root { 
+          --mcd-gold-light: #FAD02C;
+          --mcd-gold: #D4AF37;
+          --mcd-gold-dark: #B8860B;
+          --mcd-purple-light: #6A4C93;
+          --mcd-purple: #462569;
+          --mcd-purple-dark: #2D1A44;
+        }
+        
+        @keyframes scan { 
+          0% { background-position: 0 0; } 
+          100% { background-position: 0 100vh; } 
+        }
+        
+        @keyframes pulse { 
+          0%, 100% { opacity: 0.2; } 
+          50% { opacity: 0.8; } 
+        }
+        
+        @keyframes fadeIn { 
+          from { opacity: 0; } 
+          to { opacity: 1; } 
+        }
+        
+        @keyframes shake { 
+          0%, 100% { transform: translate(0, 0); }
+          25% { transform: translate(-2px, 2px); }
+          50% { transform: translate(2px, -2px); }
+          75% { transform: translate(-2px, 2px); }
+        }
+
         .animate-shake { animation: shake 0.1s linear infinite; }
-        .animate-glow { box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.25); }
+        
+        .animate-glow { 
+          box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.25);
+          transition: box-shadow 0.3s ease;
+        }
+
+        .shake-glow {
+          animation: shake 0.2s ease-in-out infinite, glow-pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.25); }
+            50% { box-shadow: 0 0 30px 10px rgba(212, 175, 55, 0.4); }
+        }
+        
+        .crt::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            rgba(18, 16, 16, 0.1) 50%, 
+            rgba(0, 0, 0, 0.25) 50%
+          );
+          background-size: 100% 3px;
+          z-index: 10;
+          pointer-events: none;
+          animation: scan 8s linear infinite;
+        }
+        
         @media (prefers-reduced-motion: reduce) {
-          * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+          * { 
+            animation-duration: 0.01ms !important; 
+            animation-iteration-count: 1 !important; 
+            transition-duration: 0.01ms !important; 
+          }
         }
       `}</style>
 
       {/* component */}
       <div
         ref={containerRef}
-        className="fixed inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-2 sm:p-4 cursor-pointer overflow-hidden z-50"
+        className="fixed inset-0 bg-gradient-to-br from-[var(--mcd-purple-dark)] via-[var(--mcd-purple)] to-black flex items-center justify-center p-2 sm:p-4 cursor-pointer overflow-hidden z-50"
         onClick={handleInteraction}
       >
-        {/* starfield */}
+        {/* starfield layers */}
         <div className="absolute inset-0 pointer-events-none">
-          {Array.from({ length: 100 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-yellow-400/10 animate-pulse"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 3 + 1}px`,
-                height: `${Math.random() * 3 + 1}px`,
-                animationDuration: `${Math.random() * 5 + 3}s`,
-                animationDelay: `${i * 0.02}s`,
-              }}
-            />
-          ))}
+          {generateStars(100, [0.5, 1.5], [20, 40])}
+          {generateStars(50, [1, 2.5], [10, 20])}
         </div>
 
         {/* terminal */}
-        <div className="w-full max-w-4xl flex flex-col rounded-xl overflow-hidden shadow-2xl animate-glow">
+        <div className={`w-full max-w-4xl flex flex-col rounded-lg overflow-hidden shadow-2xl animate-glow transition-all duration-300 ${
+          isShaking ? 'shake-glow' : ''
+        }`}>
           {/* title bar */}
-          <header className="bg-gradient-to-r from-[#2e1a47] to-[#4a2b6b] px-3 py-2 flex items-center gap-2">
+          <header className="bg-gradient-to-r from-[var(--mcd-purple-dark)] to-[var(--mcd-purple)] px-3 py-2 flex items-center gap-2 border-b border-black/30">
             <div className="flex gap-1.5">
-              <span className="w-2.5 h-2.5 bg-red-400 rounded-full" />
-              <span className="w-2.5 h-2.5 bg-yellow-400 rounded-full" />
-              <span className="w-2.5 h-2.5 bg-green-400 rounded-full" />
+              <span className="w-2.5 h-2.5 bg-red-500/80 rounded-full" />
+              <span className="w-2.5 h-2.5 bg-yellow-500/80 rounded-full" />
+              <span className="w-2.5 h-2.5 bg-green-500/80 rounded-full" />
             </div>
-            <span className="ml-2 text-xs sm:text-sm text-[#f2d675] font-semibold tracking-wider">MC&D TERMINAL v3.14.159</span>
-            <div className="ml-auto flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-[#f2d675]/80">
+            <span className="ml-2 text-xs sm:text-sm text-[var(--mcd-gold)] font-semibold tracking-wider">MC&D TERMINAL</span>
+            <div className="ml-auto flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-[var(--mcd-gold)]/80">
               <span>{Math.round(progress)}% COMPLETE</span>
               <span>{new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
             </div>
           </header>
 
           {/* body */}
-          <main className="bg-black/90 flex-1 p-3 sm:p-6 font-mono relative">
-            <div className="space-y-1">
+          <main className="bg-black/70 flex-1 p-3 sm:p-6 font-mono relative crt backdrop-blur-[1px]">
+            <div className="relative z-20 space-y-1">
+              
+              {/* --- FIX: Correctly render previous and current lines --- */}
               {lines.slice(0, currentLine).map((l, i) => (
-                <p key={i} className={`${lineStyle(l.text)} animate-fadeIn`}>
+                <p key={i} className={lineStyle(l.text)}>
                   {l.text || "\u00A0"}
                 </p>
               ))}
 
               {!isComplete && currentLine < lines.length && (
-                 <p className="flex items-center gap-2 animate-fadeIn">
-                  <span className="text-green-400">{">"}</span>
-                  <span className={`inline-block w-2.5 h-[1lh] bg-[#d4af37] transition-opacity ${showCursor ? "opacity-100" : "opacity-0"}`} />
+                 <p className={`flex items-center gap-2 ${lineStyle(lines[currentLine].text)}`}>
+                  <span>{lines[currentLine].text}</span>
+                  <span className={`inline-block w-2 h-[1em] bg-[var(--mcd-gold-light)] transition-opacity duration-200 ${showCursor ? "opacity-100" : "opacity-0"}`} />
                  </p>
               )}
-            </div>
 
-            {isComplete && (
-               <div className="mt-8 text-center space-y-2 animate-pulse">
-                 <p className="text-[#d4af37] font-bold tracking-wider text-sm sm:text-base">► PRESS ANY KEY TO CONTINUE ◄</p>
-                 <p className="text-gray-500 text-xs">Click anywhere or press any key</p>
-               </div>
-            )}
+            </div>
+            
+            {/* CRT grid overlay */}
+            <div className="absolute inset-0 pointer-events-none z-10"
+              style={{
+                backgroundImage: `linear-gradient(rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+                                  linear-gradient(90deg, rgba(212, 175, 55, 0.04) 1px, transparent 1px)`,
+                backgroundSize: "2em 2em"
+              }}
+            />
           </main>
 
           {/* progress */}
-          <div className="h-1 bg-gray-800">
-            <div className="h-full bg-gradient-to-r from-[#d4af37] to-yellow-500 transition-all duration-300" style={{ width: `${progress}%` }} />
+          <div className="h-1 bg-black/50">
+            <div className="h-full bg-gradient-to-r from-[var(--mcd-gold)] to-[var(--mcd-gold-light)] transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
-        <p className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-[#d4af37]/50 tracking-wider">CONFIDENTIAL - FOR AUTHORIZED PERSONNEL ONLY</p>
+        <p className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-[var(--mcd-gold)]/50 tracking-wider z-10">
+          CONFIDENTIAL - FOR AUTHORIZED PERSONNEL ONLY
+        </p>
 
         {canSkip && !isComplete && (
-          <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-black/50 px-2 py-1 rounded-full border border-[#d4af37]/30 animate-fadeIn">
-            <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse" />
-            <span className="text-[10px] text-[#d4af37]">PRESS ANY KEY TO SKIP</span>
+          <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-black/70 px-3 py-1.5 rounded-full border border-[var(--mcd-gold)]/30 animate-fadeIn z-10 backdrop-blur-sm">
+            <span className="w-2 h-2 bg-[var(--mcd-gold)] rounded-full animate-pulse" />
+            <span className="text-xs text-[var(--mcd-gold)]">PRESS ANY KEY TO SKIP</span>
           </div>
         )}
       </div>
