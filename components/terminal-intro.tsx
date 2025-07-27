@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react"
 
 interface TerminalIntroProps {
   onComplete: () => void
+  onShakeChange?: (isShaking: boolean) => void
 }
 
-export function TerminalIntro({ onComplete }: TerminalIntroProps) {
+export function TerminalIntro({ onComplete, onShakeChange }: TerminalIntroProps) {
   const [currentLine, setCurrentLine] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
   const [isComplete, setIsComplete] = useState(false)
@@ -16,6 +17,8 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(0)
+  const onCompleteRef = useRef(onComplete)
+  const onShakeChangeRef = useRef(onShakeChange)
 
   const terminalLines = useRef([
     { text: "MC&D TERMINAL v3.14.159", duration: 500 },
@@ -43,12 +46,18 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
     terminalLines.reduce((sum, line) => sum + line.duration, 0) + 1000
   ).current
 
+  // Update refs when props change
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+    onShakeChangeRef.current = onShakeChange
+  }, [onComplete, onShakeChange])
+
   const handleSkip = useCallback(() => {
     if (canSkip && animationRef.current) {
       cancelAnimationFrame(animationRef.current)
-      onComplete()
+      onCompleteRef.current()
     }
-  }, [canSkip, onComplete])
+  }, [canSkip])
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -96,12 +105,16 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
       // Trigger shake animation during countdown
       if (terminalLines[currentIndex]?.text.includes("LAUNCHING")) {
         setShake(true)
-        setTimeout(() => setShake(false), 2000)
+        onShakeChangeRef.current?.(true)
+        setTimeout(() => {
+          setShake(false)
+          // Don't stop shaking here - let the main page handle it
+        }, 2000)
       }
       
       if (elapsed >= totalDuration && !isComplete) {
         setIsComplete(true)
-        setTimeout(onComplete, 500)
+        onCompleteRef.current()
         return
       }
       
@@ -114,7 +127,7 @@ export function TerminalIntro({ onComplete }: TerminalIntroProps) {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current)
     }
-  }, [terminalLines, totalDuration, isComplete, onComplete])
+  }, [terminalLines, totalDuration, isComplete])
 
   useEffect(() => {
     const timer = setInterval(() => setShowCursor(prev => !prev), 500)

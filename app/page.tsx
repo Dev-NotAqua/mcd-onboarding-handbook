@@ -21,9 +21,18 @@ import { TerminalIntro } from "@/components/terminal-intro"
 export default function HandbookPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showTerminal, setShowTerminal] = useState(true)
+  const [isShaking, setIsShaking] = useState(false)
   const isMobile = useIsMobile()
   const activeSection = useActiveSection()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Check if terminal has been completed before (but allow reset on page refresh)
+  useEffect(() => {
+    const terminalCompleted = sessionStorage.getItem('mcd-terminal-completed')
+    if (terminalCompleted === 'true') {
+      setShowTerminal(false)
+    }
+  }, [])
 
   // Close menu on escape key and prevent body scroll
   useEffect(() => {
@@ -48,6 +57,17 @@ export default function HandbookPage() {
 
   const handleTerminalComplete = () => {
     setShowTerminal(false)
+    sessionStorage.setItem('mcd-terminal-completed', 'true')
+    // Continue shaking for a brief moment after terminal completes, then fade away
+    if (isShaking) {
+      setTimeout(() => {
+        setIsShaking(false)
+      }, 1000) // Shake for 1 second after terminal completes
+    }
+  }
+
+  const handleShakeChange = (shaking: boolean) => {
+    setIsShaking(shaking)
   }
 
   const filteredSections = useMemo(() => {
@@ -64,12 +84,12 @@ export default function HandbookPage() {
   }, [searchQuery])
 
   if (showTerminal) {
-    return <TerminalIntro onComplete={handleTerminalComplete} />
+    return <TerminalIntro onComplete={handleTerminalComplete} onShakeChange={handleShakeChange} />
   }
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5 text-foreground">
+      <div className={`min-h-screen bg-gradient-to-br from-background via-background to-accent/5 text-foreground transition-all duration-300 ${isShaking ? 'animate-shake-page' : ''}`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-200"

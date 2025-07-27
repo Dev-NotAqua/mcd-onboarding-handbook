@@ -73,6 +73,16 @@ const config: Config = {
         '150': '150ms',
         '300': '300ms',
       },
+      animation: {
+        'shake-page': 'shake-page 0.15s ease-in-out infinite',
+      },
+      keyframes: {
+        'shake-page': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-2px)' },
+          '75%': { transform: 'translateX(2px)' },
+        },
+      },
     },
   },
   plugins: [],
