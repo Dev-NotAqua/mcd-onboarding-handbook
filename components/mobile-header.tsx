@@ -76,29 +76,46 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
         animate={{ y: 0 }}
         transition={{ type: "spring", damping: 20, stiffness: 200 }}
       >
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between gap-3">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0 flex-1">
               <motion.div 
                 className="relative flex-shrink-0"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-mcd-purple/10 to-mcd-gold/10 rounded-xl flex items-center justify-center shadow-md border border-mcd-purple/20">
-                  <div className="relative w-8 h-8">
+                <div className="w-8 h-8 bg-gradient-to-br from-mcd-purple/20 via-mcd-gold/20 to-mcd-purple/20 rounded-lg flex items-center justify-center shadow-lg overflow-hidden border border-mcd-gold/30">
+                  <div className="relative w-6 h-6">
                     <Image
                       src="/Logo.png"
                       alt="MC&D Logo"
                       fill
-                      className="object-contain"
+                      className="object-contain drop-shadow-lg"
                       priority
                     />
                   </div>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-br from-transparent via-mcd-gold/10 to-transparent opacity-0"
+                    animate={{ opacity: [0, 0.1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                 </div>
+                <motion.div 
+                  className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-card"
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    boxShadow: ["0 0 0 0 rgba(74, 222, 128, 0.4)", "0 0 0 4px rgba(74, 222, 128, 0)", "0 0 0 0 rgba(74, 222, 128, 0.4)"]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
               </motion.div>
               <div className="min-w-0 flex-1">
                 <motion.h1 
-                  className="text-lg font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent truncate leading-tight"
+                  className="text-base font-serif font-bold bg-gradient-to-r from-mcd-purple to-mcd-gold bg-clip-text text-transparent truncate"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
@@ -106,7 +123,7 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
                   MC&D Handbook
                 </motion.h1>
                 <motion.p 
-                  className="text-sm text-muted-foreground font-medium truncate"
+                  className="text-xs text-muted-foreground font-medium truncate"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.15 }}
@@ -118,25 +135,33 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
 
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2.5 rounded-xl bg-gradient-to-br from-muted/60 to-muted/40 hover:from-muted/80 hover:to-muted/60 border border-muted-foreground/20 hover:border-mcd-purple/40 transition-all duration-200 shadow-md flex-shrink-0"
+              className="relative p-2 rounded-lg bg-gradient-to-br from-muted/80 to-muted/60 hover:from-muted hover:to-muted/80 border border-muted-foreground/20 hover:border-mcd-purple/50 transition-all duration-300 ease-out shadow-lg group flex-shrink-0"
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.9 }}
               aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation-menu"
             >
-              <div className="relative w-5 h-5 flex items-center justify-center">
+              <div className="relative w-4 h-4 flex items-center justify-center">
                 <Menu
-                  className={`absolute h-5 w-5 text-foreground transition-all duration-200 ${
+                  className={`absolute h-4 w-4 text-foreground transition-all duration-300 ease-out ${
                     isMenuOpen ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
                   }`}
                 />
                 <X
-                  className={`absolute h-5 w-5 text-foreground transition-all duration-200 ${
+                  className={`absolute h-4 w-4 text-foreground transition-all duration-300 ease-out ${
                     isMenuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
                   }`}
                 />
               </div>
+              <motion.span 
+                className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[9px] text-muted-foreground font-medium whitespace-nowrap"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: isMenuOpen ? 0 : 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isMenuOpen ? "Close" : "Menu"}
+              </motion.span>
             </motion.button>
           </div>
 

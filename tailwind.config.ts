@@ -74,13 +74,13 @@ const config: Config = {
         '300': '300ms',
       },
       animation: {
-        'shake-page': 'shake-page 0.15s ease-in-out infinite',
+        'shake-page': 'shake-page 0.6s ease-in-out',
       },
       keyframes: {
         'shake-page': {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '25%': { transform: 'translateX(-2px)' },
-          '75%': { transform: 'translateX(2px)' },
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translate(-4px, -1px) rotate(-0.5deg)' },
+          '20%, 40%, 60%, 80%': { transform: 'translate(4px, 1px) rotate(0.5deg)' },
         },
       },
     },
