@@ -190,7 +190,6 @@ return (
 </div>
 </div>
 
-Generated code
 {/* Controls */}
     <div className="flex items-center gap-3">
       {/* Status Indicator */}

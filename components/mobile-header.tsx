@@ -4,6 +4,7 @@ import { Shield, Users, FileText, User, Target, TrendingUp, BookOpen, Menu, X, C
 import { useState, useEffect } from "react"
 import type { HandbookSection } from "@/lib/types"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 const sectionIcons = {
   welcome: Shield,
@@ -83,9 +84,21 @@ export function MobileHeader({ sections, activeSection, isMenuOpen, setIsMenuOpe
                 whileHover={{ rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-mcd-purple via-mcd-gold to-mcd-purple rounded-lg flex items-center justify-center shadow-lg overflow-hidden">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.2))]"></div>
-                  <span className="text-mcd-gold font-bold text-xs relative z-10">MC&D</span>
+                <div className="w-8 h-8 bg-gradient-to-br from-mcd-purple/20 via-mcd-gold/20 to-mcd-purple/20 rounded-lg flex items-center justify-center shadow-lg overflow-hidden border border-mcd-gold/30">
+                  <div className="relative w-6 h-6">
+                    <Image
+                      src="/Logo.png"
+                      alt="MC&D Logo"
+                      fill
+                      className="object-contain drop-shadow-lg"
+                      priority
+                    />
+                  </div>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-br from-transparent via-mcd-gold/10 to-transparent opacity-0"
+                    animate={{ opacity: [0, 0.1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                 </div>
                 <motion.div 
                   className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-card"

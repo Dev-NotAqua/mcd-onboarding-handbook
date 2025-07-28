@@ -439,12 +439,12 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "list",
         "items": [
-          "[icon:mobile-device] Open Discord and head to any MC&D channel (like #general or #qna)",
-          "[icon:keyboard] Type the magic command: /verify",
-          "[icon:robot] Our friendly verification bot will pop up with instructions",
-          "[icon:link] Click the link provided to connect your Roblox account",
-          "[icon:stopwatch] Wait a few seconds for the system to process (grab a coffee!)",
-          "[icon:check-circle] Boom! You'll automatically get the 'Verified' role",
+          "[icon:mobile-device] Open Discord and head to the #verify channel",
+          "[icon:keyboard] Type the command: /verify",
+          "[icon:robot] Bloxlink verification bot will appear with instructions",
+          "[icon:link] Follow the instructions on Bloxlink's website to connect your Roblox account",
+          "[icon:stopwatch] Wait a few moments while the system processes your verification",
+          "[icon:check-circle] Once verified, you'll receive the 'Verified' role automatically",
           "[icon:confetti] Welcome to the team - you're now officially part of MC&D!"
         ]
       },

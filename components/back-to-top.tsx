@@ -1,51 +1,97 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react';
-import { ArrowUp } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { ChevronUp } from "lucide-react";
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const toggleVisibility = () => {
-    if (window.pageYOffset > 300) {
-      setIsVisible(true);
-      // Calculate scroll progress percentage (0-100)
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(Math.min(100, Math.round((window.pageYOffset / totalScroll) * 100)));
-    } else {
-      setIsVisible(false);
-      setProgress(0);
+  // Brand color definitions
+  const BRAND = {
+    gold: {
+      light: "#FAD02C",
+      DEFAULT: "#D4AF37",
+      dark: "#B8860B",
+      alpha: (opacity: number) => `rgba(212, 175, 55, ${opacity})`
+    },
+    purple: {
+      light: "#6A4C93",
+      DEFAULT: "#462569",
+      dark: "#2D1A44",
+      alpha: (opacity: number) => `rgba(70, 37, 105, ${opacity})`
+    },
+    dark: {
+      DEFAULT: "#121212",
+      darker: "#0A0A0A",
+      alpha: (opacity: number) => `rgba(18, 18, 18, ${opacity})`
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
-
   useEffect(() => {
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      
+      // Show after 50px scroll
+      if (scrollY > 50) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <button
-      className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] ${
-        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'
-      }`}
+      ref={buttonRef}
       onClick={scrollToTop}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-label="Back to top"
+      style={{
+        position: "fixed",
+        bottom: "1.5rem",
+        right: "1.5rem",
+        zIndex: 9999,
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "scale(1)" : "scale(0.7)",
+        transition: "all 0.3s ease-in-out",
+        pointerEvents: isVisible ? "auto" : "none",
+        border: "none",
+        background: "none",
+        padding: 0,
+        cursor: "pointer"
+      }}
     >
-      <div className="relative">
+      <div
+        style={{
+          position: "relative",
+          width: "56px",
+          height: "56px",
+          borderRadius: "12px",
+          background: `linear-gradient(to bottom, ${BRAND.dark.DEFAULT}, ${BRAND.dark.darker})`,
+          boxShadow: `0 4px 24px ${BRAND.dark.alpha(0.5)}`
+        }}
+      >
         {/* Progress ring */}
-        <svg 
-          className="w-14 h-14 -rotate-90" 
+        <svg
+          style={{
+            width: "56px",
+            height: "56px",
+            transform: "rotate(-90deg)",
+            position: "absolute",
+            top: 0,
+            left: 0
+          }}
           viewBox="0 0 100 100"
           aria-hidden="true"
         >
@@ -54,53 +100,99 @@ const BackToTop = () => {
             cy="50"
             r="40"
             fill="none"
-            stroke="rgba(139, 92, 246, 0.2)" // purple-500/20
-            strokeWidth="6"
+            stroke={BRAND.gold.alpha(0.15)}
+            strokeWidth="5"
           />
           <circle
             cx="50"
             cy="50"
             r="40"
             fill="none"
-            stroke="url(#gradient)"
-            strokeWidth="6"
+            stroke="url(#progressGradient)"
+            strokeWidth="5"
             strokeDasharray="251.2"
-            strokeDashoffset={251.2 - (251.2 * progress) / 100}
+            strokeDashoffset="251.2" /* Fixed default value */
             strokeLinecap="round"
           />
           <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8B5CF6" /> {/* purple-500 */}
-              <stop offset="100%" stopColor="#F59E0B" /> {/* amber-500 */}
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={BRAND.gold.light} />
+              <stop offset="100%" stopColor={BRAND.purple.light} />
             </linearGradient>
           </defs>
         </svg>
-        
+
         {/* Center icon */}
-        <div 
-          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-            isHovered 
-              ? 'bg-gradient-to-br from-purple-600 to-amber-600 scale-110 shadow-lg' 
-              : 'bg-gradient-to-br from-purple-500 to-amber-500'
-          }`}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isHovered ? "44px" : "40px",
+            height: isHovered ? "44px" : "40px",
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 30% 30%, ${BRAND.gold.DEFAULT}, ${BRAND.purple.DEFAULT})`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.3s ease",
+            boxShadow: isHovered
+              ? `0 0 20px ${BRAND.gold.alpha(0.5)}`
+              : `0 3px 8px ${BRAND.dark.alpha(0.4)}`,
+            border: `1px solid ${BRAND.gold.alpha(0.3)}`
+          }}
         >
-          <ArrowUp 
-            className={`h-5 w-5 text-white transition-transform ${
-              isHovered ? '-translate-y-0.5' : ''
-            }`} 
+          <ChevronUp
+            style={{
+              width: "20px",
+              height: "20px",
+              color: "white",
+              transform: isHovered ? "translateY(-2px)" : "none",
+              transition: "transform 0.3s ease"
+            }}
           />
         </div>
       </div>
-      
+
       {/* Tooltip */}
-      <div 
-        className={`absolute bottom-full right-0 mb-3 px-3 py-1.5 text-xs font-medium bg-gray-900 text-white rounded-md shadow-lg transition-opacity duration-300 ${
-          isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        Back to top
-        <div className="absolute top-full right-4 w-3 h-3 bg-gray-900 rotate-45"></div>
-      </div>
+      {isHovered && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            right: "0",
+            marginBottom: "12px",
+            padding: "6px 12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            borderRadius: "8px",
+            boxShadow: `0 4px 12px ${BRAND.dark.alpha(0.3)}`,
+            zIndex: 9999,
+            background: BRAND.dark.DEFAULT,
+            color: BRAND.gold.light,
+            whiteSpace: "nowrap",
+            transition: "opacity 0.2s",
+            border: `1px solid ${BRAND.gold.alpha(0.2)}`
+          }}
+        >
+          Back to top
+          <div
+            style={{
+              position: "absolute",
+              top: "100%",
+              right: "12px",
+              width: "8px",
+              height: "8px",
+              background: BRAND.dark.DEFAULT,
+              borderRight: `1px solid ${BRAND.gold.alpha(0.2)}`,
+              borderBottom: `1px solid ${BRAND.gold.alpha(0.2)}`,
+              transform: "rotate(45deg)",
+              marginLeft: "-4px"
+            }}
+          />
+        </div>
+      )}
     </button>
   );
 };
