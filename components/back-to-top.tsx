@@ -111,7 +111,7 @@ const BackToTop = () => {
             stroke="url(#progressGradient)"
             strokeWidth="5"
             strokeDasharray="251.2"
-            strokeDashoffset="251.2" /* Fixed default value */
+            strokeDashoffset="251.2"
             strokeLinecap="round"
           />
           <defs>
@@ -156,43 +156,46 @@ const BackToTop = () => {
       </div>
 
       {/* Tooltip */}
-      {isHovered && (
+      <div
+        style={{
+          position: "absolute",
+          bottom: "100%",
+          left: "50%",
+          transform: isHovered ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(5px)",
+          marginBottom: "12px",
+          padding: "6px 12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          borderRadius: "8px",
+          boxShadow: `0 4px 12px ${BRAND.dark.alpha(0.3)}`,
+          zIndex: 9999,
+          background: BRAND.dark.DEFAULT,
+          color: BRAND.gold.light,
+          whiteSpace: "nowrap",
+          opacity: isHovered ? 1 : 0,
+          visibility: isHovered ? "visible" : "hidden",
+          transition: "all 0.2s ease-in-out",
+          border: `1px solid ${BRAND.gold.alpha(0.2)}`,
+          textAlign: "center",
+          minWidth: "max-content"
+        }}
+      >
+        Back to top
         <div
           style={{
             position: "absolute",
-            bottom: "100%",
-            right: "0",
-            marginBottom: "12px",
-            padding: "6px 12px",
-            fontSize: "14px",
-            fontWeight: "500",
-            borderRadius: "8px",
-            boxShadow: `0 4px 12px ${BRAND.dark.alpha(0.3)}`,
-            zIndex: 9999,
+            top: "100%",
+            left: "50%",
+            width: "8px",
+            height: "8px",
             background: BRAND.dark.DEFAULT,
-            color: BRAND.gold.light,
-            whiteSpace: "nowrap",
-            transition: "opacity 0.2s",
-            border: `1px solid ${BRAND.gold.alpha(0.2)}`
+            borderRight: `1px solid ${BRAND.gold.alpha(0.2)}`,
+            borderBottom: `1px solid ${BRAND.gold.alpha(0.2)}`,
+            transform: "translateX(-50%) rotate(45deg)",
+            transformOrigin: "center"
           }}
-        >
-          Back to top
-          <div
-            style={{
-              position: "absolute",
-              top: "100%",
-              right: "12px",
-              width: "8px",
-              height: "8px",
-              background: BRAND.dark.DEFAULT,
-              borderRight: `1px solid ${BRAND.gold.alpha(0.2)}`,
-              borderBottom: `1px solid ${BRAND.gold.alpha(0.2)}`,
-              transform: "rotate(45deg)",
-              marginLeft: "-4px"
-            }}
-          />
-        </div>
-      )}
+        />
+      </div>
     </button>
   );
 };

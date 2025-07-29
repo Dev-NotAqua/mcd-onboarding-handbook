@@ -36,6 +36,14 @@ export default function HandbookPage() {
   const heroRef = useRef<HTMLDivElement>(null)
   const toolsRef = useRef<HTMLDivElement>(null)
 
+  // Function to scroll to a specific section
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   // Check if terminal has been completed before
   useEffect(() => {
     const terminalCompleted = sessionStorage.getItem('mcd-terminal-completed')
@@ -74,10 +82,10 @@ export default function HandbookPage() {
     setShowTerminal(false)
     sessionStorage.setItem('mcd-terminal-completed', 'true')
     
-    // Add delay before showing main content to create composition effect
+    // Create smooth assembly effect with staggered animations
     setTimeout(() => {
       setShowMainContent(true)
-    }, 500)
+    }, 800)
     
     if (isShaking) {
       setTimeout(() => {
@@ -120,7 +128,7 @@ export default function HandbookPage() {
           className={`min-h-screen bg-gradient-to-br from-background via-background to-accent/5 text-foreground ${isShaking ? 'animate-shake-page' : ''}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         >
           <a
             href="#main-content"
@@ -131,10 +139,7 @@ export default function HandbookPage() {
 
           {isMobile && (
             <MobileHeader 
-              sections={filteredSections} 
-              activeSection={activeSection} 
-              isMenuOpen={isMenuOpen} 
-              setIsMenuOpen={setIsMenuOpen} 
+              scrollToSection={scrollToSection}
             />
           )}
 
@@ -142,30 +147,48 @@ export default function HandbookPage() {
             <BackToTop />
             {!isMobile && (
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+                initial={{ opacity: 0, x: -150, scale: 0.8, rotateY: -15 }}
+                animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
+                transition={{ 
+                  duration: 1.4, 
+                  delay: 0.2, 
+                  type: "spring",
+                  stiffness: 60,
+                  damping: 15
+                }}
               >
                 <Sidebar sections={filteredSections} activeSection={activeSection} />
               </motion.div>
             )}
 
             <motion.div 
-              className={`flex-1 flex flex-col ${!isMobile ? "ml-80" : ""} ${isMobile ? "pt-24" : ""}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
+              className={`flex-1 flex flex-col ${!isMobile ? "ml-80" : ""} ${isMobile ? "pt-24" : ""} w-full max-w-full overflow-x-hidden`}
+              initial={{ opacity: 0, y: 80, scale: 0.9, rotateX: 10 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              transition={{ 
+                duration: 1.6, 
+                delay: 0.4, 
+                type: "spring",
+                stiffness: 50,
+                damping: 18
+              }}
             >
-              <main id="main-content" className="flex-1 relative">
+              <main id="main-content" className="flex-1 relative w-full max-w-full overflow-x-hidden">
                 <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none"></div>
                 <div className="relative z-10">
                 <motion.header 
-                  className={`sticky top-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-accent/20 shadow-sm transition-all duration-500 ${isScrolled ? 'py-2' : 'py-3'}`}
-                  initial={{ opacity: 0, y: -30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className={`sticky top-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-accent/20 shadow-sm transition-all duration-500 ${isScrolled ? 'py-2' : 'py-3'} w-full max-w-full overflow-x-hidden`}
+                  initial={{ opacity: 0, y: -80, scale: 0.9, rotateX: -15 }}
+                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  transition={{ 
+                    duration: 1.2, 
+                    delay: 0.6, 
+                    type: "spring",
+                    stiffness: 70,
+                    damping: 20
+                  }}
                 >
-                  <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                  <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 w-full max-w-full overflow-x-hidden">
                     <div className="w-full sm:flex-1 sm:max-w-md">
                       <SearchBar
                         value={searchQuery}
@@ -208,9 +231,15 @@ export default function HandbookPage() {
                   {/* Hero Section */}
                   <motion.div 
                     ref={heroRef}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.25 }}
+                    initial={{ opacity: 0, y: 100, scale: 0.8, rotateX: 20 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    transition={{ 
+                      duration: 1.8, 
+                      delay: 0.8, 
+                      type: "spring",
+                      stiffness: 40,
+                      damping: 20
+                    }}
                     className="relative text-center mb-8 sm:mb-12 lg:mb-16 px-2 sm:px-0"
                   >
                     <div className="absolute inset-0 -z-10">

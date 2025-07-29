@@ -75,20 +75,21 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
   }
 
   return (
-    <div className="relative group w-full max-w-lg mx-auto">
-      {/* Animated background glow */}
-      <div
-        className={`absolute -inset-0.5 bg-gradient-to-r from-mcd-purple/30 via-mcd-purple/10 to-mcd-gold/30 rounded-xl blur-lg opacity-0 group-hover:opacity-70 transition-all duration-500 ${
-          isFocused ? "opacity-70" : ""
-        }`}
-      ></div>
+    <>
+      <div className="relative group w-full max-w-lg mx-auto">
+        {/* Animated background glow */}
+        <div
+          className={`absolute -inset-0.5 bg-gradient-to-r from-mcd-purple/30 via-mcd-purple/10 to-mcd-gold/30 rounded-xl blur-lg opacity-0 group-hover:opacity-70 transition-all duration-500 ${
+            isFocused ? "opacity-70" : ""
+          }`}
+        ></div>
 
-      {/* Floating label animation */}
-      {isFocused && value === "" && (
-        <div className="absolute -top-2 left-3 px-1 bg-background text-xs text-mcd-purple font-medium z-10 transition-all duration-300">
-          {placeholder}
-        </div>
-      )}
+        {/* Floating label animation */}
+        {isFocused && value === "" && (
+          <div className="absolute -top-2 left-3 px-1 bg-background text-xs text-mcd-purple font-medium z-10 transition-all duration-300">
+            {placeholder}
+          </div>
+        )}
 
       <div className="relative">
         <div
@@ -177,8 +178,8 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
         </div>
       </div>
 
-      {/* Search Results Preview */}
-      {isFocused && searchResults.length > 0 && (
+      {/* Desktop Search Results Preview */}
+      {isFocused && searchResults.length > 0 && !isMobile && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-gradient-to-b from-background to-muted border border-border rounded-xl shadow-lg overflow-hidden transition-all duration-300 z-50 max-h-64 overflow-y-auto">
           {searchResults.slice(0, 5).map((result, index) => (
              <button
@@ -209,8 +210,8 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
         </div>
       )}
 
-      {/* Search suggestions bar */}
-      {isFocused && value.trim() && searchResults.length === 0 && (
+      {/* Desktop Search suggestions bar */}
+      {isFocused && value.trim() && searchResults.length === 0 && !isMobile && (
         <div 
           className={`absolute top-full left-0 right-0 mt-2 bg-gradient-to-b from-background to-muted border border-border rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${
             isLoading ? "animate-pulse" : ""
@@ -257,6 +258,124 @@ export function SearchBar({ value, onChange, placeholder = "Search..." }: Search
           )}
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Mobile Search Overlay */}
+      {isMobile && isFocused && (
+        <div className="fixed inset-0 bg-background z-50 flex flex-col">
+          {/* Mobile Search Header */}
+          <div className="flex items-center gap-3 p-4 border-b border-border">
+            <button
+              onClick={() => setIsFocused(false)}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close search"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <div className="flex-1 relative">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-mcd-purple">
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
+              </div>
+              <input
+                type="text"
+                value={value}
+                onChange={handleChange}
+                onKeyDown={(e) => {
+                  handleKeyDown(e)
+                  if (e.key === 'Enter' && value.trim()) {
+                    e.preventDefault()
+                  }
+                  if (e.key === 'Escape') {
+                    handleClear()
+                  }
+                }}
+                placeholder={placeholder}
+                className="w-full pl-10 pr-10 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-mcd-purple focus:border-mcd-purple"
+                autoFocus
+              />
+              {value && (
+                <button
+                  onClick={handleClear}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Search Results */}
+          <div className="flex-1 overflow-y-auto">
+            {searchResults.length > 0 ? (
+              <div className="p-4 space-y-3">
+                <div className="text-sm text-muted-foreground mb-4">
+                  {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found
+                </div>
+                {searchResults.map((result, index) => (
+                  <button
+                    key={`${result.sectionId}-${result.contentIndex}`}
+                    onClick={() => {
+                      navigateToResult(index)
+                      setIsFocused(false)
+                    }}
+                    className={`w-full text-left p-4 rounded-xl border transition-all duration-200 ${
+                      index === currentResultIndex 
+                        ? 'bg-mcd-purple/20 border-mcd-purple' 
+                        : 'bg-muted/50 border-border hover:bg-muted'
+                    }`}
+                  >
+                    <div className="text-base font-medium text-mcd-purple mb-2">{result.sectionTitle}</div>
+                    <div className="text-sm text-muted-foreground leading-relaxed">
+                      {result.contextBefore}
+                      <span className="bg-yellow-300 dark:bg-yellow-600 text-black dark:text-white px-1 rounded">
+                        {result.matchText}
+                      </span>
+                      {result.contextAfter}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : value.trim() ? (
+              <div className="p-4 text-center">
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin text-mcd-purple" />
+                    <span>Searching...</span>
+                  </div>
+                ) : (
+                  <div className="text-muted-foreground">
+                    No results found for "{value}"
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-4">
+                <div className="text-sm text-muted-foreground mb-4">Search the MC&D Handbook</div>
+                <div className="space-y-2">
+                  {HANDBOOK_SECTIONS.map((section) => (
+                    <button
+                      key={section.id}
+                      onClick={() => {
+                        onChange(section.title)
+                        setIsFocused(false)
+                      }}
+                      className="w-full text-left p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                    >
+                      <div className="font-medium text-foreground">{section.title}</div>
+                      <div className="text-xs text-muted-foreground mt-1">Section {section.id} of 8</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   )
 }

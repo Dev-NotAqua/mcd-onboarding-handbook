@@ -180,6 +180,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "pizza": Pizza,
   "tv": Tv,
   "music": Music,
+  "microphone": Mic,
   "flame": Flame,
   "rocket": Rocket,
   "life-buoy": LifeBuoy,
@@ -249,7 +250,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "shield-check": ShieldCheck,
   "book": Book,
   "graduation-cap": GraduationCap,
-  "helicopter": Plane
+  "helicopter": Plane,
+  "file": File
 }
 
 // Helper function to replace [icon:name] with JSX icon components
@@ -380,7 +382,8 @@ export const replaceIconPlaceholders = (text: string): (string | React.ReactElem
      "shield-check": "text-green-600 hover:text-green-700", // Security verified - green
      "book": "text-indigo-600 hover:text-indigo-700", // Knowledge - indigo
      "graduation-cap": "text-purple-600 hover:text-purple-700", // Education - purple
-     "helicopter": "text-blue-600 hover:text-blue-700" // Aircraft/transport - blue
+     "helicopter": "text-blue-600 hover:text-blue-700", // Aircraft/transport - blue
+     "file": "text-gray-600 hover:text-gray-700" // Document - gray
   }
   
   const parts = text.split(/(\[icon:[^\]]+\])/g)
@@ -832,52 +835,6 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
         "type": "hierarchy-interface"
       },
       {
-        "type": "div"
-      },
-
-      {
-        "type": "heading",
-        "text": "High Ranks - 200 HP"
-      },
-      {
-        "type": "list",
-        "items": [
-          "Commander - 530 points + 10 deployments hosted - HR",
-          "General - 480 points - HR",
-          "Captain - 430 points + 3 deployments hosted - HR",
-          "Colonel - 380 points - HR",
-          "Major - 330 points + Pass High Rank Applications - HR"
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "Middle Ranks - 175 HP"
-      },
-      {
-        "type": "list",
-        "items": [
-          "Lieutenant - 275 points - MR",
-          "Sergeant - 240 points - MR",
-          "Corporal - 205 points - MR",
-          "Specialist - 170 points - MR",
-          "Officer - 135 points + 3 self deployments - MR"
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "Low Ranks - 150 HP"
-      },
-      {
-        "type": "list",
-        "items": [
-          "Senior Operative - 100 points - LR",
-          "Operative - 75 points - LR",
-          "Junior Operative - 50 points + 1 self deployment - LR",
-          "Trainee - 25 points - LR",
-          "Recruit - Pass Tryout/Application - LR"
-        ]
-      },
-      {
         "type": "callout",
         "calloutType": "warning",
         "text": "Low Ranks may not join the Accounting Division! You must reach Middle Rank or higher with division leader permission."
@@ -1006,7 +963,7 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "callout",
         "calloutType": "info",
-        "text": "**ESSENTIAL:** Start with this handbook first! This comprehensive guide contains all the information you need. After reading through this handbook thoroughly, use #qna and #general for additional support. This handbook is your primary learning resource!"
+        "text": "**ESSENTIAL:** Start with this handbook first! This comprehensive guide contains all the information you need. After reading through this handbook thoroughly, use #qna and #general-chat for additional support. This handbook is your primary learning resource!"
       },
       {
         "type": "heading",
@@ -1019,11 +976,14 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "list",
         "items": [
-          "[icon:books] **<#1235830670123860009>** - This comprehensive interactive handbook for all members (your primary resource!)",
+          "[icon:books] **#rules-and-handbook** - This comprehensive interactive handbook for all members (your primary resource!)",
           "[icon:question-mark-circle] **#qna** - Ask questions and get help from staff and experienced members",
           "[icon:clipboard] **#announcements** - Critical MC&D updates, policy changes, and important news",
           "[icon:bar-chart] **#promotion-request** - Submit your promotion applications using the proper format",
-          "[icon:target] **<#1376292397859737703>** - Log your on-site activities to earn points and recognition"
+          "[icon:target] **#point-request** - Log your on-site activities to earn points and recognition",
+          "[icon:star] **#hierarchy-and-points** - View rank requirements and point information",
+          "[icon:user] **#codename-request** - Submit your codename for approval",
+          "[icon:shield] **#verify** - Complete your Discord verification process"
         ]
       },
       {
@@ -1042,10 +1002,12 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "list",
         "items": [
-          "[icon:chat] **#general** - Main chat for casual conversation and daily interactions",
-          "[icon:game-controller] **<#1317659188503248937>** - Discuss games, organize gaming sessions, and find gaming buddies",
+          "[icon:chat] **#general-chat** - Main chat for casual conversation and daily interactions",
+          "[icon:game-controller] **#gamenights** - Discuss games, organize gaming sessions, and find gaming buddies",
           "[icon:camera] **#media** - Share screenshots, videos, memes, and creative content",
-          "[icon:pizza] **#off-topic** - Random discussions about anything and everything"
+          "[icon:pizza] **#outsider-chat** - Random discussions about anything and everything",
+          "[icon:music] **#music** - Share and discuss music",
+          "[icon:microphone] **#no-mic** - Voice channel discussions for those without microphones"
         ]
       },
       {
@@ -1059,8 +1021,12 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "list",
         "items": [
-          "[icon:scroll] **#rules** - Server rules, guidelines, and the MC&D Constitution",
-          "[icon:building] **<#1240841153658491041>** and **<#1270591070878568450>** - MC&D lore, history, and background information"
+          "[icon:scroll] **#rules-and-handbook** - Server rules, guidelines, and the MC&D Constitution",
+          "[icon:building] **#lore** - MC&D lore, history, and background information",
+          "[icon:file] **#applications** - Submit applications for various positions",
+          "[icon:trophy] **#promotions** - Track promotion announcements and updates",
+          "[icon:globe] **#deployable-sites** - Information about deployment locations",
+          "[icon:clipboard] **#advertisement** - Company advertisements and announcements"
         ]
       },
 
@@ -1183,7 +1149,7 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "list",
         "items": [
-          "[icon:pencil] **Step 2:** Submit application with relevant experience/skills"
+          "[icon:pencil] **Step 1:** Submit application with relevant experience/skills"
         ]
       },
       {

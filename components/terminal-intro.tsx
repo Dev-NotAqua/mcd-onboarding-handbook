@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 
 interface Props {
   onComplete: () => void;
@@ -196,7 +197,7 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
     const launchLine = lines[currentLine];
     if (!launchLine) return;
     
-    const doShake = /T-\d+\.\.\.|LAUNCHING|IGNITION|SYSTEM ARMED/.test(launchLine.text);
+    const doShake = /T-\d+\.\.\.|LAUNCHING|IGNITION|SYSTEM ARMED|SYNTHESIS|OVERRIDE|COUNTDOWN|COMPLETE|SUCCESS|VERIFIED|ARMED|READY|NEURAL|BIOMETRIC|CLEARANCE|QUANTUM|REALITY|ANCHORS/.test(launchLine.text);
     setIsShaking(doShake);
     onShakeChange?.(doShake);
     
@@ -205,6 +206,28 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
       console.log('Shake effect triggered for line:', launchLine.text);
     }
   }, [currentLine, onShakeChange, lines]);
+
+  // Handle completion with enhanced effects
+  useEffect(() => {
+    if (isComplete) {
+      // Trigger final shake effect
+      setIsShaking(true);
+      onShakeChange?.(true);
+      
+      // Stop shake after completion animation
+      const shakeTimeout = setTimeout(() => {
+        setIsShaking(false);
+        onShakeChange?.(false);
+        
+        // Call onComplete after shake ends
+        setTimeout(() => {
+          onComplete();
+        }, 300);
+      }, 800);
+      
+      return () => clearTimeout(shakeTimeout);
+    }
+  }, [isComplete, onComplete, onShakeChange]);
   
   /* -------------------------------------------------------- Starfield Setup */
   useEffect(() => {
@@ -735,10 +758,21 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
       `}</style>
       
       {/* Component */}
-      <div
+      <motion.div
         ref={containerRef}
         className="fixed inset-0 bg-gradient-to-br from-[#2D1A44] via-[#462569] to-black flex items-center justify-center p-2 sm:p-4 cursor-pointer overflow-hidden z-50"
         onClick={handleInteraction}
+        initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        animate={{ 
+          opacity: isComplete ? 0 : 1,
+          scale: isComplete ? 0.8 : 1,
+          filter: isComplete ? "blur(20px)" : "blur(0px)"
+        }}
+        transition={{ 
+          duration: 2.0, 
+          delay: isComplete ? 0.5 : 0,
+          ease: "easeInOut"
+        }}
       >
         {/* Starfield Canvas - now with persistent positions */}
         <canvas
@@ -827,7 +861,7 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
             <span className="text-xs text-[#FAD02C]">PRESS ANY KEY TO SKIP</span>
           </div>
         )}
-      </div>
+      </motion.div>
     </>
   );
 }

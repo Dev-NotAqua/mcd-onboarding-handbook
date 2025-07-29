@@ -9,8 +9,10 @@ export function ThemeToggle() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
+
   const handleClick = () => {
     setIsAnimating(true)
+    
     setTimeout(() => {
       if (theme === "light") {
         setTheme("dark")
@@ -57,19 +59,19 @@ export function ThemeToggle() {
   const colors = getThemeColors()
 
   return (
-    <div className="relative flex justify-center items-center">
-      {/* Decorative rings */}
+    <div className="relative flex justify-center items-center w-24 h-24">
+      {/* Decorative rings - hidden on mobile */}
       <div className={`absolute w-14 h-14 rounded-xl border-2 ${
         colors.border
       } transition-all duration-700 ease-out ${
-        isHovered ? "scale-125 opacity-100" : "scale-100 opacity-0"
-      }`}></div>
+        isHovered ? "sm:scale-125 sm:opacity-100" : "scale-100 opacity-0"
+      } hidden sm:block pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}></div>
       
       <div className={`absolute w-16 h-16 rounded-xl border ${
         colors.borderSecondary
       } transition-all duration-1000 ease-out ${
-        isHovered ? "scale-150 opacity-50" : "scale-100 opacity-0"
-      }`}></div>
+        isHovered ? "sm:scale-150 sm:opacity-50" : "scale-100 opacity-0"
+      } hidden sm:block pointer-events-none left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}></div>
       
       {/* Toggle button */}
       <button
@@ -79,7 +81,7 @@ export function ThemeToggle() {
         className={`relative w-12 h-12 rounded-xl flex items-center justify-center ${
           colors.bg
         } shadow-lg transition-all duration-500 z-10 transform ${
-          isHovered ? "scale-110" : "scale-100"
+          isHovered ? "sm:scale-110" : "scale-100"
         }`}
         aria-label="Toggle theme"
       >
@@ -118,12 +120,9 @@ export function ThemeToggle() {
         }`}></div>
       </button>
       
-      {/* Theme indicator text */}
-      <div className={`absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-xs font-semibold transition-all duration-300 ${
-        isHovered ? "opacity-100 translate-y-0 scale-105" : "opacity-75 translate-y-2 scale-100"
-      } ${colors.text} drop-shadow-sm bg-white/10 dark:bg-black/20 px-2 py-1 rounded-md backdrop-blur-sm border border-white/20 dark:border-black/20 whitespace-nowrap`}>
-        {theme === "light" ? "Light Mode" : theme === "dark" ? "Dark Mode" : "System Mode"}
-      </div>
+
+      
+
     </div>
   )
 }

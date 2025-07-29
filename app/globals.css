@@ -75,9 +75,47 @@
   @apply from-mcd-gold to-mcd-gold-dark;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling and overflow fixes */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Prevent scrollbar flickering during animations */
+body {
+  scrollbar-gutter: stable;
+}
+
+/* Prevent horizontal scrolling globally */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix for common overflow culprits */
+.container, .content, main, section {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Prevent layout shifts during animations */
+.flex.min-h-screen {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Stable scrollbar during page transitions */
+html {
+  overflow-y: scroll;
 }
 
 /* Typography improvements */
@@ -260,22 +298,148 @@ html {
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Enhanced animation keyframes */
+@keyframes dramaticEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.7) rotateX(30deg);
+    filter: blur(10px) brightness(0.3);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    opacity: 0.7;
+    transform: translateY(20px) scale(0.95) rotateX(5deg);
+    filter: blur(2px) brightness(0.8);
   }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0px) brightness(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(139, 92, 246, 0.6), 0 0 50px rgba(139, 92, 246, 0.3);
+  }
+}
+
+/* Assembly animation keyframes */
+@keyframes assemblySlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-150px) scale(0.7) rotateY(-25deg) rotateX(10deg);
+    filter: blur(8px) brightness(0.5);
+  }
+  30% {
+    opacity: 0.4;
+    transform: translateX(-60px) scale(0.85) rotateY(-10deg) rotateX(5deg);
+    filter: blur(4px) brightness(0.7);
+  }
+  70% {
+    opacity: 0.8;
+    transform: translateX(-10px) scale(0.98) rotateY(-2deg) rotateX(1deg);
+    filter: blur(1px) brightness(0.9);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateX(0) scale(1) rotateY(0deg) rotateX(0deg);
+    filter: blur(0px) brightness(1);
+  }
+}
+
+@keyframes assemblyFadeUp {
+  0% { 
+    opacity: 0;
+    transform: translateY(100px) scale(0.8) rotateX(15deg);
+    filter: blur(6px) brightness(0.6);
+  }
+  40% {
+    opacity: 0.6;
+    transform: translateY(30px) scale(0.95) rotateX(5deg);
+    filter: blur(2px) brightness(0.8);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateY(5px) scale(0.99) rotateX(1deg);
+    filter: blur(0.5px) brightness(0.95);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0px) brightness(1);
+  }
+}
+
+@keyframes assemblyGlow {
+  0% { 
+    box-shadow: 0 0 0 rgba(139, 92, 246, 0), 0 0 0 rgba(59, 130, 246, 0);
+  }
+  25% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2), 0 0 40px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.4), 0 0 80px rgba(59, 130, 246, 0.2);
+  }
+  75% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.15);
+  }
+  100% { 
+    box-shadow: 0 0 0 rgba(139, 92, 246, 0), 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.animate-assembly-slide {
+  animation: assemblySlideIn 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-assembly-fade {
+  animation: assemblyFadeUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-assembly-glow {
+  animation: assemblyGlow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-dramatic-entrance {
+  animation: dramaticEntrance 2.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
 }
 
 @keyframes shake-page {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  10%, 30%, 50%, 70%, 90% { transform: translate(-4px, -1px) rotate(-0.5deg); }
-  20%, 40%, 60%, 80% { transform: translate(4px, 1px) rotate(0.5deg); }
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  5% { transform: translate(-8px, -4px) rotate(-1.2deg) scale(1.01); }
+  10% { transform: translate(8px, 4px) rotate(1.2deg) scale(0.99); }
+  15% { transform: translate(-6px, 6px) rotate(0.8deg) scale(1.01); }
+  20% { transform: translate(6px, -4px) rotate(-1.0deg) scale(0.99); }
+  25% { transform: translate(-4px, 8px) rotate(1.1deg) scale(1.01); }
+  30% { transform: translate(4px, -6px) rotate(-0.9deg) scale(0.99); }
+  35% { transform: translate(-7px, 3px) rotate(1.3deg) scale(1.01); }
+  40% { transform: translate(7px, -3px) rotate(-1.1deg) scale(0.99); }
+  45% { transform: translate(-3px, 7px) rotate(0.7deg) scale(1.01); }
+  50% { transform: translate(3px, -7px) rotate(-0.8deg) scale(0.99); }
+  55% { transform: translate(-5px, 2px) rotate(1.0deg) scale(1.01); }
+  60% { transform: translate(5px, -2px) rotate(-0.9deg) scale(0.99); }
+  65% { transform: translate(-2px, 5px) rotate(0.6deg) scale(1.01); }
+  70% { transform: translate(2px, -5px) rotate(-0.7deg) scale(0.99); }
+  75% { transform: translate(-4px, 1px) rotate(0.8deg) scale(1.005); }
+  80% { transform: translate(4px, -1px) rotate(-0.6deg) scale(0.995); }
+  85% { transform: translate(-1px, 3px) rotate(0.4deg) scale(1.005); }
+  90% { transform: translate(1px, -3px) rotate(-0.5deg) scale(0.995); }
+  95% { transform: translate(-2px, 1px) rotate(0.3deg) scale(1.002); }
 }
 
 .animate-shake-page {
-  animation: shake-page 0.6s ease-in-out;
+  animation: shake-page 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform-origin: center center;
 }
 
