@@ -32,7 +32,7 @@ interface Rank {
   owner?: string;
   color: string;
   icon: LucideIcon;
-  level: "executive" | "high" | "middle" | "low";
+  level: "executive" | "high" | "hr" | "middle" | "low";
 }
 
 const RANKS: Rank[] = [
@@ -46,11 +46,11 @@ const RANKS: Rank[] = [
   { id: "fd", name: "Finance Director", points: 0, color: "from-red-300 to-orange-300", icon: Star, level: "high", owner: "Singularity" },
 
   // High Ranks
-  { id: "hr5", name: "Commander", points: 530, color: "from-orange-500 to-yellow-500", icon: Award, level: "high", requirements: "10 Deployments Hosted" },
-  { id: "hr4", name: "General", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "high" },
-  { id: "hr3", name: "Colonel", points: 430, color: "from-orange-300 to-yellow-300", icon: Award, level: "high", requirements: "3 Deployments Hosted" },
-  { id: "hr2", name: "Major", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "high" },
-  { id: "hr1", name: "Captain", points: 330, color: "from-yellow-400 to-yellow-300", icon: Shield, level: "high", requirements: "Pass HR Applications" },
+  { id: "hr5", name: "Commander", points: 530, color: "from-orange-500 to-yellow-500", icon: Award, level: "hr", requirements: "10 Deployments Hosted" },
+  { id: "hr4", name: "General", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "hr" },
+  { id: "hr3", name: "Colonel", points: 430, color: "from-orange-300 to-yellow-300", icon: Award, level: "hr", requirements: "3 Deployments Hosted" },
+  { id: "hr2", name: "Major", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "hr" },
+  { id: "hr1", name: "Captain", points: 330, color: "from-yellow-400 to-yellow-300", icon: Shield, level: "hr", requirements: "Pass HR Applications" },
 
   // Middle Ranks
   { id: "mr5", name: "Lieutenant", points: 275, color: "from-blue-500 to-cyan-500", icon: TrendingUp, level: "middle" },
@@ -89,13 +89,22 @@ const LEVEL_DETAILS: Record<Rank["level"], LevelDetail> = {
     gradient: "from-purple-500 to-pink-500",
   },
   high: {
-    title: "High Command & High Ranks",
+    title: "High Command",
     colors: "from-red-900/50 to-orange-900/50 border-red-500/50",
     icon: Star,
-    health: "175 HP",
+    health: "200 HP",
     division: "All Divisions",
     canRK: "Full Authority",
     gradient: "from-red-500 to-orange-500",
+  },
+  hr: {
+    title: "High Ranks",
+    colors: "from-orange-900/50 to-yellow-900/50 border-orange-500/50",
+    icon: Award,
+    health: "175 HP",
+    division: "All Divisions",
+    canRK: "Full Authority",
+    gradient: "from-orange-500 to-yellow-500",
   },
   middle: {
     title: "Middle Ranks",
@@ -117,7 +126,7 @@ const LEVEL_DETAILS: Record<Rank["level"], LevelDetail> = {
   },
 };
 
-const LEVEL_ORDER: Rank["level"][] = ["executive", "high", "middle", "low"];
+const LEVEL_ORDER: Rank["level"][] = ["executive", "high", "hr", "middle", "low"];
 
 // --- UI & STYLING DEFINITIONS ---
 const UIVariants = {
@@ -150,63 +159,134 @@ export function HierarchyInterface() {
   }, []);
 
   return (
-    <div className={UIVariants.container}>
-      <header className={UIVariants.header}>
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-pink-900/10 to-orange-900/10"></div>
-        <div className="relative z-10">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className={UIVariants.headerTitle}
-          >
-            <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400 bg-clip-text text-transparent">
-              MC&D Hierarchy
-            </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className={UIVariants.headerSubtitle}
-          >
-            Explore the complete rank structure, point requirements, and privileges.
-          </motion.p>
-        </div>
-      </header>
-
-      <main className={UIVariants.levelWrapper}>
-        {LEVEL_ORDER.map((level, index) => {
-          const details = LEVEL_DETAILS[level];
-          const ranksInLevel = RANKS.filter(r => r.level === level);
-
-          return (
-            <motion.section
-              key={level}
-              initial={{ opacity: 0, y: 50 }}
+    <div className="space-y-8">
+      {/* Wrecker Division Hierarchy */}
+      <div className={UIVariants.container}>
+        <header className={UIVariants.header}>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-pink-900/10 to-orange-900/10"></div>
+          <div className="relative z-10">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`${UIVariants.levelCard} ${details.colors}`}
+              transition={{ duration: 0.5 }}
+              className={UIVariants.headerTitle}
             >
-               <div className={`absolute top-0 left-0 h-1 w-full bg-gradient-to-r ${details.gradient} opacity-50`}></div>
-              <h3 className={UIVariants.levelTitle}>
-                <details.icon className="w-8 h-8 opacity-80" />
-                {details.title}
-              </h3>
-              <div className={UIVariants.rankGrid}>
-                {ranksInLevel.map((rank) => (
-                  <RankCard
-                    key={rank.id}
-                    rank={rank}
-                    // Pass the rank object itself to the handler
-                    onSelect={() => setActiveRank(rank)}
-                  />
-                ))}
-              </div>
-            </motion.section>
-          );
-        })}
-      </main>
+              <span className="bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400 bg-clip-text text-transparent">
+                Wrecker Division
+              </span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className={UIVariants.headerSubtitle}
+            >
+              The primary operational division - security, protection, and tactical operations.
+            </motion.p>
+          </div>
+        </header>
+
+        <main className={UIVariants.levelWrapper}>
+          {LEVEL_ORDER.map((level, index) => {
+            const details = LEVEL_DETAILS[level];
+            const ranksInLevel = RANKS.filter(r => r.level === level);
+
+            return (
+              <motion.section
+                key={level}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`${UIVariants.levelCard} ${details.colors}`}
+              >
+                 <div className={`absolute top-0 left-0 h-1 w-full bg-gradient-to-r ${details.gradient} opacity-50`}></div>
+                <h3 className={UIVariants.levelTitle}>
+                  <details.icon className="w-8 h-8 opacity-80" />
+                  {details.title}
+                </h3>
+                <div className={UIVariants.rankGrid}>
+                  {ranksInLevel.map((rank) => (
+                    <RankCard
+                      key={rank.id}
+                      rank={rank}
+                      // Pass the rank object itself to the handler
+                      onSelect={() => setActiveRank(rank)}
+                    />
+                  ))}
+                </div>
+              </motion.section>
+            );
+          })}
+        </main>
+        
+        <footer className={UIVariants.footer}>
+          <p className="text-gray-500 text-sm">Select any rank to view its full details.</p>
+        </footer>
+      </div>
+
+      {/* Accounting Division Hierarchy */}
+      <div className={UIVariants.container}>
+        <header className={UIVariants.header}>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-900/10 via-emerald-900/10 to-teal-900/10"></div>
+          <div className="relative z-10">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={UIVariants.headerTitle}
+            >
+              <span className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 bg-clip-text text-transparent">
+                Accounting Division
+              </span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className={UIVariants.headerSubtitle}
+            >
+              Financial management and business operations - Middle Rank+ only with leader permission.
+            </motion.p>
+          </div>
+        </header>
+
+        <main className={UIVariants.levelWrapper}>
+          {LEVEL_ORDER.map((level, index) => {
+            const details = LEVEL_DETAILS[level];
+            const ranksInLevel = RANKS.filter(r => r.level === level);
+
+            return (
+              <motion.section
+                key={level}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`${UIVariants.levelCard} ${details.colors}`}
+              >
+                 <div className={`absolute top-0 left-0 h-1 w-full bg-gradient-to-r ${details.gradient} opacity-50`}></div>
+                <h3 className={UIVariants.levelTitle}>
+                  <details.icon className="w-8 h-8 opacity-80" />
+                  {details.title}
+                </h3>
+                <div className={UIVariants.rankGrid}>
+                  {ranksInLevel.map((rank) => (
+                    <RankCard
+                      key={`ad-${rank.id}`}
+                      rank={rank}
+                      // Pass the rank object itself to the handler
+                      onSelect={() => setActiveRank(rank)}
+                    />
+                  ))}
+                </div>
+              </motion.section>
+            );
+          })}
+        </main>
+        
+        <footer className={UIVariants.footer}>
+          <p className="text-gray-500 text-sm">Select any rank to view its full details. Note: Low Ranks cannot join this division.</p>
+        </footer>
+      </div>
       
       {/* Modal is rendered here, outside of the mapping */}
       <AnimatePresence>
@@ -218,10 +298,6 @@ export function HierarchyInterface() {
           />
         )}
       </AnimatePresence>
-
-      <footer className={UIVariants.footer}>
-        <p className="text-gray-500 text-sm">Select any rank to view its full details.</p>
-      </footer>
     </div>
   );
 }
