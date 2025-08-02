@@ -460,6 +460,20 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
       {
         "type": "text",
         "text": "Once you're verified, a whole new world opens up! You'll see all our member channels, can participate in discussions, start earning points, and begin your climb up the corporate ladder. Time to start your MC&D adventure! [icon:theater-masks]"
+      },
+      {
+        "type": "text",
+        "text": "After completing verification, you'll receive these important roles that unlock your full MC&D experience:"
+      },
+      {
+        "type": "list",
+        "items": [
+          "[:] MC&D Shareholders [:]",
+          "[:] Low Rank [:]",
+          "[:] Recruit [:]",
+          "[:] Wrecker Division [:]",
+          "[:] Current Generation [:]"
+        ]
       }
     ]
   },
@@ -532,20 +546,6 @@ export const HANDBOOK_SECTIONS: HandbookSection[] = [
         "type": "code-block",
         "language": "text",
         "code": "FORMAT:\nDiscord Username: \nRoblox Username: \nCodename Request: "
-      },
-      {
-        "type": "text",
-        "text": "At the end of the verification process (not after codename approval), you'll receive these important roles that unlock your full MC&D experience:"
-      },
-      {
-        "type": "list",
-        "items": [
-          "[:] MC&D Shareholders [:]",
-          "[:] Low Rank [:]",
-          "[:] Recruit [:]",
-          "[:] Wrecker Division [:]",
-          "[:] Current Generation [:]"
-        ]
       },
       {
         "type": "text",
