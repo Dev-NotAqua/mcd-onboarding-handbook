@@ -166,7 +166,7 @@ const Starfield = memo(() => {
       const starLayers = [
         { count: 80, speed: 0.1, color: '#FFF' },   // Background
         { count: 50, speed: 0.3, color: '#DDD' },   // Middle
-        { count: 20, speed: 0.5, color: '#FFA' }    // Foreground
+        { count: 20, color: '#FFA' }                // Foreground
       ]
       
       starsRef.current = starLayers.flatMap((layer, i) => 
@@ -175,7 +175,7 @@ const Starfield = memo(() => {
           y: Math.random() * size.height,
           radius: Math.random() * (i + 0.5),
           opacity: Math.random() * 0.8 + 0.2,
-          speed: layer.speed * (Math.random() * 0.5 + 0.5),
+          speed: (layer.speed || 0.5) * (Math.random() * 0.5 + 0.5),
           twinklePhase: Math.random() * Math.PI * 2,
           twinkleSpeed: 0.005 + Math.random() * 0.02,
           color: layer.color,
