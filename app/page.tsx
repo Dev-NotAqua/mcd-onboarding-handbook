@@ -26,7 +26,7 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 export default function HandbookPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showTerminal, setShowTerminal] = useState(true)
-  const [isShaking, setIsShaking] = useState(false)
+
   const [showMainContent, setShowMainContent] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [showTools, setShowTools] = useState(true)
@@ -81,21 +81,7 @@ export default function HandbookPage() {
   const handleTerminalComplete = () => {
     setShowTerminal(false)
     sessionStorage.setItem('mcd-terminal-completed', 'true')
-    
-    // Create smooth assembly effect with staggered animations
-    setTimeout(() => {
-      setShowMainContent(true)
-    }, 800)
-    
-    if (isShaking) {
-      setTimeout(() => {
-        setIsShaking(false)
-      }, 1000)
-    }
-  }
-
-  const handleShakeChange = (shaking: boolean) => {
-    setIsShaking(shaking)
+    setShowMainContent(true)
   }
 
   const filteredSections = useMemo(() => {
@@ -116,7 +102,7 @@ export default function HandbookPage() {
   }
 
   if (showTerminal) {
-    return <TerminalIntro onComplete={handleTerminalComplete} onShakeChange={handleShakeChange} />
+    return <TerminalIntro onComplete={handleTerminalComplete} />
   }
 
   // Removed loading spinner - show main content directly after terminal intro
@@ -125,11 +111,12 @@ export default function HandbookPage() {
     <SearchProvider>
       <ErrorBoundary>
         <motion.div 
-          className={`min-h-screen bg-gradient-to-br from-background via-background to-accent/5 text-foreground ${isShaking ? 'animate-shake-page' : ''}`}
+          className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5 text-foreground relative overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
+
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-200"
@@ -147,14 +134,15 @@ export default function HandbookPage() {
             <BackToTop />
             {!isMobile && (
               <motion.div
-                initial={{ opacity: 0, x: -150, scale: 0.8, rotateY: -15 }}
-                animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
+                initial={{ opacity: 0, x: -320, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ 
-                  duration: 1.4, 
-                  delay: 0.2, 
+                  duration: 1.2, 
+                  delay: showMainContent ? 0.1 : 1.4, 
                   type: "spring",
-                  stiffness: 60,
-                  damping: 15
+                  stiffness: 80,
+                  damping: 20,
+                  ease: [0.16, 1, 0.3, 1]
                 }}
               >
                 <Sidebar sections={filteredSections} activeSection={activeSection} />
@@ -163,14 +151,15 @@ export default function HandbookPage() {
 
             <motion.div 
               className={`flex-1 flex flex-col ${!isMobile ? "ml-80" : ""} ${isMobile ? "pt-24" : ""} w-full max-w-full overflow-x-hidden`}
-              initial={{ opacity: 0, y: 80, scale: 0.9, rotateX: 10 }}
-              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              initial={{ opacity: 0, x: "100%", scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ 
-                duration: 1.6, 
-                delay: 0.4, 
+                duration: 1.2, 
+                delay: showMainContent ? 0.3 : 1.6, 
                 type: "spring",
-                stiffness: 50,
-                damping: 18
+                stiffness: 70,
+                damping: 20,
+                ease: [0.16, 1, 0.3, 1]
               }}
             >
               <main id="main-content" className="flex-1 relative w-full max-w-full overflow-x-hidden">
@@ -178,14 +167,15 @@ export default function HandbookPage() {
                 <div className="relative z-10">
                 <motion.header 
                   className={`sticky top-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-accent/20 shadow-sm transition-all duration-500 ${isScrolled ? 'py-2' : 'py-3'} w-full max-w-full overflow-x-hidden`}
-                  initial={{ opacity: 0, y: -80, scale: 0.9, rotateX: -15 }}
-                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  initial={{ opacity: 0, y: -80, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ 
-                    duration: 1.2, 
-                    delay: 0.6, 
+                    duration: 1.0, 
+                    delay: showMainContent ? 0.5 : 1.8, 
                     type: "spring",
-                    stiffness: 70,
-                    damping: 20
+                    stiffness: 80,
+                    damping: 20,
+                    ease: [0.16, 1, 0.3, 1]
                   }}
                 >
                   <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 w-full max-w-full overflow-x-hidden">

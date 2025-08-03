@@ -32,7 +32,7 @@ interface Rank {
   owner?: string;
   color: string;
   icon: LucideIcon;
-  level: "executive" | "high" | "middle" | "low";
+  level: "executive" | "hicom" | "hr" | "middle" | "low";
 }
 
 const RANKS: Rank[] = [
@@ -42,15 +42,15 @@ const RANKS: Rank[] = [
   { id: "advisor", name: "Company Advisor - FoL", points: 0, color: "from-purple-300 to-pink-300", icon: Crown, level: "executive", owner: "VACANT" },
 
   // High Command
-  { id: "fl", name: "Force Leader", points: 0, color: "from-red-400 to-orange-400", icon: Star, level: "high", owner: "Moonveil" },
-  { id: "fd", name: "Finance Director", points: 0, color: "from-red-300 to-orange-300", icon: Star, level: "high", owner: "Singularity" },
+  { id: "fl", name: "Force Leader", points: 0, color: "from-red-400 to-orange-400", icon: Star, level: "hicom", owner: "Moonveil" },
+  { id: "fd", name: "Finance Director", points: 0, color: "from-red-300 to-orange-300", icon: Star, level: "hicom", owner: "Singularity" },
 
   // High Ranks
-  { id: "hr5", name: "Commander", points: 530, color: "from-orange-500 to-yellow-500", icon: Award, level: "high", requirements: "10 Deployments Hosted" },
-  { id: "hr4", name: "General", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "high" },
-  { id: "hr3", name: "Colonel", points: 430, color: "from-orange-300 to-yellow-300", icon: Award, level: "high", requirements: "3 Deployments Hosted" },
-  { id: "hr2", name: "Major", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "high" },
-  { id: "hr1", name: "Captain", points: 330, color: "from-yellow-400 to-yellow-300", icon: Shield, level: "high", requirements: "Pass HR Applications" },
+  { id: "hr5", name: "Commander", points: 530, color: "from-orange-500 to-yellow-500", icon: Award, level: "hr", requirements: "10 Deployments Hosted" },
+  { id: "hr4", name: "General", points: 480, color: "from-orange-400 to-yellow-400", icon: Award, level: "hr" },
+  { id: "hr3", name: "Colonel", points: 430, color: "from-orange-300 to-yellow-300", icon: Award, level: "hr", requirements: "3 Deployments Hosted" },
+  { id: "hr2", name: "Major", points: 380, color: "from-yellow-500 to-yellow-400", icon: Shield, level: "hr" },
+  { id: "hr1", name: "Captain", points: 330, color: "from-yellow-400 to-yellow-300", icon: Shield, level: "hr", requirements: "Pass HR Applications" },
 
   // Middle Ranks
   { id: "mr5", name: "Lieutenant", points: 275, color: "from-blue-500 to-cyan-500", icon: TrendingUp, level: "middle" },
@@ -78,7 +78,7 @@ interface LevelDetail {
   gradient: string;
 }
 
-const LEVEL_DETAILS: Record<Rank["level"], LevelDetail> = {
+const LEVEL_DETAILS: Record<string, LevelDetail> = {
   executive: {
     title: "Executive Command",
     colors: "from-purple-900/50 to-pink-900/50 border-purple-500/50",
@@ -88,14 +88,23 @@ const LEVEL_DETAILS: Record<Rank["level"], LevelDetail> = {
     canRK: "Full Authority",
     gradient: "from-purple-500 to-pink-500",
   },
-  high: {
-    title: "High Command & High Ranks",
+  hicom: {
+    title: "High Command",
     colors: "from-red-900/50 to-orange-900/50 border-red-500/50",
     icon: Star,
-    health: "175 HP",
+    health: "200 HP",
     division: "All Divisions",
     canRK: "Full Authority",
     gradient: "from-red-500 to-orange-500",
+  },
+  hr: {
+    title: "High Ranks",
+    colors: "from-orange-900/50 to-yellow-900/50 border-orange-500/50",
+    icon: Award,
+    health: "175 HP",
+    division: "All Divisions",
+    canRK: "Full Authority",
+    gradient: "from-orange-500 to-yellow-500",
   },
   middle: {
     title: "Middle Ranks",
@@ -117,7 +126,7 @@ const LEVEL_DETAILS: Record<Rank["level"], LevelDetail> = {
   },
 };
 
-const LEVEL_ORDER: Rank["level"][] = ["executive", "high", "middle", "low"];
+const LEVEL_ORDER: string[] = ["executive", "hicom", "hr", "middle", "low"];
 
 // --- UI & STYLING DEFINITIONS ---
 const UIVariants = {
@@ -149,6 +158,53 @@ export function HierarchyInterface() {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
+  const renderHierarchy = (divisionTitle: string, divisionColor: string) => (
+    <div className="mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-8"
+      >
+        <h2 className={`text-3xl font-bold ${divisionColor} mb-2`}>
+          {divisionTitle}
+        </h2>
+        <div className={`h-1 w-32 mx-auto bg-gradient-to-r ${divisionColor.includes('blue') ? 'from-blue-500 to-cyan-500' : 'from-orange-500 to-red-500'} rounded-full`}></div>
+      </motion.div>
+      
+      {LEVEL_ORDER.map((level, index) => {
+        const details = LEVEL_DETAILS[level];
+        const ranksInLevel = RANKS.filter(r => r.level === level);
+
+        return (
+          <motion.section
+            key={`${divisionTitle}-${level}`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className={`${UIVariants.levelCard} ${details.colors} mb-6`}
+          >
+             <div className={`absolute top-0 left-0 h-1 w-full bg-gradient-to-r ${details.gradient} opacity-50`}></div>
+            <h3 className={UIVariants.levelTitle}>
+              <details.icon className="w-8 h-8 opacity-80" />
+              {details.title}
+            </h3>
+            <div className={UIVariants.rankGrid}>
+              {ranksInLevel.map((rank) => (
+                <RankCard
+                  key={rank.id}
+                  rank={rank}
+                  // Pass the rank object itself to the handler
+                  onSelect={() => setActiveRank(rank)}
+                />
+              ))}
+            </div>
+          </motion.section>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className={UIVariants.container}>
       <header className={UIVariants.header}>
@@ -176,36 +232,8 @@ export function HierarchyInterface() {
       </header>
 
       <main className={UIVariants.levelWrapper}>
-        {LEVEL_ORDER.map((level, index) => {
-          const details = LEVEL_DETAILS[level];
-          const ranksInLevel = RANKS.filter(r => r.level === level);
-
-          return (
-            <motion.section
-              key={level}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`${UIVariants.levelCard} ${details.colors}`}
-            >
-               <div className={`absolute top-0 left-0 h-1 w-full bg-gradient-to-r ${details.gradient} opacity-50`}></div>
-              <h3 className={UIVariants.levelTitle}>
-                <details.icon className="w-8 h-8 opacity-80" />
-                {details.title}
-              </h3>
-              <div className={UIVariants.rankGrid}>
-                {ranksInLevel.map((rank) => (
-                  <RankCard
-                    key={rank.id}
-                    rank={rank}
-                    // Pass the rank object itself to the handler
-                    onSelect={() => setActiveRank(rank)}
-                  />
-                ))}
-              </div>
-            </motion.section>
-          );
-        })}
+        {renderHierarchy("Wrecker Division", "text-orange-400")}
+        {renderHierarchy("Accounting Division", "text-blue-400")}
       </main>
       
       {/* Modal is rendered here, outside of the mapping */}

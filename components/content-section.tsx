@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, Check, Star, Zap, Shield, User, Award, BookOpen, Clock, Briefcase, Globe, Gavel } from "lucide-react"
+import { ChevronDown, ChevronUp, ExternalLink, ArrowRight, Check, Star, Zap, Shield, User, Award, BookOpen, Clock, Briefcase, Globe, Gavel, Shapes, MessageCircle } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useSearch } from "@/contexts/search-context"
 import { highlightText } from "@/lib/search-utils"
@@ -54,9 +54,9 @@ const SECTION_ICONS: Record<string, React.ComponentType<{ className?: string }>>
   "verification": Shield,
   "codenames": User,
   "shift-logging": Clock,
-  "morphs": User,
+  "morphs": Shapes,
   "hierarchy": Award,
-  "channels": Globe,
+  "channels": MessageCircle,
   "divisions": Briefcase,
   "conclusion": BookOpen,
   "beginner-info": Zap,

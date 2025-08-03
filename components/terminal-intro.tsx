@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 
 interface Props {
   onComplete: () => void;
-  onShakeChange?: (isShaking: boolean) => void;
 }
 
 // Star properties interface
@@ -17,14 +16,14 @@ interface Star {
   id: string;
 }
 
-export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
+export default function TerminalIntro({ onComplete }: Props) {
   /* -------------------------------------------------------- State */
   const [currentLine, setCurrentLine] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
   const [canSkip, setCanSkip] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isShaking, setIsShaking] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -193,41 +192,19 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
     return () => clearInterval(blink);
   }, []);
   
-  useEffect(() => {
-    const launchLine = lines[currentLine];
-    if (!launchLine) return;
-    
-    const doShake = /T-\d+\.\.\.|LAUNCHING|IGNITION|SYSTEM ARMED|SYNTHESIS|OVERRIDE|COUNTDOWN|COMPLETE|SUCCESS|VERIFIED|ARMED|READY|NEURAL|BIOMETRIC|CLEARANCE|QUANTUM|REALITY|ANCHORS/.test(launchLine.text);
-    setIsShaking(doShake);
-    onShakeChange?.(doShake);
-    
-    // Debug log to verify shake effect is triggering
-    if (doShake) {
-      console.log('Shake effect triggered for line:', launchLine.text);
-    }
-  }, [currentLine, onShakeChange, lines]);
 
-  // Handle completion with enhanced effects
+
+  // Handle completion
   useEffect(() => {
     if (isComplete) {
-      // Trigger final shake effect
-      setIsShaking(true);
-      onShakeChange?.(true);
-      
-      // Stop shake after completion animation
-      const shakeTimeout = setTimeout(() => {
-        setIsShaking(false);
-        onShakeChange?.(false);
-        
-        // Call onComplete after shake ends
-        setTimeout(() => {
-          onComplete();
-        }, 300);
+      // Call onComplete after completion animation
+      const completionTimeout = setTimeout(() => {
+        onComplete();
       }, 800);
       
-      return () => clearTimeout(shakeTimeout);
+      return () => clearTimeout(completionTimeout);
     }
-  }, [isComplete, onComplete, onShakeChange]);
+  }, [isComplete, onComplete]);
   
   /* -------------------------------------------------------- Starfield Setup */
   useEffect(() => {
@@ -794,9 +771,7 @@ export default function TerminalIntro({ onComplete, onShakeChange }: Props) {
         />
         
         {/* Terminal */}
-        <div className={`w-full max-w-4xl flex flex-col rounded-lg overflow-hidden shadow-2xl animate-glow transition-all duration-300 max-h-[80vh] ${
-          isShaking ? 'shake-glow' : ''
-        }`}>
+        <div className="w-full max-w-4xl flex flex-col rounded-lg overflow-hidden shadow-2xl animate-glow transition-all duration-300 max-h-[80vh]">
           {/* Title bar */}
           <header className="bg-gradient-to-r from-[#2D1A44] to-[#462569] px-3 py-2 flex items-center gap-2 border-b border-black/30">
             <div className="flex gap-1.5">

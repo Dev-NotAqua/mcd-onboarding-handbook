@@ -13,7 +13,10 @@ import {
   Globe,
   Gavel,
   Menu,
-  X
+  X,
+  Zap,
+  Shapes,
+  MessageCircle
 } from "lucide-react"
 import type { HandbookSection } from "@/lib/types"
 import { useState, useEffect } from "react"
@@ -24,10 +27,15 @@ import { motion } from "framer-motion"
 
 const sectionIcons = {
   welcome: Shield,
-  verification: Users,
-  codenames: FileText,
+  verification: Shield,
+  codenames: User,
+  "self-deployments": Clock,
+  morphs: Shapes,
+  hierarchy: Award,
+  "discord-channels": MessageCircle,
   divisions: Briefcase,
-  hierarchy: TrendingUp,
+  "final-steps": BookOpen,
+  "beginner-info": Zap,
   "shift-logging": Clock,
   points: Target,
   "hierarchy-detailed": Award,
